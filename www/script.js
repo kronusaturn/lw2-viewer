@@ -594,9 +594,9 @@ function changeVoteButtonVisualState(button) {
 
 	/*	Interaction states are:
 
-		0  0·  0··  0·w  0··w    (neutral; +1/2 clicks; +1/2 clicks, waiting)
-		1  1·  1··  1·w  1··w    (small vote; +1/2 clicks; +1/2 clicks, waiting)
-		2  2·  2··  2·w  2··w    (big vote; +1/2 clicks; +1/2 clicks, waiting)
+		0  0·    (neutral; +1 click)
+		1  1·    (small vote; +1 click)
+		2  2·    (big vote; +1 click)
 
 		Visual states are (with their state classes in [brackets]) are:
 
@@ -605,62 +605,41 @@ function changeVoteButtonVisualState(button) {
 		12    (small vote active, temporary indicator of big vote) [two-temp]
 		22    (big vote active) [two]
 
-		The following are the 24 possible interaction state transitions (and
+		The following are the 9 possible interaction state transitions (and
 		the visual state transitions associated with them):
 
 		                VIS.    VIS.
 		FROM    TO      FROM    TO      NOTES
 		====    ====    ====    ====    =====
 		0       0·      01      12      first click
-		0·      0··     12      22      second click
-		0·      0·w     12      02      one click without second; waiting
-		0··     0··w    22      22      two clicks; waiting
-		0·w     1       02      02      small vote from neutral, success
-		0·w     0       02      01      small vote from neutral, failure
-		0··w    2       22      22      big vote from neutral, success
-		0··w    0       22      01      big vote from neutral, failure
+		0·      1       12      02      one click without second
+		0·      2       12      22      second click
 
 		1       1·      02      12      first click
-		1·      1··     12      22      second click
-		1·      1·w     12      01      one click without second; waiting
-		1··     1··w    22      22      two clicks; waiting
-		1·w     0       01      01      removal of small vote, success
-		1·w     1       01      02      removal of small vote, failure
-		1··w    2       22      22      big vote from small vote, success
-		1··w    1       22      02      big vote from small vote, failure
+		1·      0       12      01      one click without second
+		1·      2       12      22      second click
 
 		2       2·      22      12      first click
-		2·      2··     12      01      second click
-		2·      2·w     12      02      one click without second; waiting
-		2··     2··w    01      01      two clicks; waiting
-		2·w     1       02      02      downgrade of big vote to small, success
-		2·w     2       02      22      downgrade of big vote to small, failure
-		2··w    0       01      01      removal of big vote, success
-		2··w    2       01      22      removal of big vote, failure
-
-		(Note that the transitions _from_ the waiting states are done by the 
-		 updateVoteButtonVisualState() function, not by this one.)
+		2·      1       12      02      one click without second
+		2·      0       12      01      second click
 	*/
-	let currentStateClass = ([ "none", "one", "two-temp", "two" ].find(stateClass => button.classList.contains(stateClass)) || "none");
 	let transitions = [
-		[ "big-vote waiting clicked-twice", "none none" 		], // 2·· => 2··w
-		[ "big-vote waiting clicked-once", 	"two-temp one" 		], // 2·  => 2·w
-		[ "big-vote clicked-twice", 		"two-temp none"		], // 2·  => 2··
-		[ "big-vote clicked-once", 			"two two-temp"	 	], // 2   => 2·
+		[ "big-vote two-temp clicked-twice", "none"     ], // 2· => 0
+		[ "big-vote two-temp clicked-once",  "one"      ], // 2· => 1
+		[ "big-vote clicked-once",           "two-temp" ], // 2  => 2·
 
-		[ "selected waiting clicked-twice", "two two"	 		], // 1·· => 1··w
-		[ "selected waiting clicked-once", 	"two-temp none" 	], // 1·  => 1·w
-		[ "selected clicked-twice", 		"two-temp two" 		], // 1·  => 1··
-		[ "selected clicked-once", 			"one two-temp" 		], // 1   => 1·
+		[ "selected two-temp clicked-twice", "two"      ], // 1· => 2
+		[ "selected two-temp clicked-once",  "none"     ], // 1· => 0
+		[ "selected clicked-once",           "two-temp" ], // 1  => 1·
 
-		[ "waiting clicked-twice", 			"two two"	 		], // 0·· => 0··w
-		[ "waiting clicked-once", 			"two-temp one" 		], // 0·  => 0·w
-		[ "clicked-twice", 					"two-temp two" 		], // 0·  => 0··
-		[ "clicked-once", 					"none two-temp" 	], // 0   => 0·
+		[ "two-temp clicked-twice",          "two"      ], // 0· => 2
+		[ "two-temp clicked-once",           "one"      ], // 0· => 1
+		[ "clicked-once",                    "two-temp" ], // 0  => 0·
 	];
-	for ([ interactionClasses, visualStateClassesToSwap ] of transitions) {
+	for (let [ interactionClasses, visualStateClass ] of transitions) {
 		if (button.hasClasses(interactionClasses.split(" "))) {
-			button.swapClasses(visualStateClassesToSwap.split(" "), 1);
+			button.removeClasses([ "none", "one", "two-temp", "two" ]);
+			button.addClass(visualStateClass);
 			break;
 		}
 	}
@@ -678,7 +657,7 @@ function voteCompleteEvent(targetType, targetId, response) {
 	controls.forEach(control => {
 		const voteAxis = (control.dataset.voteAxis || "karma");
 
-		if(!desiredVote || (currentVote[voteAxis] || "neutral") === (desiredVote[voteAxis] || "neutral")) {
+		if (!desiredVote || (currentVote[voteAxis] || "neutral") === (desiredVote[voteAxis] || "neutral")) {
 			control.removeClass("waiting");
 			control.querySelectorAll("button").forEach(button => button.removeClass("waiting"));
 		}
@@ -704,11 +683,16 @@ function voteCompleteEvent(targetType, targetId, response) {
 		}
 
 		control.queryAll("button.vote").forEach(button => {
-			button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
-			if (button.dataset.voteType == voteUpDown) button.addClass(voteClass);
-			updateVoteButtonVisualState(button);
+			updateVoteButton(button, voteUpDown, voteClass);
 		});
 	});
+}
+
+function updateVoteButton(button, voteUpDown, voteClass) {
+	button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
+	if (button.dataset.voteType == voteUpDown)
+		button.addClass(voteClass);
+	updateVoteButtonVisualState(button);
 }
 
 function makeVoteRequestCompleteEvent(targetType, targetId) {
@@ -716,9 +700,9 @@ function makeVoteRequestCompleteEvent(targetType, targetId) {
 		var currentVote = {};
 		var response = null;
 
-		if(event.target.status == 200) {
+		if (event.target.status == 200) {
 			response = JSON.parse(event.target.responseText);
-			for(const voteAxis of response.keys()) {
+			for (const voteAxis of response.keys()) {
 				currentVote[voteAxis] = response[voteAxis][0];
 			}
 			voteData[targetType][targetId] = currentVote;
@@ -729,13 +713,12 @@ function makeVoteRequestCompleteEvent(targetType, targetId) {
 
 		var desiredVote = voteDesired[targetType][targetId];
 
-		if(desiredVote && !votesEqual(currentVote, desiredVote)) {
+		if (desiredVote && !votesEqual(currentVote, desiredVote)) {
 			sendVoteRequest(targetType, targetId);
 		} else {
 			delete voteDesired[targetType][targetId];
+			voteCompleteEvent(targetType, targetId, response);
 		}
-
-		voteCompleteEvent(targetType, targetId, response);
 	}
 }
 
@@ -777,7 +760,6 @@ function voteButtonClicked(event) {
 		// Do double-click code.
 		voteButton.removeClass("clicked-once");
 		voteButton.addClass("clicked-twice");
-		changeVoteButtonVisualState(voteButton);
 		voteEvent(voteButton, 2);
 	}
 }
@@ -793,13 +775,6 @@ function voteEvent(voteButton, numClicks) {
 	let voteAxis = voteControl.dataset.voteAxis || "karma";
 	let voteUpDown = voteButton.dataset.voteType;
 
-	let voteControls = findVoteControls(targetType, targetId, voteAxis);
-
-	for(const voteControl of voteControls) {
-		voteControl.addClass("waiting");
-		changeVoteButtonVisualState(voteControl.query("."+voteUpDown));
-	}
-
 	let voteType;
 	if (   (numClicks == 2 && voteButton.hasClass("big-vote"))
 		|| (numClicks == 1 && voteButton.hasClass("selected") && !voteButton.hasClass("big-vote"))) {
@@ -809,12 +784,22 @@ function voteEvent(voteButton, numClicks) {
 		vote.big = (numClicks == 2);
 		voteType = makeVoteType(vote);
 	}
+
+	let voteControls = findVoteControls(targetType, targetId, voteAxis);
+	for (const voteControl of voteControls) {
+		voteControl.addClass("waiting");
+		voteControl.queryAll(".vote").forEach(button => {
+			button.addClass("waiting");
+			updateVoteButton(button, voteUpDown, makeVoteClass(parseVoteType(voteType)));
+		});
+	}
+
 	let voteRequestPending = voteDesired[targetType][targetId];
 	let voteObject = Object.assign({}, voteRequestPending || voteData[targetType][targetId] || {});
 	voteObject[voteAxis] = voteType;
 	voteDesired[targetType][targetId] = voteObject;
 
-	if(!voteRequestPending) sendVoteRequest(targetType, targetId);
+	if (!voteRequestPending) sendVoteRequest(targetType, targetId);
 }
 
 function initializeVoteButtons() {
