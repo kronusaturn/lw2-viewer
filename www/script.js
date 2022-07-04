@@ -670,7 +670,7 @@ function voteCompleteEvent(targetType, targetId, response) {
 	GWLog("voteCompleteEvent");
 
 	var currentVote = voteData[targetType][targetId] || {};
-	var desiredVote = voteDesired[targetType][targetId] || {};
+	var desiredVote = voteDesired[targetType][targetId];
 
 	var controls = findVoteControls(targetType, targetId);
 	var controlsByAxis = new Object;
@@ -678,7 +678,7 @@ function voteCompleteEvent(targetType, targetId, response) {
 	controls.forEach(control => {
 		const voteAxis = (control.dataset.voteAxis || "karma");
 
-		if((currentVote[voteAxis] || "neutral") === (desiredVote[voteAxis] || "neutral")) {
+		if(!desiredVote || (currentVote[voteAxis] || "neutral") === (desiredVote[voteAxis] || "neutral")) {
 			control.removeClass("waiting");
 			control.querySelectorAll("button").forEach(button => button.removeClass("waiting"));
 		}
@@ -731,6 +731,8 @@ function makeVoteRequestCompleteEvent(targetType, targetId) {
 
 		if(desiredVote && !votesEqual(currentVote, desiredVote)) {
 			sendVoteRequest(targetType, targetId);
+		} else {
+			delete voteDesired[targetType][targetId];
 		}
 
 		voteCompleteEvent(targetType, targetId, response);
