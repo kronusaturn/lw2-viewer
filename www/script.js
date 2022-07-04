@@ -120,6 +120,11 @@ function urlEncodeQuery(params) {
 	return params.keys().map((x) => {return "" + x + "=" + encodeURIComponent(params[x])}).join("&");
 }
 
+function handleAjaxError(event) {
+	if(event.target.getResponseHeader("Content-Type") === "application/json") alert("Error: " + JSON.parse(event.target.responseText)["error"]);
+	else alert("Error: Something bad happened :(");
+}
+
 function doAjax(params) {
 	let req = new XMLHttpRequest();
 	req.addEventListener("load", (event) => {
@@ -127,8 +132,7 @@ function doAjax(params) {
 			if(params["onSuccess"]) params.onSuccess(event);
 		} else {
 			if(params["onFailure"]) params.onFailure(event);
-			else if(event.target.getResponseHeader("Content-Type") === "application/json") alert("Error: " + JSON.parse(event.target.responseText)["error"]);
-			else alert("Error: Something bad happened :(");
+			else handleAjaxError(event);
 		}
 		if(params["onFinish"]) params.onFinish(event);
 	});
@@ -532,13 +536,33 @@ function makeVoteClass(vote) {
 	}
 }
 
+function findVoteControls(targetType, targetId, voteAxis) {
+	var voteAxisQuery = (voteAxis ? "."+voteAxis : "");
+
+	if(targetType == "Post") {
+		return queryAll(".post-meta .voting-controls"+voteAxisQuery);
+	} else if(targetType == "Comment") {
+		return queryAll("#comment-"+targetId+" > .comment > .comment-meta .voting-controls"+voteAxisQuery+", #comment-"+targetId+" > .comment > .comment-controls .voting-controls"+voteAxisQuery);
+	}
+}
+
+function votesEqual(vote1, vote2) {
+	var allKeys = Object.assign({}, vote1);
+	Object.assign(allKeys, vote2);
+
+	for(k of allKeys.keys()) {
+		if((vote1[k] || "neutral") !== (vote2[k] || "neutral")) return false;
+	}
+	return true;
+}
+
 function addVoteButtons(element, vote, targetType) {
 	GWLog("addVoteButtons");
 	vote = vote || {};
 	let voteAxis = element.parentElement.dataset.voteAxis || "karma";
 	let voteType = parseVoteType(vote[voteAxis]);
 	let voteClass = makeVoteClass(voteType);
-	
+
 	element.parentElement.queryAll("button").forEach((button) => {
 		button.disabled = false;
 		if (voteType) {
@@ -642,64 +666,88 @@ function changeVoteButtonVisualState(button) {
 	}
 }
 
-function makeVoteCompleteEvent(target) {
-	GWLog("makeVoteCompleteEvent");
-	return (GW.voteComplete = (event) => {
-		GWLog("GW.voteComplete");
-		var controls;
-		var controlsByAxis = new Object;
-		if (target === null) {
-			controls = queryAll(".post-meta .voting-controls");
-		} else {
-			let comment = target.closest(".comment");
-			controls = comment.queryAll(".comment-meta .voting-controls, .comment-controls .voting-controls");
-		}
-		controls.forEach(control => {
+function voteCompleteEvent(targetType, targetId, response) {
+	GWLog("voteCompleteEvent");
+
+	var currentVote = voteData[targetType][targetId] || {};
+	var desiredVote = voteDesired[targetType][targetId] || {};
+
+	var controls = findVoteControls(targetType, targetId);
+	var controlsByAxis = new Object;
+
+	controls.forEach(control => {
+		const voteAxis = (control.dataset.voteAxis || "karma");
+
+		if((currentVote[voteAxis] || "neutral") === (desiredVote[voteAxis] || "neutral")) {
 			control.removeClass("waiting");
 			control.querySelectorAll("button").forEach(button => button.removeClass("waiting"));
-			var voteAxis = (control.dataset.voteAxis || "karma");
-			if(!controlsByAxis[voteAxis]) controlsByAxis[voteAxis] = new Array;
-			controlsByAxis[voteAxis].push(control);
-		});
-		if (event.target.status == 200) {
-			let response = JSON.parse(event.target.responseText);
-			for (const voteAxis of response.keys()) {
-				const [voteType, displayText, titleText] = response[voteAxis];
-				const axisControls = controlsByAxis[voteAxis];
-				
-				let vote = parseVoteType(voteType);
-				let voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
-				let voteClass = makeVoteClass(vote);
-
-				axisControls.forEach(control => {
-					const displayTarget = control.query(".karma-value");
-					if (displayTarget.hasClass("redacted")) {
-						displayTarget.dataset["trueValue"] = displayText;
-					} else {
-						displayTarget.innerHTML = displayText;
-					}
-					displayTarget.setAttribute("title", titleText);
-
-					control.queryAll("button.vote").forEach(button => {
-						button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
-						if (button.dataset.voteType == voteUpDown) button.addClass(voteClass);
-						updateVoteButtonVisualState(button);
-					});
-				});
-			}
 		}
+
+		if(!controlsByAxis[voteAxis]) controlsByAxis[voteAxis] = new Array;
+		controlsByAxis[voteAxis].push(control);
+
+		const voteType = currentVote[voteAxis];
+		const vote = parseVoteType(voteType);
+		const voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
+		const voteClass = makeVoteClass(vote);
+
+		if(response && response[voteAxis]) {
+			const [voteType, displayText, titleText] = response[voteAxis];
+
+			const displayTarget = control.query(".karma-value");
+			if (displayTarget.hasClass("redacted")) {
+				displayTarget.dataset["trueValue"] = displayText;
+			} else {
+				displayTarget.innerHTML = displayText;
+			}
+			displayTarget.setAttribute("title", titleText);
+		}
+
+		control.queryAll("button.vote").forEach(button => {
+			button.removeClasses([ "clicked-once", "clicked-twice", "selected", "big-vote" ]);
+			if (button.dataset.voteType == voteUpDown) button.addClass(voteClass);
+			updateVoteButtonVisualState(button);
+		});
 	});
 }
 
-function sendVoteRequest(targetType, targetId, vote, onFinish) {
+function makeVoteRequestCompleteEvent(targetType, targetId) {
+	return (event) => {
+		var currentVote = {};
+		var response = null;
+
+		if(event.target.status == 200) {
+			response = JSON.parse(event.target.responseText);
+			for(const voteAxis of response.keys()) {
+				currentVote[voteAxis] = response[voteAxis][0];
+			}
+			voteData[targetType][targetId] = currentVote;
+		} else {
+			delete voteDesired[targetType][targetId];
+			currentVote = voteData[targetType][targetId];
+		}
+
+		var desiredVote = voteDesired[targetType][targetId];
+
+		if(desiredVote && !votesEqual(currentVote, desiredVote)) {
+			sendVoteRequest(targetType, targetId);
+		}
+
+		voteCompleteEvent(targetType, targetId, response);
+	}
+}
+
+function sendVoteRequest(targetType, targetId) {
 	GWLog("sendVoteRequest");
+
 	doAjax({
 		method: "POST",
 		location: "/karma-vote",
 		params: { "target": targetId,
 			  "target-type": targetType,
-			  "vote": JSON.stringify(vote) },
-		onFinish: onFinish });
+			  "vote": JSON.stringify(voteDesired[targetType][targetId]) },
+		onFinish: makeVoteRequestCompleteEvent(targetType, targetId)
+	});
 }
 
 function voteButtonClicked(event) {
@@ -735,14 +783,21 @@ function voteButtonClicked(event) {
 function voteEvent(voteButton, numClicks) {
 	GWLog("voteEvent");
 	voteButton.blur();
-	voteButton.addClass("waiting");
+
 	let voteControl = voteButton.parentNode;
-	voteControl.addClass("waiting");
-	changeVoteButtonVisualState(voteButton);
-	let voteAxis = voteControl.dataset.voteAxis || "karma";
+
 	let targetType = voteButton.dataset.targetType;
 	let targetId = ((targetType == 'Comment') ? voteButton.getCommentId() : voteButton.parentNode.dataset.postId);
+	let voteAxis = voteControl.dataset.voteAxis || "karma";
 	let voteUpDown = voteButton.dataset.voteType;
+
+	let voteControls = findVoteControls(targetType, targetId, voteAxis);
+
+	for(const voteControl of voteControls) {
+		voteControl.addClass("waiting");
+		changeVoteButtonVisualState(voteControl.query("."+voteUpDown));
+	}
+
 	let voteType;
 	if (   (numClicks == 2 && voteButton.hasClass("big-vote"))
 		|| (numClicks == 1 && voteButton.hasClass("selected") && !voteButton.hasClass("big-vote"))) {
@@ -752,11 +807,12 @@ function voteEvent(voteButton, numClicks) {
 		vote.big = (numClicks == 2);
 		voteType = makeVoteType(vote);
 	}
-	let voteObject = voteData[targetType][targetId] || new Object;
+	let voteRequestPending = voteDesired[targetType][targetId];
+	let voteObject = Object.assign({}, voteRequestPending || voteData[targetType][targetId] || {});
 	voteObject[voteAxis] = voteType;
-	voteData[targetType][targetId] = voteObject;
+	voteDesired[targetType][targetId] = voteObject;
 
-	sendVoteRequest(targetType, targetId, voteObject, makeVoteCompleteEvent((targetType == 'Comment' ? voteButton.parentNode : null)));
+	if(!voteRequestPending) sendVoteRequest(targetType, targetId);
 }
 
 function initializeVoteButtons() {
@@ -770,6 +826,12 @@ function initializeVoteButtons() {
 
 function processVoteData(voteData) {
 	window.voteData = voteData;
+
+	window.voteDesired = new Object;
+	for(key of voteData.keys()) {
+		voteDesired[key] = new Object;
+	}
+
 	initializeVoteButtons();
 	
 	addTriggerListener("postLoaded", {priority: 3000, fn: () => {
