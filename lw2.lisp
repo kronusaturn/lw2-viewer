@@ -1371,6 +1371,7 @@ signaled condition to *HTML-OUTPUT*."
     (let ((auth-token *current-auth-token*))
       (request-method
        (:post (target target-type (vote-json :real-name "vote"))
+	      (sleep 5) (load-time-value (warn "Artificial delay enabled"))
 	      (let ((vote (safe-decode-json vote-json)))
 		(multiple-value-bind (current-vote result)
 		    (do-lw2-vote auth-token target-type target vote)
