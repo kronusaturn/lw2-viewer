@@ -1880,16 +1880,26 @@ article {
 		display: block;
 		left: 50%;
 		transform: translateX(-50%);
-		white-space: nowrap;
+		white-space: pre-wrap;
+		width: max-content;
 		text-align: center;
 		font-size: 0.875rem;
 		color: #bbb;
 		opacity: 0;
 		transition: opacity 0.2s ease;
 	}
+	.post .voting-controls.agreement .karma-value:hover::after,
+	.comment-item .voting-controls.agreement .karma-value:hover::after {
+		top: unset;
+		bottom: 100%;
+	}
 	.post .voting-controls .karma-value:hover::after,
 	.comment-item .voting-controls .karma-value:hover::after {
 		opacity: 1.0;
+	}
+	.post .voting-controls.waiting .karma-value:hover::after,
+	.comment-item .voting-controls.waiting .karma-value:hover::after {
+		display: none;
 	}
 	.comment-item .voting-controls .karma-value:hover::after {
 		z-index: 5001;

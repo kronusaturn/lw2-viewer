@@ -670,7 +670,7 @@ function voteCompleteEvent(targetType, targetId, response) {
 		const voteUpDown = (vote.up ? 'upvote' : (vote.down ? 'downvote' : ''));
 		const voteClass = makeVoteClass(vote);
 
-		if(response && response[voteAxis]) {
+		if (response && response[voteAxis]) {
 			const [voteType, displayText, titleText] = response[voteAxis];
 
 			const displayTarget = control.query(".karma-value");
