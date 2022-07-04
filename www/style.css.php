@@ -3401,6 +3401,7 @@ pre > code {
 	display: block;
 	border-radius: 0;
 	padding: 3px 4px 5px 8px;
+	tab-size: 4;
 }
 
 /*= Fractions =*/
