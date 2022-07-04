@@ -62,7 +62,7 @@
 (defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score all-votes)
   (labels ((button (vote-type)
 	     (when with-buttons
-	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Post" "Comment") tabindex="-1" disabled></button>))
+	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Post" "Comment") tabindex="-1" disabled autocomplete="off"></button>))
 	   (text ()
 	     (if (and af-score (/= af-score 0))
 		 (format nil "LW: ~A AF: ~A" base-score af-score)
