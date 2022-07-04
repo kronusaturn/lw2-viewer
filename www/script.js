@@ -584,39 +584,39 @@ function changeVoteButtonVisualState(button) {
 		The following are the 24 possible interaction state transitions (and
 		the visual state transitions associated with them):
 
-						VIS.	VIS.
-		FROM	TO		FROM	TO		NOTES
-		====	====	====	====	=====
-		0		0·		01		12		first click
-		0·		0··		12		22		second click
-		0·		0·w		12		02		one click without second; waiting
-		0··		0··w	22		22		two clicks; waiting
-		0·w		1		02		02		small vote from neutral, success
-		0·w		0		02		01		small vote from neutral, failure
-		0··w	2		22		22		big vote from neutral, success
-		0··w	0		22		01		big vote from neutral, failure
+		                VIS.    VIS.
+		FROM    TO      FROM    TO      NOTES
+		====    ====    ====    ====    =====
+		0       0·      01      12      first click
+		0·      0··     12      22      second click
+		0·      0·w     12      02      one click without second; waiting
+		0··     0··w    22      22      two clicks; waiting
+		0·w     1       02      02      small vote from neutral, success
+		0·w     0       02      01      small vote from neutral, failure
+		0··w    2       22      22      big vote from neutral, success
+		0··w    0       22      01      big vote from neutral, failure
 
-		1		1·		02		12		first click
-		1·		1··		12		22		second click
-		1·		1·w		12		01		one click without second; waiting
-		1··		1··w	22		22		two clicks; waiting
-		1·w		0		01		01		removal of small vote, success
-		1·w		1		01		02		removal of small vote, failure
-		1··w	2		22		22		big vote from small vote, success
-		1··w	1		22		02		big vote from small vote, failure
+		1       1·      02      12      first click
+		1·      1··     12      22      second click
+		1·      1·w     12      01      one click without second; waiting
+		1··     1··w    22      22      two clicks; waiting
+		1·w     0       01      01      removal of small vote, success
+		1·w     1       01      02      removal of small vote, failure
+		1··w    2       22      22      big vote from small vote, success
+		1··w    1       22      02      big vote from small vote, failure
 
-		2		2·		22		12		first click
-		2·		2··		12		01		second click
-		2·		2·w		12		02		one click without second; waiting
-		2··		2··w	01		01		two clicks; waiting
-		2·w		1		02		02		downgrade of big vote to small, success
-		2·w		2		02		22		downgrade of big vote to small, failure
-		2··w	0		01		01		removal of big vote, success
-		2··w	2		01		22		removal of big vote, failure
+		2       2·      22      12      first click
+		2·      2··     12      01      second click
+		2·      2·w     12      02      one click without second; waiting
+		2··     2··w    01      01      two clicks; waiting
+		2·w     1       02      02      downgrade of big vote to small, success
+		2·w     2       02      22      downgrade of big vote to small, failure
+		2··w    0       01      01      removal of big vote, success
+		2··w    2       01      22      removal of big vote, failure
 
 		(Note that the transitions _from_ the waiting states are done by the 
 		 updateVoteButtonVisualState() function, not by this one.)
-	 */
+	*/
 	let currentStateClass = ([ "none", "one", "two-temp", "two" ].find(stateClass => button.classList.contains(stateClass)) || "none");
 	let transitions = [
 		[ "big-vote waiting clicked-twice", "none none" 		], // 2·· => 2··w
