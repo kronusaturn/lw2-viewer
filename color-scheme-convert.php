@@ -10,7 +10,7 @@ $stylesheet = file_get_contents($argv[1]);
 $mode = @$argv[2] ?: 1;
 
 ## Process and print.
-$stylesheet = preg_replace_callback("/(#[0-9abcdef]+)([,; ])/i", 'ProcessColorValue', $stylesheet);
+$stylesheet = preg_replace_callback("/(#[0-9abcdef]+)([),; ])/i", 'ProcessColorValue', $stylesheet);
 $stylesheet = preg_replace_callback("/rgba\\(\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9\.]+)\\s*\\)/i", 'ProcessColorValue_RGBA', $stylesheet);
 echo $stylesheet;
 
