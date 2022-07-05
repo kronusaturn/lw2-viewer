@@ -127,6 +127,7 @@ function handleAjaxError(event) {
 
 function doAjax(params) {
 	let req = new XMLHttpRequest();
+	let requestMethod = params["method"] || "GET";
 	req.addEventListener("load", (event) => {
 		if(event.target.status < 400) {
 			if(params["onSuccess"]) params.onSuccess(event);
@@ -136,8 +137,8 @@ function doAjax(params) {
 		}
 		if(params["onFinish"]) params.onFinish(event);
 	});
-	req.open((params["method"] || "GET"), (params.location || document.location) + (params.params ? "?" + urlEncodeQuery(params.params) : ""));
-	if(params["method"] == "POST") {
+	req.open(requestMethod, (params.location || document.location) + ((requestMethod == "GET" && params.params) ? "?" + urlEncodeQuery(params.params) : ""));
+	if(requestMethod == "POST") {
 		req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		params["params"]["csrf-token"] = GW.csrfToken;
 		req.send(urlEncodeQuery(params.params));
