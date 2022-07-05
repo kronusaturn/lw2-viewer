@@ -2761,8 +2761,25 @@ a.comment-parent-link:hover::after {
 	cursor: default;
 }
 
+@keyframes waiting {
+	0% {background-position: 200% 0%}
+	100% {background-position: 0% 0%}
+}
+
+.voting-controls .karma-value {
+	opacity: 1;
+	transition: opacity 0.5s linear;
+}
+
 .voting-controls.waiting .karma-value {
 	opacity: 0.5;
+	background: repeat-x linear-gradient(70deg, #000 50%, #fff 75%, #000);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	background-position: 200% 0%;
+	background-size: 200% 100%;
+	animation: waiting 1s linear infinite;
 }
 
 /* Replicated karma controls at bottom of comments. */
