@@ -554,7 +554,7 @@
   (lw2-graphql-query (lw2-query-string :comment :list '((:view . "allRecentComments") (:limit . 20)) :context :index) :return-type :string))
 
 (defun process-vote-result (res)
-  (alist-bind ((id simple-string :--id)
+  (alist-bind ((id (or null simple-string) :--id)
 	       current-user-votes
 	       current-user-vote
 	       current-user-extended-vote)
