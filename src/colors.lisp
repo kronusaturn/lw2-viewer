@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.colors
   (:use #:cl #:iterate #:lw2.utils)
   (:import-from #:alexandria #:when-let #:emptyp)
+  (:import-from #:parse-float #:parse-float)
   (:export #:decode-css-color #:encode-css-color #:safe-color-name #:perceptual-invert-rgba #:perceptual-invert-color-string))
 
 (in-package #:lw2.colors)
@@ -27,7 +28,7 @@
 	(/ number 255.0d0))))
 
 (defun parse-css-hue-value (string)
-  (let ((number (arnesi:parse-float string :junk-allowed t)))
+  (let ((number (parse-float string :junk-allowed t)))
     (regex-case string
 		("grad$" (* number (/ 360.0d0 400.0d0)))
 		("rad$" (* number (/ 360.0d0 (* 2 pi))))
@@ -36,7 +37,7 @@
 		(t number))))
 
 (defun parse-css-alpha-value (string)
-  (let ((number (and (not (emptyp string)) (arnesi:parse-float string :junk-allowed t))))
+  (let ((number (and (not (emptyp string)) (parse-float string :junk-allowed t))))
     (if number
 	(regex-case string
 		    ("%$" (/ number 100d0))
