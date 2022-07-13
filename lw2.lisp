@@ -1118,7 +1118,7 @@ signaled condition to *HTML-OUTPUT*."
 		 (retract-comment-id
 		  (do-lw2-comment-edit lw2-auth-token retract-comment-id '((:retracted . t))))
 		 (unretract-comment-id
-		  (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . nil))))
+		  (do-lw2-comment-edit lw2-auth-token unretract-comment-id '((:retracted . :false))))
 		 (delete-comment-id
 		  (do-lw2-comment-remove lw2-auth-token delete-comment-id :reason "Comment deleted by its author.")
 		  nil))))
