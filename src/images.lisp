@@ -199,7 +199,7 @@
 		      inverted-uri
 		      (or proxy-uri encoded-uri))
 	     (finish-tag img-attributes predicate stream)
-	     (format stream "</picture><img style='display: var(--inverted-display)' src='~A'"
+	     (format stream "</picture><img style='display: var(--inverted-display)' loading='lazy' src='~A'"
 		     inverted-uri)
 	     (finish-tag img-attributes predicate stream))
 	    (:otherwise
