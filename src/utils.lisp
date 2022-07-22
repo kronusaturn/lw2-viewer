@@ -159,7 +159,7 @@
 (declaim (inline substring)
          (ftype (function (string array-dimension-type &optional array-dimension-type) (values (and string (not simple-string)) &optional)) substring))
 (defun substring (string start &optional (end (length string)))
-  (values (make-array (- end start) :element-type 'character :displaced-to string :displaced-index-offset start)))
+  (values (make-array (- end start) :element-type (array-element-type string) :displaced-to string :displaced-index-offset start)))
 
 (declaim (inline nonempty-string)
 	 (ftype (function (t) (values (or null string) &optional)) nonempty-string))
