@@ -213,6 +213,66 @@
 	  (setf word-start i)))
   text)
 
+(defun char-is-whitespace (c)
+  (or (cl-unicode:has-binary-property c "White_Space")
+      (eql c #\BRAILLE_PATTERN_BLANK)))
+
+(defun string-is-whitespace (string)
+  (every #'char-is-whitespace string))
+
+(defvar *mathjax-process* nil)
+
+(defmacro with-mathjax-processor (() &body body)
+  `(let ((*mathjax-process* nil))
+     (unwind-protect
+	  (progn ,@body)
+       (when *mathjax-process*
+	 (uiop:close-streams *mathjax-process*)
+	 (uiop:wait-process *mathjax-process*)))))
+
+(defun start-mathjax-process ()
+  (unless *mathjax-process*
+    (setf *mathjax-process* (uiop:launch-program "node js-foreign-lib/mathjax.js"
+						 :input :stream :output :stream
+						 :element-type '(unsigned-byte 8))))
+  (values (uiop:process-info-input *mathjax-process*)
+	  (uiop:process-info-output *mathjax-process*)))
+
+(defun process-mathjax (tex)
+  (multiple-value-bind (outstream instream) (start-mathjax-process)
+    (let ((outbuf (babel:string-to-octets tex)))
+      (nibbles:write-ub32/le (length outbuf) outstream)
+      (write-sequence outbuf outstream)
+      (finish-output outstream))
+    (let ((insize (nibbles:read-ub32/le instream)))
+      (when (> insize 0)
+	(let ((inbuf (make-array insize :element-type '(unsigned-byte 8))))
+	  (read-sequence inbuf instream)
+	  (babel:octets-to-string inbuf))))))
+
+(defun handle-codecogs (node uri)
+  (regex-case uri
+	      ("^https?://[a-z.]*codecogs\.com/[a-z.]*\\?(.*)$"
+	       (declare (regex-groups-min 1))
+	       (let ((math-html (process-mathjax (quri:url-decode (reg 0)))))
+		 (when math-html
+		   (let* ((math-dom (plump:parse math-html))
+			  (children (plump:children math-dom)))
+		     (if (string-is-whitespace (plump:text (plump:parent node)))
+			 (loop for child across children
+			    do (plump:insert-after node child)
+			    do (setf (plump:parent child) (plump:parent node)))
+			 (let ((container (plump:make-element (plump:parent node) "span")))
+			   (plump:remove-child container)
+			   (plump:insert-after node container)
+			   (setf (plump:parent container) (plump:parent node)
+				 (plump:children container) children)
+			   (loop for child across children
+				do (setf (plump:parent child) container))))
+		     (plump:remove-child node))
+		   t)))
+	      (t nil)))
+
 (declaim (ftype (function (plump:node) list) class-list))
 
 (defun class-list (node)
@@ -237,6 +297,9 @@
 	(cond ((or (plump:root-p target) (null target)) (return t))
 	      ((not (funcall test target)) (return nil)))))
 
+(defun any-ancestor (node test)
+  (not (every-ancestor node (complement test))))
+
 (defun class-is-not (node &rest args)
   (declare (type plump:node node)
            (dynamic-extent args))
@@ -245,6 +308,15 @@
 			       (class-list n)
 			       args
 			       :test #'string=)))))
+
+(defun class-is (node &rest args)
+  (declare (type plump:node node)
+	   (dynamic-extent args))
+  (any-ancestor node (lambda (n)
+		       (intersection
+			(class-list n)
+			args
+			:test #'string=))))
 
 (defun text-class-is-not (node &rest args)
   (declare (type plump:node node)
@@ -405,8 +477,9 @@
 	(declare (dynamic-extent *dynamic-content-block-callback*))
 	(multiple-value-prog1
 	    (funcall fn)
-	  (when dynamic-call-list
-	    (cache-put "dynamic-content-blocks" hash (nreverse dynamic-call-list) :key-type :byte-vector :value-type :lisp)))))))
+	  (if dynamic-call-list
+	      (cache-put "dynamic-content-blocks" hash (nreverse dynamic-call-list) :key-type :byte-vector :value-type :lisp)
+	      (cache-del "dynamic-content-blocks" hash :key-type :byte-vector)))))))
 
 (defmacro with-dynamic-block-serialization ((hash output-string) &body body)
   `(dynamic-flet ((fn () ,@body)) (call-with-dynamic-block-serialization #'fn ,hash ,output-string)))
@@ -436,7 +509,7 @@
 	 :test (lambda (node) (tag-is node "p")))))))
 
 (define-lmdb-memoized clean-html 'lw2.backend-modules:backend-lmdb-cache
-  (:sources ("src/clean-html.lisp" "src/links.lisp" "src/colors.lisp" "text-clean-regexps.js" "html-clean-regexps.js")) (in-html &key with-toc post-id)
+  (:sources ("src/clean-html.lisp" "src/links.lisp" "src/colors.lisp" "text-clean-regexps.js" "html-clean-regexps.js" "js-foreign-lib/mathjax.js")) (in-html &key with-toc post-id)
   (declare (ftype (function (plump:node) fixnum) plump:child-position)
            (ftype (function (plump:node) (and vector (not simple-array))) plump:family)
            (ftype (function (plump:node) simple-string) plump:text plump:tag-name))
@@ -516,11 +589,6 @@
 		  when (digit-char-p c)
 		  do (incf digit)
 		  finally (return (>= digit alpha)))))
-	   (char-is-whitespace (c)
-	     (or (cl-unicode:has-binary-property c "White_Space")
-		 (eql c #\BRAILLE_PATTERN_BLANK)))
-	   (string-is-whitespace (string)
-	     (every #'char-is-whitespace string))
 	   (remove-if-whitespace (node)
 	     (when (string-is-whitespace (plump:text node))
 	       (plump:remove-child node)))
@@ -682,56 +750,60 @@
 	  (when *before-clean-hook*
 	    (funcall *before-clean-hook*))
           (let ((wayward-li-container nil))
-            (plump:traverse
-	     root
-	     (lambda (node)
-	       (cond
-		 ((not (plump:parent node)) nil)
-		 ((tag-is node "a")
-		  (cond
-		    ((not (plump:attribute node "href"))
-		     (move-children-out-of-node node :keep t))
-		    ((or
-		      (and (ppcre:scan "^\s*https?://" (plump:text node))
-			   (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
-		      (notany (lambda (attr) (nonempty-string (plump:attribute node attr))) '("href" "name" "id")))
-		     (flatten-element node))
-		    (t (tagbody start
-			  (let* ((next-sibling (plump:next-sibling node))
-				 (next-text-node (if (plump:text-node-p next-sibling) next-sibling))
-				 (next-next-sibling (if next-text-node (plump:next-sibling next-text-node) next-sibling))
-				 (next-a (if (and next-next-sibling (tag-is next-next-sibling "a")) next-next-sibling)))
-			    (when (and next-a
-				       (or (not next-text-node) (string-is-whitespace (plump:text next-text-node)))
-				       (string= (plump:attribute node "href") (plump:attribute next-a "href")))
-			      (when next-text-node
-				(plump:remove-child next-text-node)
-				(plump:append-child node next-text-node))
-			      (loop for c across (plump:children next-a)
-				 do (progn (plump:remove-child c)
-					   (plump:append-child node c)))
-			      (plump:remove-child next-a)
-			      (go start)))))))
-		 ((tag-is node "ul" "ol")
-		  (setf wayward-li-container node)
-		  (let ((new-children (plump:make-child-array)))
-		    (loop for child across (plump:children node)
-		       do (if (and (plump:element-p child) (tag-is child "li"))
-			      (vector-push-extend child new-children)
-			      (unless (and (plump:text-node-p child) (string-is-whitespace (plump:text child)))
-				(if (= (length new-children) 0)
-				    (vector-push-extend (plump:make-element node "li") new-children))
-				(plump:append-child (aref new-children (- (length new-children) 1)) child))))
-		    (setf (plump:children node) new-children)))
-		 ((tag-is node "li")
-		  (unless (is-child-of-tag node "ul" "ol")
-		    (unless wayward-li-container
-		      (setf wayward-li-container (make-element-before node "ul")))
-		    (plump:remove-child node)
-		    (plump:append-child wayward-li-container node)))
-		 ((tag-is node "p" "blockquote" "div")
-		  (setf wayward-li-container nil))))
-	     :test #'plump:element-p))
+	    (with-mathjax-processor ()
+	      (plump:traverse
+	       root
+	       (lambda (node)
+		 (cond
+		   ((tag-is node "img")
+		    (when-let ((src (plump:attribute node "src")))
+		      (handle-codecogs node src)))
+		   ((not (plump:parent node)) nil)
+		   ((tag-is node "a")
+		    (cond
+		      ((not (plump:attribute node "href"))
+		       (move-children-out-of-node node :keep t))
+		      ((or
+			(and (ppcre:scan "^\s*https?://" (plump:text node))
+			     (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
+			(notany (lambda (attr) (nonempty-string (plump:attribute node attr))) '("href" "name" "id")))
+		       (flatten-element node))
+		      (t (tagbody start
+			    (let* ((next-sibling (plump:next-sibling node))
+				   (next-text-node (if (plump:text-node-p next-sibling) next-sibling))
+				   (next-next-sibling (if next-text-node (plump:next-sibling next-text-node) next-sibling))
+				   (next-a (if (and next-next-sibling (tag-is next-next-sibling "a")) next-next-sibling)))
+			      (when (and next-a
+					 (or (not next-text-node) (string-is-whitespace (plump:text next-text-node)))
+					 (string= (plump:attribute node "href") (plump:attribute next-a "href")))
+				(when next-text-node
+				  (plump:remove-child next-text-node)
+				  (plump:append-child node next-text-node))
+				(loop for c across (plump:children next-a)
+				   do (progn (plump:remove-child c)
+					     (plump:append-child node c)))
+				(plump:remove-child next-a)
+				(go start)))))))
+		   ((tag-is node "ul" "ol")
+		    (setf wayward-li-container node)
+		    (let ((new-children (plump:make-child-array)))
+		      (loop for child across (plump:children node)
+			 do (if (and (plump:element-p child) (tag-is child "li"))
+				(vector-push-extend child new-children)
+				(unless (and (plump:text-node-p child) (string-is-whitespace (plump:text child)))
+				  (if (= (length new-children) 0)
+				      (vector-push-extend (plump:make-element node "li") new-children))
+				  (plump:append-child (aref new-children (- (length new-children) 1)) child))))
+		      (setf (plump:children node) new-children)))
+		   ((tag-is node "li")
+		    (unless (is-child-of-tag node "ul" "ol")
+		      (unless wayward-li-container
+			(setf wayward-li-container (make-element-before node "ul")))
+		      (plump:remove-child node)
+		      (plump:append-child wayward-li-container node)))
+		   ((tag-is node "p" "blockquote" "div")
+		    (setf wayward-li-container nil))))
+	       :test #'plump:element-p)))
 	  (loop while (and (= 1 (length (plump:children root))) (plump:element-p (plump:first-child root)) (tag-is (plump:first-child root) "div" "html" "body"))
 	     do (setf (plump:children root) (plump:children (plump:first-child root)))
 	     do (loop for c across (plump:children root) do (setf (plump:parent c) root))
@@ -798,20 +870,22 @@
 				 (setf (plump:attribute node "style") (alist-to-style-string style-list))))))))
 		  (when (and aggressive-deformat (tag-is node "div"))
 		    (setf (plump:tag-name node) "p"))
-		  (when (let ((class (plump:attribute node "class"))
-			      (parent (plump:parent node)))
+		  (when (let ((parent (plump:parent node)))
 			  (and
-			   (or (search "mjx-math" class)
-			       (search "mjpage" class))
+			   (intersection (class-list node) '("mjx-chtml" "mjx-math" "mjpage") :test #'string=)
 			   (and parent
-				(class-is-not parent "mjx-math" "mjpage"))))
-		    (loop for current = node then (plump:parent current)
+				(class-is-not parent "mjx-chtml" "mjx-math" "mjpage"))))
+		    (loop
+		       with full-width = (class-is node "mjx-full-width")
+		       for current = (plump:parent node) then (plump:parent current)
 		       for parent = (plump:parent current)
 		       when (loop for s across (plump:family current)
 			       unless (or (eq s current)
 					  (and (plump:text-node-p s) (string-is-whitespace (plump:text s))))
 			       return t)
-		       do (progn (add-class current "mathjax-inline-container")
+		       do (progn (add-class current (if full-width
+							"mathjax-block-container"
+							"mathjax-inline-container"))
 				 (return))
 		       when (or (plump:root-p parent)
 				(tag-is parent "p" "blockquote" "div"))
