@@ -2,7 +2,8 @@ var mathjax = require('mathjax-node'),
     chunks = [],
     size = null;
 
-mathjax.config({ MathJax: { loader: {load: ['ui/safe']} } });
+mathjax.config({ MathJax: { loader: {load: ['ui/safe']},
+			    extensions: ["Safe.js"] } });
 
 process.stdin.on('data', (chunk) => {
 	if(size === null) {
