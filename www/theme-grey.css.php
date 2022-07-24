@@ -101,12 +101,11 @@ body {
 	background-color: #d8d8d8;
 }
 
-.nav-bar a:link,
-.nav-bar a:visited {
+.nav-bar .nav-inner {
 	color: #888;
 }
-.nav-bar a:hover,
-.nav-bar a:focus {
+.nav-bar .nav-inner:hover,
+.nav-bar .nav-inner:focus {
 	text-decoration: none;
 	text-shadow: <?php echo $white_glow; ?>;
 }

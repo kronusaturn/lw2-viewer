@@ -507,7 +507,11 @@ signaled condition to *HTML-OUTPUT*."
 	      (let ((user-slug (encode-entities (logged-in-user-slug))))
 		`("login" ,(format nil "/users/~A" user-slug) ,(plump:encode-entities username) :description "User page" :accesskey "u"
 			  :trailing-html ,(lambda (out-stream) (inbox-to-html out-stream user-slug))))
-	      `("login" ,(format nil "/login?return=~A" (url-rewrite:url-encode current-uri)) "Log In" :accesskey "u" :nofollow t :override-uri "/login"))))
+	      `("login" "/login" "Log In"
+			:html ,(lambda (out-stream)
+				 (write-string "<form action='/login' id='login-button-form'><input type='hidden' name='return' value='" out-stream)
+				 (encode-entities current-uri out-stream)
+				 (write-string "'></form><button class='nav-inner' form='login-button-form' accesskey='u'>Log In</button>" out-stream))))))
 
 (defun sublevel-nav-to-html (options current &key default (base-uri (hunchentoot:request-uri*)) (param-name "show") (remove-params '("offset")) extra-class)
   (declare (type (or null string) extra-class))

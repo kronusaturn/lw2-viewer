@@ -119,11 +119,10 @@ body {
 .nav-bar {
 	border-bottom: 1px solid #d6d5d6;
 }
-.nav-bar a,
-.nav-bar a:visited {
+.nav-bar .nav-inner {
 	color: #999;
 }
-.nav-bar a:hover {
+.nav-bar .nav-inner:hover {
 	color: #777;
 	text-decoration: none;
 }

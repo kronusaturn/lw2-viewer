@@ -44,7 +44,7 @@ body {
 	font-size: 1em;
 }
 
-a.nav-inner,
+*.nav-inner,
 #nav-item-search button {
 	font-weight: <?php echo ($platform == 'Mac') ? '200' : '300'; ?>;
 	color: #888;

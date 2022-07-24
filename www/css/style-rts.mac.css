@@ -149,6 +149,9 @@ body > iframe[id^='firefox-screenshots'] {
 	text-align: center;
 	display: block;
 	position: relative;
+	line-height: inherit;
+	width: 100%;
+	background: unset;
 }
 .nav-bar-top:not(#primary-bar) .nav-inner {
 	padding: 4px 0;
@@ -5835,7 +5838,7 @@ body {
 	font-size: 1em;
 }
 
-a.nav-inner,
+*.nav-inner,
 #nav-item-search button {
 	font-weight: 200;
 	color: #888;

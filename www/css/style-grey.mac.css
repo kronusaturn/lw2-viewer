@@ -149,6 +149,9 @@ body > iframe[id^='firefox-screenshots'] {
 	text-align: center;
 	display: block;
 	position: relative;
+	line-height: inherit;
+	width: 100%;
+	background: unset;
 }
 .nav-bar-top:not(#primary-bar) .nav-inner {
 	padding: 4px 0;
@@ -5899,12 +5902,11 @@ body {
 	background-color: #d8d8d8;
 }
 
-.nav-bar a:link,
-.nav-bar a:visited {
+.nav-bar .nav-inner {
 	color: #888;
 }
-.nav-bar a:hover,
-.nav-bar a:focus {
+.nav-bar .nav-inner:hover,
+.nav-bar .nav-inner:focus {
 	text-decoration: none;
 	text-shadow: 0 0 1px #fff, 0 0 3px #fff, 0 0 5px #fff;
 }
