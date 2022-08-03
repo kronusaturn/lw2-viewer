@@ -1017,6 +1017,18 @@
 		       (when-let (start (ignore-errors (parse-integer start-string)))
 			 (plump:remove-attribute node "start")
 			 (add-element-style node "counter-reset" (format nil "ol ~A" (- start 1))))))
+		    ((and (tag-is node "li") (find "footnote-item" (class-list node) :test #'string-equal))
+		     (unless (find-if (lambda (e) (and (plump:element-p e) (find "footnote-content" (class-list e) :test #'string-equal)))
+				      (plump:children node))
+		       ;; footnote-content div does not exist. We must create it and move the footnote contents into place.
+		       (let* ((wrapper (wrap-children node "div"))
+			      (backrefs (clss:select ".footnote-backref" wrapper))
+			      (back-links (make-element-before wrapper "span")))
+			 (setf (plump:attribute wrapper "class") "footnote-content"
+			       (plump:attribute back-links "class") "footnote-back-link")
+			 (loop for backref across backrefs do
+			      (progn (plump:remove-child backref)
+				     (plump:append-child back-links backref))))))
 		    ((tag-is node "li")
 		     (when (let ((c (plump:first-child node))) (and c (if (plump:text-node-p c) (not (string-is-whitespace (plump:text c))) (not (tag-is c "p" "ul" "ol")))))
 		       (wrap-children node "p")))
