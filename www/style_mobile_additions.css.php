@@ -919,10 +919,22 @@ a.comment-parent-link::after {
 }
 @media only screen and (max-width: 520px) {
 	.comment-meta {
-		padding: 2px 10px;
+		padding: 2px 24px 2px 10px;
 		position: relative;
 	}
-	.comment-meta .author {
+	.comment-meta > * {
+		order: 3;
+	}
+	.comment-meta > :not(.author) {
+		line-height: 1.8;
+	}
+	.comment-meta .author,
+	.comment-meta .date {
+		order: 1;
+	}
+	.comment-meta:before {
+		content: "";
+		order: 2;
 		flex-basis: 100%;
 	}
 	.comment-post-title2 {
