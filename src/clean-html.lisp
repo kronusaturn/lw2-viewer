@@ -875,27 +875,35 @@
 			   (intersection (class-list node) '("mjx-chtml" "mjx-math" "mjpage") :test #'string=)
 			   (and parent
 				(class-is-not parent "mjx-chtml" "mjx-math" "mjpage"))))
-		    (loop
-		       with full-width = (or (class-is node "mjx-full-width")
-					     (loop for e across (plump:children node)
-						when (member "MJXc-display" (class-list e) :test #'string=)
-						return t))
-		       for current = node then (plump:parent current)
-		       for parent = (plump:parent current)
-		       when (and parent
-				 (loop for s across (plump:family current)
-				    unless (or (eq s current)
-					       (and (plump:text-node-p s) (string-is-whitespace (plump:text s))))
-				    return t))
-		       do (progn (add-class current (if full-width
-							"mathjax-block-container"
-							"mathjax-inline-container"))
-				 (return))
-		       when (or (null parent)
-				(plump:root-p parent)
-				(tag-is parent "p" "blockquote" "div"))
-		       do (progn (add-class current "mathjax-block-container")
-				 (return))))
+		    (cond
+		      ((let ((mrows (clss:select ".mjx-mrow" node)))
+			 (and (not (zerop (length mrows)))
+			      (every (lambda (mrow)
+				       (zerop (length (plump:children mrow))))
+				     mrows)))
+		       (plump:remove-child node))
+		      (:otherwise
+		       (loop
+			  with full-width = (or (class-is node "mjx-full-width")
+						(loop for e across (plump:children node)
+						   when (member "MJXc-display" (class-list e) :test #'string=)
+						   return t))
+			  for current = node then (plump:parent current)
+			  for parent = (plump:parent current)
+			  when (and parent
+				    (loop for s across (plump:family current)
+				       unless (or (eq s current)
+						  (and (plump:text-node-p s) (string-is-whitespace (plump:text s))))
+				       return t))
+			  do (progn (add-class current (if full-width
+							   "mathjax-block-container"
+							   "mathjax-inline-container"))
+				    (return))
+			  when (or (null parent)
+				   (plump:root-p parent)
+				   (tag-is parent "p" "blockquote" "div"))
+			  do (progn (add-class current "mathjax-block-container")
+				    (return))))))
 		  (cond
 		    ((tag-is node "a")
 		     (vacuum-whitespace node)
