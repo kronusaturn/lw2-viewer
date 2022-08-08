@@ -294,7 +294,7 @@
   (declare (type plump:node node)
 	   (type function test))
   (iter (for target first node then (plump:parent target))
-	(cond ((or (plump:root-p target) (null target)) (return t))
+	(cond ((or (null target) (plump:root-p target)) (return t))
 	      ((not (funcall test target)) (return nil)))))
 
 (defun any-ancestor (node test)
@@ -876,18 +876,23 @@
 			   (and parent
 				(class-is-not parent "mjx-chtml" "mjx-math" "mjpage"))))
 		    (loop
-		       with full-width = (class-is node "mjx-full-width")
-		       for current = (plump:parent node) then (plump:parent current)
+		       with full-width = (or (class-is node "mjx-full-width")
+					     (loop for e across (plump:children node)
+						when (member "MJXc-display" (class-list e) :test #'string=)
+						return t))
+		       for current = node then (plump:parent current)
 		       for parent = (plump:parent current)
-		       when (loop for s across (plump:family current)
-			       unless (or (eq s current)
-					  (and (plump:text-node-p s) (string-is-whitespace (plump:text s))))
-			       return t)
+		       when (and parent
+				 (loop for s across (plump:family current)
+				    unless (or (eq s current)
+					       (and (plump:text-node-p s) (string-is-whitespace (plump:text s))))
+				    return t))
 		       do (progn (add-class current (if full-width
 							"mathjax-block-container"
 							"mathjax-inline-container"))
 				 (return))
-		       when (or (plump:root-p parent)
+		       when (or (null parent)
+				(plump:root-p parent)
 				(tag-is parent "p" "blockquote" "div"))
 		       do (progn (add-class current "mathjax-block-container")
 				 (return))))
