@@ -9,7 +9,7 @@
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
     #:site-uri #:site-host #:site-domain #:site-link-base #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
-    #:main-site-title #:main-site-abbreviation #:main-site-uri
+    #:main-site-title #:main-site-abbreviation #:main-site-uri #:always-canonical
     #:host-matches #:find-site
     #:call-with-site-context #:with-site-context
     #:reset-site-definitions
@@ -77,7 +77,8 @@
 (defclass alternate-frontend-site (backend-site)
   ((main-site-title :accessor main-site-title :initarg :main-site-title :type simple-string)
    (main-site-abbreviation :accessor main-site-abbreviation :initarg :main-site-abbreviation :type simple-string)
-   (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string))
+   (main-site-uri :accessor main-site-uri :initarg :main-site-uri :type simple-string)
+   (always-canonical :accessor always-canonical :initarg :always-canonical :initform nil :type boolean))
   (:metaclass site-class))
 
 (defmethod site-link-base ((s alternate-frontend-site)) (main-site-uri s))

@@ -1212,7 +1212,9 @@ signaled condition to *HTML-OUTPUT*."
 	     (return)))
 	 (labels ((extra-head ()
 		    (when-let (canonical-source (and (not comment-id)
-						     (cdr (assoc :canonical-source post))))
+						     (or (cdr (assoc :canonical-source post))
+							 (and (always-canonical *current-site*)
+							      (cdr (assoc :page-url post))))))
 			      <link rel="canonical" href=canonical-source>)
 		    <script>postId=(with-html-stream-output (:stream stream) (json:encode-json post-id stream))</script>
 		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>
