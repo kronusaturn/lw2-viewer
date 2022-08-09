@@ -4189,19 +4189,23 @@ li {
 }
 .mathjax-inline-container {
 	max-width: 100%;
-	display: inline-block;
 	overflow-x: auto;
 	overflow-y: hidden;
 	position: relative;
-	vertical-align: text-top;
 	padding: 0 1px;
 }
+#content .mathjax-inline-container,
+#content .mathjax-inline-container .mjpage,
+#content .mathjax-inline-container .mjx-chtml,
+#content .mathjax-inline-container .mjx-math,
+#content .mathjax-inline-container .mjx-mrow {
+    display: inline;
+    white-space: normal;
+}
 .post .mathjax-inline-container {
-	line-height: 1.1;
-	top: 2px;
+	line-height: 1;
 }
 .comment .mathjax-inline-container {
-	top: 3px;
 	line-height: 1;
 }
 .mathjax-inline-container .mjx-chtml {
