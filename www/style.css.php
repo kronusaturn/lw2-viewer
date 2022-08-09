@@ -2322,6 +2322,7 @@ ul.comment-thread {
 	flex-basis: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 	line-height: 1.3;
 }
 .conversation-page .comment-meta .comment-post-title {
