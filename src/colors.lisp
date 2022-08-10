@@ -2,11 +2,13 @@
   (:use #:cl #:iterate #:lw2.utils)
   (:import-from #:alexandria #:when-let #:emptyp)
   (:import-from #:parse-float #:parse-float)
-  (:export #:decode-css-color #:encode-css-color #:safe-color-name #:perceptual-invert-rgba #:perceptual-invert-color-string))
+  (:export #:-css-color-scanner- #:decode-css-color #:encode-css-color #:safe-color-name #:perceptual-invert-rgba #:perceptual-invert-color-string))
 
 (in-package #:lw2.colors)
 
 ;;;; Refer to https://drafts.csswg.org/css-color/#numeric-srgb
+
+(global-vars:define-global-parameter -css-color-scanner- (ppcre:create-scanner "#[0-9a-fA-F]{3,8}|rgba?\\((?:.*?)\\)|hsla?\\((?:.*?)\\)"))
 
 (defparameter *web-colors-list*
   (with-open-file (stream (asdf:system-relative-pathname :lw2-viewer "data/webcolors.json") :direction :input)
