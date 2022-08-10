@@ -914,19 +914,25 @@ signaled condition to *HTML-OUTPUT*."
       (format stream "<a href=\"~A\" class=\"~A\"~@[ accesskey=\"~A\"~]~:[~; rel=\"nofollow\"~]~@[ title=\"~A\"~]>~A</a>" url class accesskey nofollow title text)
       (format stream "<span class=\"~A\"~@[ title=\"~A\"~]>~A</span>" class title text)))
 
+(defgeneric main-site-link (site item-type item-designator &key)
+  (:method ((site lw2-frontend-site) (item-type (eql :post)) (post-id string) &key slug comment-id direct-comment-link)
+    (merge-uris
+     (format nil "/posts/~A/~A~[~;#~A~;?commentId=~A~]" post-id slug (if comment-id (if direct-comment-link 2 1) 0) comment-id)
+     (main-site-uri *current-site*)))
+  (:method ((site lw2-frontend-site) (item-type (eql :tag)) (slug string) &key comment-id direct-comment-link)
+    (when (not (and comment-id direct-comment-link))
+      (merge-uris
+       (format nil "/tag/~A~@[/discussion#~A~]" slug comment-id)
+       (main-site-uri *current-site*)))))
+
 (defun postprocess-markdown (markdown)
   (if (typep *current-site* 'alternate-frontend-site)
       (regex-replace-body
        ((concatenate 'string (regex-replace-all "\\." (site-uri *current-site*) "\\.") "posts/([^/ ]{17})/([^/# ]*)(?:(#comment-|/comment/|/answer/)([^/ ]{17}))?")
 	markdown)
-       (let* ((post-id (reg 0))
-	      (slug (reg 1))
-	      (comment-id (reg 3))
-	      (direct-comment-link (and comment-id (reg 2) (string= "/" (reg 2) :end2 1))))
-	 (quri:render-uri
-	  (quri:merge-uris
-	   (format nil "/posts/~A/~A~[~;#~A~;?commentId=~A~]" post-id slug (if comment-id (if direct-comment-link 2 1) 0) comment-id)
-	   (main-site-uri *current-site*)))))
+       (main-site-link *current-site*
+		       :post (reg 0) :slug (reg 1) :comment-id (reg 3)
+		       :direct-comment-link (and (reg 3) (reg 2) (string= "/" (reg 2) :end2 1))))
       markdown))
 
 (defun redirect (uri &key (type :see-other) preserve-query)
@@ -936,7 +942,7 @@ signaled condition to *HTML-OUTPUT*."
 						    uri)))
 
 (defun main-site-redirect (uri &key (type :see-other))
-  (redirect (quri:render-uri (quri:merge-uris uri (main-site-uri *current-site*))) :type type))
+  (redirect (merge-uris uri (main-site-uri *current-site*)) :type type))
 
 (defmacro request-method (&body method-clauses)
   (with-gensyms (request-method)
@@ -1137,10 +1143,9 @@ signaled condition to *HTML-OUTPUT*."
 		       new-comment-result
 		       (mark-comment-replied (alist* :parent-comment-id parent-comment-id :user-id *current-userid* new-comment-result))
 		       (setf (markdown-source :comment new-comment-id new-comment-html) text)
-		       (redirect (quri:render-uri
-				  (quri:merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id)
-								  :query (list-cond (need-auth "need-auth" "y")))
-						   (hunchentoot:request-uri*)))))))))))
+		       (redirect (merge-uris (quri:make-uri :fragment (format nil "comment-~A" new-comment-id)
+							    :query (list-cond (need-auth "need-auth" "y")))
+					     (hunchentoot:request-uri*))))))))))
 
 (defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono replies-open)
   (labels ((output-comments-inner ()
@@ -1211,10 +1216,11 @@ signaled condition to *HTML-OUTPUT*."
 	     (redirect (generate-item-link :post post :comment-id comment-id :item-subtype correct-subtype))
 	     (return)))
 	 (labels ((extra-head ()
-		    (when-let (canonical-source (and (not comment-id)
-						     (or (cdr (assoc :canonical-source post))
-							 (and (always-canonical *current-site*)
-							      (cdr (assoc :page-url post))))))
+		    (when-let (canonical-source (or (and (not comment-id)
+							 (cdr (assoc :canonical-source post)))
+						    (and (always-canonical *current-site*)
+							 (main-site-link *current-site* :post post-id :slug (cdr (assoc :slug post))
+									 :comment-id comment-id :direct-comment-link t))))
 			      <link rel="canonical" href=canonical-source>)
 		    <script>postId=(with-html-stream-output (:stream stream) (json:encode-json post-id stream))</script>
 		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>
@@ -1556,7 +1562,12 @@ signaled condition to *HTML-OUTPUT*."
 	   (renderer ()
 	     (view-items-index posts
 			       :title (format nil "~A tag" name)
-			       :extra-head (lambda () (when (logged-in-userid) (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id))))
+			       :extra-head (lambda ()
+					     (when-let (canonical-source (and (always-canonical *current-site*)
+									      (main-site-link *current-site* :tag slug)))
+					       <link rel="canonical" href=canonical-source>)
+					     (when (logged-in-userid)
+					       (call-with-server-data 'process-vote-data (format nil "/karma-vote/tag?tag-id=~A" tag-id))))
 			       :top-nav (lambda ()
 					  (page-toolbar-to-html :title name :rss (not wiki-only))
 					  (tag-to-html tag)

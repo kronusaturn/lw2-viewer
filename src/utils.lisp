@@ -22,7 +22,8 @@
 	   #:with-output-to-designator
 	   #:with-atomic-file-replacement
 	   #:random-string
-	   #:values*)
+	   #:values*
+	   #:merge-uris)
   (:recycle #:lw2-viewer #:lw2.backend))
 
 (in-package #:lw2.utils)
@@ -463,3 +464,8 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defmacro values* (&rest multiple-value-forms)
   `(multiple-value-call #'values ,@multiple-value-forms))
+
+(declaim (ftype (function ((or string quri:uri) (or string quri:uri)) string) merge-uris))
+
+(defun merge-uris (reference base)
+  (quri:render-uri (quri:merge-uris (quri:uri reference) (quri:uri base))))

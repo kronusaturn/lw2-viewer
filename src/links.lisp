@@ -101,10 +101,9 @@
 
 (defun convert-redirect-link (link match-fn get-fn base-uri)
   (if-let (matched-link (funcall match-fn link))
-    (with-direct-link-restart ((concatenate 'string base-uri matched-link))
-      (quri:render-uri
-        (quri:merge-uris (quri:uri (funcall get-fn matched-link))
-                         (quri:uri (site-uri (find-link-site base-uri))))))))
+      (with-direct-link-restart ((concatenate 'string base-uri matched-link))
+	(merge-uris (funcall get-fn matched-link)
+		    (site-uri (find-link-site base-uri))))))
 
 (simple-cacheable ("lw1-link" 'backend-lmdb-cache "lw1-link" link :catch-errors nil)
   (process-redirect-link link "https://www.lesswrong.com" "LessWrong 1.0"))
@@ -198,8 +197,7 @@
       (and (not (eq context :search))
 	   (let ((sanitized-link (sanitize-link link)))
 	     (handler-case
-		 (quri:render-uri
-		  (quri:merge-uris
-		   sanitized-link
-		   (site-link-base *current-site*)))
+		 (merge-uris
+		  sanitized-link
+		  (site-link-base *current-site*))
 	       (error () sanitized-link))))))

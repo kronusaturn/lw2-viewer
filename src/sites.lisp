@@ -5,7 +5,7 @@
     #:*sites*
     #:site #:forum-site #:wiki-site
     #:login-site #:shortform-site #:ignore-list-site
-    #:alternate-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
+    #:alternate-frontend-site #:lw2-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
     #:site-uri #:site-host #:site-domain #:site-link-base #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
@@ -51,6 +51,8 @@
 
 (defmethod site-link-base ((s site)) (site-uri s))
 
+(defmethod always-canonical ((s site)) nil)
+
 (defmethod call-route-handler ((s site) request-uri)
   (call-route-handler (class-of s) request-uri))
 
@@ -83,10 +85,13 @@
 
 (defmethod site-link-base ((s alternate-frontend-site)) (main-site-uri s))
 
-(defclass lesswrong-viewer-site (forum-site ignore-list-site login-site alternate-frontend-site shortform-site) ()
+(defclass lw2-frontend-site (alternate-frontend-site) ()
   (:metaclass site-class))
 
-(defclass ea-forum-viewer-site (forum-site ignore-list-site login-site alternate-frontend-site shortform-site) ()
+(defclass lesswrong-viewer-site (forum-site ignore-list-site login-site lw2-frontend-site shortform-site) ()
+  (:metaclass site-class))
+
+(defclass ea-forum-viewer-site (forum-site ignore-list-site login-site lw2-frontend-site shortform-site) ()
   (:metaclass site-class))
 
 (defclass arbital-site (wiki-site alternate-frontend-site) ()
