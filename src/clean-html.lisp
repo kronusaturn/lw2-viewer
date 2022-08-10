@@ -858,14 +858,16 @@
 			     (plump:remove-attribute node "style"))
 			    (t
 			     (let (updated)
-			       (iter (for style-item in style-list)
-				     (when (member (car style-item) '("color" "background-color") :test #'string-equal)
-				       (multiple-value-bind (r g b a) (decode-css-color (cdr style-item))
-					 (when (and r g b a)
-					   (let ((color-name (safe-color-name r g b a)))
-					     (setf updated t
-						   (gethash color-name used-colors) (list r g b a)
-						   (cdr style-item) (format nil "var(--user-color-~A)" color-name)))))))
+			       (dolist (style-item style-list)
+				 (when (member (car style-item) '("color" "background" "background-color" "border" "border-color") :test #'string-equal)
+				   (setf (cdr style-item)
+					 (regex-replace-body ("#[0-9a-fA-F]{3,8}|rgba?\\((?:.*?)\\)|hsla?\\((?:.*?)\\)" (cdr style-item))
+					   (multiple-value-bind (r g b a) (decode-css-color (match))
+					     (when (and r g b a)
+					       (let ((color-name (safe-color-name r g b a)))
+						 (setf updated t
+						       (gethash color-name used-colors) (list r g b a))
+						 (format nil "var(--user-color-~A)" color-name))))))))
 			       (when updated
 				 (setf (plump:attribute node "style") (alist-to-style-string style-list))))))))
 		  (when (and aggressive-deformat (tag-is node "div"))
