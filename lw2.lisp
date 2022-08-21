@@ -1621,6 +1621,7 @@ signaled condition to *HTML-OUTPUT*."
 (define-component-routes forum-site (view-tags-index-alt (standard-route :uri "/topics") () (view-tags-index)))
 
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/topics/all" :handler (lambda () (redirect "/topics")))
 
 (define-route 'alternate-frontend-site 'standard-route :name 'view-tags-voting-redirect :uri "/tagVoting" :handler (lambda () (main-site-redirect "/tagVoting")))
 (define-route 'alternate-frontend-site 'standard-route :name 'view-tags-dashboard-redirect :uri "/tags/dashboard" :handler (lambda () (main-site-redirect "/tags/dashboard")))
