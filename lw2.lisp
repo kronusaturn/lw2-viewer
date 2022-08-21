@@ -1618,7 +1618,7 @@ signaled condition to *HTML-OUTPUT*."
 		  (tag-list-to-html tags))))))))
 
 (define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
-(define-component-routes forum-site (view-tags-index (standard-route :uri "/topics") () (view-tags-index)))
+(define-component-routes forum-site (view-tags-index-alt (standard-route :uri "/topics") () (view-tags-index)))
 
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
 
