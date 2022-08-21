@@ -1591,7 +1591,9 @@ signaled condition to *HTML-OUTPUT*."
 	 (renderer ()
 	   (post-comment :tag-id tag-id)))))))
 
-(define-component-routes forum-site (view-tag (regex-route :regex "/tag/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
+(define-component-routes forum-site (view-tag (regex-route :regex "^/(?:tag|topics)/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
+
+(define-route 'ea-forum-viewer-site 'regex-route :name 'view-tags-redirect :regex "^/tag/" :handler (lambda () (redirect (ppcre:regex-replace "^/tag/" (hunchentoot:request-uri*) "/topics/"))))
 
 (define-component view-tags-index ()
   (:http-args ())
@@ -1616,6 +1618,7 @@ signaled condition to *HTML-OUTPUT*."
 		  (tag-list-to-html tags))))))))
 
 (define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
+(define-component-routes forum-site (view-tags-index (standard-route :uri "/topics") () (view-tags-index)))
 
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
 

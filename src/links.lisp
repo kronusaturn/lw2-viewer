@@ -71,7 +71,7 @@
 
 (defun convert-lw2-misc-link (link)
   (when-let* ((site (find-link-site link))
-	      (matched-link (and (typep site '(or lesswrong-viewer-site ea-forum-viewer-site)) (match-values "^(?:https?://[^/]+)?/((?:users/|tags|tag/|s/|sequences/|library).*)" link (0)))))
+	      (matched-link (and (typep site '(or lesswrong-viewer-site ea-forum-viewer-site)) (match-values "^(?:https?://[^/]+)?/((?:users/|tags|tag/|topics/|s/|sequences/|library).*)" link (0)))))
     (concatenate 'string (site-link-prefix site) matched-link)))
 
 (defun convert-arbital-link (link)
