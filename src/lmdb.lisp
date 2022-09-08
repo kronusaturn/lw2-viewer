@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.lmdb
   (:use #:cl #:sb-ext #:sb-thread #:alexandria #:iterate #:lw2.raw-memory-streams #:lw2.conditions #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
-  (:import-from #:lw2.rwlock #:rwlock #:make-rwlock #:with-read-lock #:with-write-lock)
+  (:import-from #:lw2.rwlock #:rwlock #:make-rwlock #:with-read-lock #:with-write-lock #:with-rwlock-protect)
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction
@@ -114,10 +114,10 @@
 (define-backend-function get-current-environment ())
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
-  (with-read-lock (*db-environments-rwlock* :upgrade-fn upgrade-lock)
-    (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
-		 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
-      (upgrade-lock)
+  (with-rwlock-protect *db-environments-rwlock*
+    (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
+	 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
+    (progn
       (setf *environments-sites* *sites*)
       (let ((lmdb-cache-sites (remove-if (lambda (x) (not (typep (site-backend x) 'backend-lmdb-cache)))
 					 *environments-sites*)))
@@ -127,19 +127,19 @@
 						lmdb-cache-sites))
 	(dolist (site lmdb-cache-sites)
 	  (if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) *db-environments*))
-		  (progn
-		    (setf (backend-lmdb-environment (site-backend site)) existing-environment)
-		    (prepare-environment existing-environment (site-backend site)))
-		  (let ((new-environment
-			 (make-environment-container
-			  :rwlock (make-rwlock)
-			  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
-							      :max-databases 1024 :max-readers 512 :open-flags 0 :mapsize *lmdb-mapsize*))))
-		    (lmdb:open-environment (environment-container-environment new-environment) :create t)
-		    (prepare-environment new-environment (site-backend site))
-		    (setf (backend-lmdb-environment (site-backend site)) new-environment)
-		    (push new-environment *db-environments*)))))))
-  (backend-lmdb-environment backend))
+	      (progn
+		(setf (backend-lmdb-environment (site-backend site)) existing-environment)
+		(prepare-environment existing-environment (site-backend site)))
+	    (let ((new-environment
+		   (make-environment-container
+		    :rwlock (make-rwlock)
+		    :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
+							:max-databases 1024 :max-readers 512 :open-flags 0 :mapsize *lmdb-mapsize*))))
+	      (lmdb:open-environment (environment-container-environment new-environment) :create t)
+	      (prepare-environment new-environment (site-backend site))
+	      (setf (backend-lmdb-environment (site-backend site)) new-environment)
+	      (push new-environment *db-environments*))))))
+    (backend-lmdb-environment backend)))
 
 (uiop:chdir (asdf:system-source-directory "lw2-viewer"))
 
