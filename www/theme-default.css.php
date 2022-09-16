@@ -444,6 +444,23 @@ body {
 	background-color: var(--GW-toggle-widget-hover-color);
 }
 
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#dark-mode-selector button {
+	color: #777;
+}
+#dark-mode-selector button.default {
+	font-weight: 600;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector::after {
+	color: #999;
+}
+
 /*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/

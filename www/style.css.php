@@ -575,6 +575,7 @@ a#inbox-indicator.new-messages:hover::before {
 	position: absolute;
 	top: 4px;
 	right: -78px;
+	display: flex;
 	opacity: 0.4;
 }
 #dark-mode-selector:hover {
@@ -592,18 +593,16 @@ a#inbox-indicator.new-messages:hover::before {
 	width: 24px;
 	height: 24px;
 	padding: 0;
-	position: relative;
+	line-height: 1;
 }
 #dark-mode-selector button.select-mode-auto {
-	padding: 0 0 0 1px;
 }
 #dark-mode-selector button.select-mode-light {
-	padding: 0 0 0 2px;
+	padding: 0 0 0 1px;
 }
 #dark-mode-selector button.select-mode-dark {
 	font-size: 1.25rem;
-	padding: 0 0 0 4px;
-	top: 1px;
+	padding: 1px 0 0 4px;
 }
 #dark-mode-selector button:disabled {
 	opacity: 0.5;
@@ -618,12 +617,15 @@ a#inbox-indicator.new-messages:hover::before {
 
 #dark-mode-selector button::after {
 	content: attr(data-name);
+	font-family: <?php echo $UI_font; ?>;
+	font-weight: normal;
 	position: absolute;
 	display: block;
 	left: 0;
 	width: 100%;
 	text-align: center;
-	top: 56px;
+	top: 92px;
+	font-size: 1rem;
 	visibility: hidden;
 }
 #dark-mode-selector button.selected::after {
