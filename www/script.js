@@ -230,6 +230,26 @@ DOMRectReadOnly.prototype.isInside = function (x, y) {
 	return (this.left <= x && this.right >= x && this.top <= y && this.bottom >= y);
 }
 
+/*	Simple mutex mechanism.
+ */
+function doIfAllowed(f, passHolder, passName, releaseImmediately = false) {
+	if (passHolder[passName] == false)
+		return;
+
+	passHolder[passName] = false;
+
+	f();
+
+	if (releaseImmediately) {
+		passHolder[passName] = true;
+	} else {
+		requestAnimationFrame(() => {
+			passHolder[passName] = true;
+		});
+	}
+}
+
+
 /********************/
 /* DEBUGGING OUTPUT */
 /********************/
@@ -986,6 +1006,261 @@ function badgePostsWithNewComments() {
 		commentCountDisplay.title = `${currentCommentCount} comments (${currentCommentCount - savedCommentCount} new)`;
 	});
 }
+
+
+/*****************/
+/* MEDIA QUERIES */
+/*****************/
+
+GW.mediaQueries = {
+    systemDarkModeActive:  matchMedia("(prefers-color-scheme: dark)")
+};
+
+
+/************************/
+/* ACTIVE MEDIA QUERIES */
+/************************/
+
+/*  This function provides two slightly different versions of its functionality,
+    depending on how many arguments it gets.
+
+    If one function is given (in addition to the media query and its name), it
+    is called whenever the media query changes (in either direction).
+
+    If two functions are given (in addition to the media query and its name),
+    then the first function is called whenever the media query starts matching,
+    and the second function is called whenever the media query stops matching.
+
+    If you want to call a function for a change in one direction only, pass an
+    empty closure (NOT null!) as one of the function arguments.
+
+    There is also an optional fifth argument. This should be a function to be
+    called when the active media query is canceled.
+ */
+function doWhenMatchMedia(mediaQuery, name, ifMatchesOrAlwaysDo, otherwiseDo = null, whenCanceledDo = null) {
+    if (typeof GW.mediaQueryResponders == "undefined")
+        GW.mediaQueryResponders = { };
+
+    let mediaQueryResponder = (event, canceling = false) => {
+        if (canceling) {
+            GWLog(`Canceling media query “${name}”`, "media queries", 1);
+
+            if (whenCanceledDo != null)
+                whenCanceledDo(mediaQuery);
+        } else {
+            let matches = (typeof event == "undefined") ? mediaQuery.matches : event.matches;
+
+            GWLog(`Media query “${name}” triggered (matches: ${matches ? "YES" : "NO"})`, "media queries", 1);
+
+            if ((otherwiseDo == null) || matches)
+            	ifMatchesOrAlwaysDo(mediaQuery);
+            else
+            	otherwiseDo(mediaQuery);
+        }
+    };
+    mediaQueryResponder();
+    mediaQuery.addListener(mediaQueryResponder);
+
+    GW.mediaQueryResponders[name] = mediaQueryResponder;
+}
+
+/*  Deactivates and discards an active media query, after calling the function
+    that was passed as the whenCanceledDo parameter when the media query was
+    added.
+ */
+function cancelDoWhenMatchMedia(name) {
+    GW.mediaQueryResponders[name](null, true);
+
+    for ([ key, mediaQuery ] of Object.entries(GW.mediaQueries))
+        mediaQuery.removeListener(GW.mediaQueryResponders[name]);
+
+    GW.mediaQueryResponders[name] = null;
+}
+
+
+/******************************/
+/* DARK/LIGHT MODE ADJUSTMENT */
+/******************************/
+
+DarkMode = {
+	/*****************/
+	/*	Configuration.
+	 */
+	modeOptions: [
+		[ 'auto', '&#xf042;', 'Set light or dark mode automatically, according to system-wide setting (Win: Start → Personalization → Colors; Mac: Apple → System-Preferences → General → Appearance; iOS: Settings → Display-and-Brightness; Android: Settings → Display)' ],
+		[ 'light', '&#xf185;', 'Light mode at all times (black-on-white)' ],
+		[ 'dark', '&#xf186;', 'Dark mode at all times (inverted: white-on-black)' ]
+	],
+
+	selectedModeOptionNote: " [This option is currently selected.]",
+
+	/******************/
+	/*	Infrastructure.
+	 */
+
+	modeSelector: null,
+	modeSelectorInteractable: true,
+
+	/******************/
+	/*	Mode selection.
+	 */
+
+    /*  Returns current (saved) mode (light, dark, or auto).
+     */
+    getSavedMode: () => {
+    	//	NOTE: For testing only!
+		return "auto";
+
+        return (localStorage.getItem("dark-mode-setting") || "auto");
+    },
+
+	/*	Saves specified mode (light, dark, or auto).
+	 */
+	saveMode: (mode) => {
+    	//	NOTE: For testing only!
+		return;
+
+		if (mode == "auto")
+			localStorage.removeItem("dark-mode-setting");
+		else
+			localStorage.setItem("dark-mode-setting", mode);
+	},
+
+	/*  Set specified color mode (light, dark, or auto).
+	 */
+	setMode: (selectedMode = DarkMode.getSavedMode()) => {
+		GWLog("DarkMode.setMode");
+
+		//	The style block should be inlined (and already loaded).
+		let darkModeStyles = document.querySelector("#inlined-dark-mode-styles");
+		if (darkModeStyles == null)
+			return;
+
+		//	Set `media` attribute of style block to match requested mode.
+		if (selectedMode == 'auto') {
+			darkModeStyles.media = "all and (prefers-color-scheme: dark)";
+		} else if (selectedMode == 'dark') {
+			darkModeStyles.media = "all";
+		} else {
+			darkModeStyles.media = "not all";
+		}
+
+		//	Fire event.
+		DarkMode.updateModeSelectorState(DarkMode.modeSelector);
+	},
+
+	modeSelectorHTML: (inline = false) => {
+		let selectorTagName = (inline ? "span" : "div");
+		let selectorId = (inline ? "" : " id='dark-mode-selector'");
+		let selectorClass = (" class='dark-mode-selector mode-selector" + (inline ? " mode-selector-inline" : "") + "'");
+
+		//	Get saved mode setting (or default).
+		let currentMode = DarkMode.getSavedMode();
+
+		return `<${selectorTagName}${selectorId}${selectorClass}>`
+			+ DarkMode.modeOptions.map(modeOption => {
+				let [ name, label, desc ] = modeOption;
+				let selected = (name == currentMode ? " selected" : "");
+				let disabled = (name == currentMode ? " disabled" : "");
+				let active = ((   currentMode == "auto"
+							   && name == (GW.mediaQueries.systemDarkModeActive.matches ? "dark" : "light"))
+							  ? " active"
+							  : "");
+				if (name == currentMode)
+					desc += DarkMode.selectedModeOptionNote;
+				return `<button
+							type="button"
+							class="select-mode-${name}${selected}${active}"
+							${disabled}
+							tabindex="-1"
+							data-name="${name}"
+							title="${desc}"
+								>${label}</button>`;
+			  }).join("")
+			+ `</${selectorTagName}>`;
+	},
+
+	injectModeSelector: (replacedElement = null) => {
+		GWLog("DarkMode.injectModeSelector", "dark-mode.js", 1);
+
+		//	Inject the mode selector widget.
+		let modeSelector;
+		if (replacedElement) {
+			replacedElement.innerHTML = DarkMode.modeSelectorHTML(true);
+			modeSelector = replacedElement.firstElementChild;
+			unwrap(replacedElement);
+		} else {
+			modeSelector = DarkMode.modeSelector = addUIElement(DarkMode.modeSelectorHTML());
+		}
+
+		//  Add event listeners and update state.
+		requestAnimationFrame(() => {
+			//	Activate mode selector widget buttons.
+			modeSelector.querySelectorAll("button").forEach(button => {
+				button.addActivateEvent(DarkMode.modeSelectButtonClicked = (event) => {
+					GWLog("DarkMode.modeSelectButtonClicked");
+
+					/*	We don’t want clicks to go through if the transition 
+						between modes has not completed yet, so we disable the 
+						button temporarily while we’re transitioning between 
+						modes.
+					 */
+					doIfAllowed(() => {
+						// Determine which setting was chosen (ie. which button was clicked).
+						let selectedMode = event.target.dataset.name;
+
+						// Save the new setting.
+						DarkMode.saveMode(selectedMode);
+
+						// Actually change the mode.
+						DarkMode.setMode(selectedMode);
+					}, DarkMode, "modeSelectorInteractable");
+				});
+			});
+		});
+
+		/*	Add active media query to update mode selector state when system dark
+			mode setting changes. (This is relevant only for the ‘auto’ setting.)
+		 */
+		doWhenMatchMedia(GW.mediaQueries.systemDarkModeActive, "DarkMode.updateModeSelectorStateForSystemDarkMode", () => { 
+			DarkMode.updateModeSelectorState(modeSelector);
+		});
+	},
+
+	updateModeSelectorState: (modeSelector = DarkMode.modeSelector) => {
+		GWLog("DarkMode.updateModeSelectorState");
+
+		/*	If the mode selector has not yet been injected, then do nothing.
+		 */
+		if (modeSelector == null)
+			return;
+
+		//	Get saved mode setting (or default).
+		let currentMode = DarkMode.getSavedMode();
+
+		//	Clear current buttons state.
+		modeSelector.querySelectorAll("button").forEach(button => {
+			button.classList.remove("active", "selected");
+			button.disabled = false;
+			if (button.title.endsWith(DarkMode.selectedModeOptionNote))
+				button.title = button.title.slice(0, (-1 * DarkMode.selectedModeOptionNote.length));
+		});
+
+		//	Set the correct button to be selected.
+		modeSelector.querySelectorAll(`.select-mode-${currentMode}`).forEach(button => {
+			button.classList.add("selected");
+			button.disabled = true;
+			button.title += DarkMode.selectedModeOptionNote;
+		});
+
+		/*	Ensure the right button (light or dark) has the “currently active” 
+			indicator, if the current mode is ‘auto’.
+		 */
+		if (currentMode == "auto")
+			modeSelector.querySelector(`.select-mode-${(GW.mediaQueries.systemDarkModeActive.matches ? "dark" : "light")}`).classList.add("active");
+	}
+};
+
 
 /***********************************/
 /* CONTENT COLUMN WIDTH ADJUSTMENT */
@@ -3723,6 +3998,8 @@ addTriggerListener('navBarLoaded', {priority: 3000, fn: function () {
 	injectContentWidthSelector();
 	// Add the text size adjustment widget.
 	injectTextSizeAdjustmentUI();
+	// Add the dark mode selector.
+	DarkMode.injectModeSelector();
 	// Add the theme selector.
 	injectThemeSelector();
 	// Add the theme tweaker.
