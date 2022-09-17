@@ -584,15 +584,24 @@ a#inbox-indicator.new-messages:hover::before {
 	height: 24px;
 	padding: 0;
 	line-height: 1;
+	font-weight: 400;
+}
+#dark-mode-selector button.selected {
+	font-weight: 900;
 }
 #dark-mode-selector button.select-mode-auto {
 }
 #dark-mode-selector button.select-mode-light {
-	padding: 0 0 0 1px;
+	font-size: 1.25rem;
+	padding: 1px 0 0 1px;
 }
 #dark-mode-selector button.select-mode-dark {
+	font-weight: 300;
 	font-size: 1.25rem;
 	padding: 1px 0 0 4px;
+}
+#dark-mode-selector button.select-mode-dark.selected {
+	font-weight: 400;
 }
 #dark-mode-selector button:disabled:hover {
 	cursor: default;

@@ -1088,7 +1088,7 @@ DarkMode = {
 	 */
 	modeOptions: [
 		[ 'auto', '&#xf042;', 'Set light or dark mode automatically, according to system-wide setting (Win: Start → Personalization → Colors; Mac: Apple → System-Preferences → General → Appearance; iOS: Settings → Display-and-Brightness; Android: Settings → Display)' ],
-		[ 'light', '&#xf185;', 'Light mode at all times (black-on-white)' ],
+		[ 'light', '&#xe28f;', 'Light mode at all times (black-on-white)' ],
 		[ 'dark', '&#xf186;', 'Dark mode at all times (inverted: white-on-black)' ]
 	],
 
@@ -1108,18 +1108,12 @@ DarkMode = {
     /*  Returns current (saved) mode (light, dark, or auto).
      */
     getSavedMode: () => {
-    	//	NOTE: For testing only!
-		return "auto";
-
         return (localStorage.getItem("dark-mode-setting") || "auto");
     },
 
 	/*	Saves specified mode (light, dark, or auto).
 	 */
 	saveMode: (mode) => {
-    	//	NOTE: For testing only!
-		return;
-
 		if (mode == "auto")
 			localStorage.removeItem("dark-mode-setting");
 		else
@@ -1145,7 +1139,7 @@ DarkMode = {
 			darkModeStyles.media = "not all";
 		}
 
-		//	Fire event.
+		//	Update state.
 		DarkMode.updateModeSelectorState(DarkMode.modeSelector);
 	},
 
