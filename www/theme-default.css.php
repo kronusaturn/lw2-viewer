@@ -453,12 +453,13 @@ body {
 }
 #dark-mode-selector button {
 	color: #777;
-	font-weight: 300;
 }
 #dark-mode-selector button.selected {
-	font-weight: 400;
 	background-color: #999;
 	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #999 inset;
 }
 #dark-mode-selector button:disabled:hover {
 	text-shadow: none;

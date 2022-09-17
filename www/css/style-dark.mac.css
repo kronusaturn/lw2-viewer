@@ -577,7 +577,6 @@ a#inbox-indicator.new-messages:hover::before {
 /*=---------=*/
 
 #dark-mode-selector button {
-	font-weight: 900;
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 1.125rem;
 	width: 24px;
@@ -585,9 +584,6 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0;
 	line-height: 1;
 	font-weight: 400;
-}
-#dark-mode-selector button.selected {
-	font-weight: 900;
 }
 #dark-mode-selector button.select-mode-auto {
 }
@@ -6349,12 +6345,13 @@ body {
 }
 #dark-mode-selector button {
 	color: #777;
-	font-weight: 300;
 }
 #dark-mode-selector button.selected {
-	font-weight: 400;
 	background-color: #575756;
 	color: #000;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #575756 inset;
 }
 #dark-mode-selector button:disabled:hover {
 	text-shadow: none;

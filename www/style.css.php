@@ -587,7 +587,6 @@ a#inbox-indicator.new-messages:hover::before {
 /*=---------=*/
 
 #dark-mode-selector button {
-	font-weight: 900;
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	font-size: 1.125rem;
 	width: 24px;
@@ -595,9 +594,6 @@ a#inbox-indicator.new-messages:hover::before {
 	padding: 0;
 	line-height: 1;
 	font-weight: 400;
-}
-#dark-mode-selector button.selected {
-	font-weight: 900;
 }
 #dark-mode-selector button.select-mode-auto {
 }

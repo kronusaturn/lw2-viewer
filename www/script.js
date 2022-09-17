@@ -1114,6 +1114,8 @@ DarkMode = {
 	/*	Saves specified mode (light, dark, or auto).
 	 */
 	saveMode: (mode) => {
+		GWLog("DarkMode.setMode");
+
 		if (mode == "auto")
 			localStorage.removeItem("dark-mode-setting");
 		else
@@ -1126,18 +1128,18 @@ DarkMode = {
 		GWLog("DarkMode.setMode");
 
 		//	The style block should be inlined (and already loaded).
-		let darkModeStyles = document.querySelector("#inlined-dark-mode-styles");
-		if (darkModeStyles == null)
-			return;
+// 		let darkModeStyles = document.querySelector("#inlined-dark-mode-styles");
+// 		if (darkModeStyles == null)
+// 			return;
 
 		//	Set `media` attribute of style block to match requested mode.
-		if (selectedMode == 'auto') {
-			darkModeStyles.media = "all and (prefers-color-scheme: dark)";
-		} else if (selectedMode == 'dark') {
-			darkModeStyles.media = "all";
-		} else {
-			darkModeStyles.media = "not all";
-		}
+// 		if (selectedMode == 'auto') {
+// 			darkModeStyles.media = "all and (prefers-color-scheme: dark)";
+// 		} else if (selectedMode == 'dark') {
+// 			darkModeStyles.media = "all";
+// 		} else {
+// 			darkModeStyles.media = "not all";
+// 		}
 
 		//	Update state.
 		DarkMode.updateModeSelectorState(DarkMode.modeSelector);
