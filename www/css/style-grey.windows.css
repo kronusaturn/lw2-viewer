@@ -6347,6 +6347,32 @@ body {
 	background-color: #555;
 }
 
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#dark-mode-selector {
+	outline: 1px solid #999;
+}
+#dark-mode-selector button {
+	color: #777;
+}
+#dark-mode-selector button.selected {
+	background-color: #999;
+	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #999 inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: 'Concourse', 'a_Avante', Arial, 'GW-Symbols', sans-serif;
+	color: #999;
+	text-shadow: none;
+}
+
 /*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/

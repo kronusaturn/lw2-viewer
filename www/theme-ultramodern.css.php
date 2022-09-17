@@ -409,12 +409,43 @@ body {
 	background-color: #000;
 }
 
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#dark-mode-selector {
+	outline: 1px solid #ccc;
+	opacity: 0.5;
+}
+#dark-mode-selector button {
+	color: #ddd;
+}
+#dark-mode-selector button:hover {
+	color: #444;
+}
+#dark-mode-selector button.selected {
+	background-color: #ccc;
+	color: #777;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #ccc inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #ccc;
+	text-shadow: none;
+	font-weight: 300;
+}
+
 /*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/
 
 #text-size-adjustment-ui button {
-	color: #444;
+	color: #ccc;
 }
 #text-size-adjustment-ui button.default {
 	font-weight: 600;
