@@ -1197,25 +1197,7 @@ DarkMode = {
 		requestAnimationFrame(() => {
 			//	Activate mode selector widget buttons.
 			modeSelector.querySelectorAll("button").forEach(button => {
-				button.addActivateEvent(DarkMode.modeSelectButtonClicked = (event) => {
-					GWLog("DarkMode.modeSelectButtonClicked");
-
-					/*	We don’t want clicks to go through if the transition 
-						between modes has not completed yet, so we disable the 
-						button temporarily while we’re transitioning between 
-						modes.
-					 */
-					doIfAllowed(() => {
-						// Determine which setting was chosen (ie. which button was clicked).
-						let selectedMode = event.target.dataset.name;
-
-						// Save the new setting.
-						DarkMode.saveMode(selectedMode);
-
-						// Actually change the mode.
-						DarkMode.setMode(selectedMode);
-					}, DarkMode, "modeSelectorInteractable");
-				});
+				button.addActivateEvent(DarkMode.modeSelectButtonClicked);
 			});
 		});
 
@@ -1225,6 +1207,28 @@ DarkMode = {
 		doWhenMatchMedia(GW.mediaQueries.systemDarkModeActive, "DarkMode.updateModeSelectorStateForSystemDarkMode", () => { 
 			DarkMode.updateModeSelectorState(modeSelector);
 		});
+	},
+
+	modeSelectButtonClicked: (event) => {
+		GWLog("DarkMode.modeSelectButtonClicked");
+
+		/*	We don’t want clicks to go through if the transition 
+			between modes has not completed yet, so we disable the 
+			button temporarily while we’re transitioning between 
+			modes.
+		 */
+		doIfAllowed(() => {
+			// Determine which setting was chosen (ie. which button was clicked).
+			let selectedMode = event.target.dataset.name;
+
+			// Save the new setting.
+			DarkMode.saveMode(selectedMode);
+
+			// Actually change the mode.
+			DarkMode.setMode(selectedMode);
+		}, DarkMode, "modeSelectorInteractable");
+
+		event.target.blur();
 	},
 
 	updateModeSelectorState: (modeSelector = DarkMode.modeSelector) => {

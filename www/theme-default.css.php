@@ -448,17 +448,24 @@ body {
 /* DARK MODE SELECTOR */
 /*====================*/
 
+#dark-mode-selector {
+	outline: 1px solid #999;
+}
 #dark-mode-selector button {
 	color: #777;
+	font-weight: 300;
 }
-#dark-mode-selector button.default {
-	font-weight: 600;
+#dark-mode-selector button.selected {
+	font-weight: 400;
+	background-color: #999;
+	color: #fff;
 }
 #dark-mode-selector button:disabled:hover {
 	text-shadow: none;
 }
-#dark-mode-selector::after {
+#dark-mode-selector button::after {
 	color: #999;
+	text-shadow: none;
 }
 
 /*======================*/
