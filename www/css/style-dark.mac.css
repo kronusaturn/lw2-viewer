@@ -6357,6 +6357,7 @@ body {
 	text-shadow: none;
 }
 #dark-mode-selector button::after {
+	font-family: 'Concourse', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
 	color: #575756;
 	text-shadow: none;
 }

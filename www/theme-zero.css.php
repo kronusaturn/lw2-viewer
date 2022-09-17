@@ -383,6 +383,32 @@ body {
 	background-color: #777;
 }
 
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#dark-mode-selector {
+	outline: 1px solid #777;
+}
+#dark-mode-selector button {
+	color: #777;
+}
+#dark-mode-selector button.selected {
+	background-color: #777;
+	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #777 inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #999;
+	text-shadow: none;
+}
+
 /*======================*/
 /* TEXT SIZE ADJUSTMENT */
 /*======================*/

@@ -465,6 +465,7 @@ body {
 	text-shadow: none;
 }
 #dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
 	color: #999;
 	text-shadow: none;
 }
