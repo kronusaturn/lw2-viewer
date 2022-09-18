@@ -599,6 +599,9 @@ a#inbox-indicator.new-messages:hover::before {
 #dark-mode-selector button.select-mode-dark.selected {
 	font-weight: 400;
 }
+#dark-mode-selector button:disabled:active {
+	transform: none;
+}
 #dark-mode-selector button:disabled:hover {
 	cursor: default;
 }

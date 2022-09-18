@@ -2453,16 +2453,29 @@ function injectAppearanceAdjustUIToggle() {
 		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
 	}
 }
+GW.themes = {
+	less: {
+		appearanceAdjustUIElementsSelector: [
+			"#comments-view-mode-selector", 
+			"#theme-selector", 
+			"#dark-mode-selector",
+			"#width-selector", 
+			"#text-size-adjustment-ui", 
+			"#theme-tweaker-toggle", 
+			"#appearance-adjust-ui-toggle button"
+		].join(", ")
+	}
+};
 function removeAppearanceAdjustUIToggle() {
 	GWLog("removeAppearanceAdjustUIToggle");
-	queryAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
+	queryAll(GW.themes.less.appearanceAdjustUIElementsSelector).forEach(element => {
 		element.removeClass("engaged");
 	});
 	removeElement("#appearance-adjust-ui-toggle");
 }
 function toggleAppearanceAdjustUI() {
 	GWLog("toggleAppearanceAdjustUI");
-	queryAll("#comments-view-mode-selector, #theme-selector, #width-selector, #text-size-adjustment-ui, #theme-tweaker-toggle, #appearance-adjust-ui-toggle button").forEach(element => {
+	queryAll(GW.themes.less.appearanceAdjustUIElementsSelector).forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
