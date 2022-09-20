@@ -50,19 +50,6 @@ function setCookie(name, value, days) {
 	document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax" + (GW.secureCookies ? "; Secure" : "");
 }
 
-/*	Reads the value of named cookie.
-	Returns the cookie as a string, or null if no such cookie exists. */
-function readCookie(name) {
-	var nameEQ = name + "=";
-	var ca = document.cookie.split(';');
-	for(var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1, c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-	}
-	return null;
-}
-
 /*******************************/
 /* EVENT LISTENER MANIPULATION */
 /*******************************/
@@ -378,27 +365,25 @@ Element.prototype.addTextareaFeatures = function() {
 	// On smartphone (narrow mobile) screens, when a textarea is focused (and
 	// automatically fullscreened), remove all the filters from the page, and 
 	// then apply them *just* to the fixed editor UI elements. This is in order
-	// to get around the "children of elements with a filter applied cannot be
-	// fixed" issue".
+	// to get around the “children of elements with a filter applied cannot be
+	// fixed” issue.
 	if (GW.isMobile && window.innerWidth <= 520) {
 		let fixedEditorElements = textareaContainer.queryAll("textarea, .guiedit-buttons-container, .guiedit-mobile-auxiliary-button, #markdown-hints");
 		textarea.addEventListener("focus", GW.textareaFocusedMobile = (event) => {
 			GWLog("GW.textareaFocusedMobile");
-			GW.savedFilters = GW.currentFilters;
-			GW.currentFilters = { };
-			applyFilters(GW.currentFilters);
+			Appearance.savedFilters = Appearance.currentFilters;
+			Appearance.applyFilters(Appearance.noFilters);
 			fixedEditorElements.forEach(element => {
-				element.style.filter = filterStringFromFilters(GW.savedFilters);
+				element.style.filter = Appearance.filterStringFromFilters(Appearance.savedFilters);
 			});
 		});
 		textarea.addEventListener("blur", GW.textareaBlurredMobile = (event) => {
 			GWLog("GW.textareaBlurredMobile");
-			GW.currentFilters = GW.savedFilters;
-			GW.savedFilters = { };
 			requestAnimationFrame(() => {
-				applyFilters(GW.currentFilters);
+				Appearance.applyFilters(Appearance.savedFilters);
+				Appearance.savedFilters = null;
 				fixedEditorElements.forEach(element => {
-					element.style.filter = filterStringFromFilters(GW.savedFilters);
+					element.style.filter = Appearance.filterStringFromFilters(Appearance.savedFilters);
 				});
 			});
 		});
@@ -825,7 +810,7 @@ function voteEvent(voteButton, numClicks) {
 
 function initializeVoteButtons() {
 	// Color the upvote/downvote buttons with an embedded style sheet.
-	query("head").insertAdjacentHTML("beforeend", "<style id='vote-buttons'>" + `
+	insertHeadHTML("<style id='vote-buttons'>" + `
 		:root {
 			--GW-upvote-button-color: #00d800;
 			--GW-downvote-button-color: #eb4c2a;
@@ -1087,9 +1072,9 @@ DarkMode = {
 	/*	Configuration.
 	 */
 	modeOptions: [
-		[ 'auto', '&#xf042;', 'Set light or dark mode automatically, according to system-wide setting (Win: Start → Personalization → Colors; Mac: Apple → System-Preferences → General → Appearance; iOS: Settings → Display-and-Brightness; Android: Settings → Display)' ],
-		[ 'light', '&#xe28f;', 'Light mode at all times (black-on-white)' ],
-		[ 'dark', '&#xf186;', 'Dark mode at all times (inverted: white-on-black)' ]
+		[ "auto", "&#xf042;", "Set light or dark mode automatically, according to system-wide setting (Win: Start → Personalization → Colors; Mac: Apple → System-Preferences → General → Appearance; iOS: Settings → Display-and-Brightness; Android: Settings → Display)" ],
+		[ "light", "&#xe28f;", "Light mode at all times (black-on-white)" ],
+		[ "dark", "&#xf186;", "Dark mode at all times (inverted: white-on-black)" ]
 	],
 
 	selectedModeOptionNote: " [This option is currently selected.]",
@@ -1131,9 +1116,9 @@ DarkMode = {
 		let darkModeStyles = document.querySelector("#inlined-dark-mode-styles");
 		if (darkModeStyles) {
 			//	Set `media` attribute of style block to match requested mode.
-			if (selectedMode == 'auto') {
+			if (selectedMode == "auto") {
 				darkModeStyles.media = "all and (prefers-color-scheme: dark)";
-			} else if (selectedMode == 'dark') {
+			} else if (selectedMode == "dark") {
 				darkModeStyles.media = "all";
 			} else {
 				darkModeStyles.media = "not all";
@@ -1146,8 +1131,8 @@ DarkMode = {
 
 	modeSelectorHTML: (inline = false) => {
 		let selectorTagName = (inline ? "span" : "div");
-		let selectorId = (inline ? "" : " id='dark-mode-selector'");
-		let selectorClass = (" class='dark-mode-selector mode-selector" + (inline ? " mode-selector-inline" : "") + "'");
+		let selectorId = (inline ? `` : ` id="dark-mode-selector"`);
+		let selectorClass = (` class="dark-mode-selector mode-selector` + (inline ? ` mode-selector-inline` : ``) + `"`);
 
 		//	Get saved mode setting (or default).
 		let currentMode = DarkMode.getSavedMode();
@@ -1261,578 +1246,972 @@ DarkMode = {
 };
 
 
-/***********************************/
-/* CONTENT COLUMN WIDTH ADJUSTMENT */
-/***********************************/
+/****************************/
+/* APPEARANCE CUSTOMIZATION */
+/****************************/
 
-function injectContentWidthSelector() {
-	GWLog("injectContentWidthSelector");
-	// Get saved width setting (or default).
-	let currentWidth = localStorage.getItem("selected-width") || 'normal';
+Appearance = { ...Appearance,
+	/******************/
+	/*	Infrastructure.
+	 */
 
-	// Inject the content width selector widget and activate buttons.
-	let widthSelector = addUIElement(
-		"<div id='width-selector'>" +
-		String.prototype.concat.apply("", GW.widthOptions.map(widthOption => {
-			let [name, desc, abbr] = widthOption;
-			let selected = (name == currentWidth ? ' selected' : '');
-			let disabled = (name == currentWidth ? ' disabled' : '');
-			return `<button type='button' class='select-width-${name}${selected}'${disabled} title='${desc}' tabindex='-1' data-name='${name}'>${abbr}</button>`})) +
-		"</div>");
-	widthSelector.queryAll("button").forEach(button => {
-		button.addActivateEvent(GW.widthAdjustButtonClicked = (event) => {
-			GWLog("GW.widthAdjustButtonClicked");
+	noFilters: { },
 
-			// Determine which setting was chosen (i.e., which button was clicked).
-			let selectedWidth = event.target.dataset.name;
+	themeSelector: null,
 
-			// Save the new setting.
-			if (selectedWidth == "normal") localStorage.removeItem("selected-width");
-			else localStorage.setItem("selected-width", selectedWidth);
+	themeTweakerToggle: null,
 
-			// Save current visible comment
-			let visibleComment = getCurrentVisibleComment();
+	themeTweakerUI: null,
+	themeTweakerUIMainWindow: null,
+	themeTweakerUIHelpWindow: null,
+	themeTweakerUISampleTextContainer: null,
+	themeTweakerUIClippyContainer: null,
+	themeTweakerUIClippyControl: null,
 
-			// Actually change the content width.
-			setContentWidth(selectedWidth);
-			event.target.parentElement.childNodes.forEach(button => {
-				button.removeClass("selected");
-				button.disabled = false;
-			});
-			event.target.addClass("selected");
-			event.target.disabled = true;
+	widthSelector: null,
 
-			// Make sure the accesskey (to cycle to the next width) is on the right button.
-			setWidthAdjustButtonsAccesskey();
+	textSizeAdjustmentWidget: null,
 
-			// Regenerate images overlay.
-			generateImagesOverlay();
+	appearanceAdjustUIToggle: null,
 
-			if(visibleComment) visibleComment.scrollIntoView();
-		});
-	});
+	/*****************/
+	/*	Functionality.
+	 */
 
-	// Make sure the accesskey (to cycle to the next width) is on the right button.
-	setWidthAdjustButtonsAccesskey();
-
-	// Inject transitions CSS, if animating changes is enabled.
-	if (GW.adjustmentTransitions) {
-		insertHeadHTML(
-			"<style id='width-transition'>" + 
-			`#content,
-			#ui-elements-container,
-			#images-overlay {
-				transition:
-					max-width 0.3s ease;
-			}` + 
-			"</style>");
-	}
-}
-function setWidthAdjustButtonsAccesskey() {
-	GWLog("setWidthAdjustButtonsAccesskey");
-	let widthSelector = query("#width-selector");
-	widthSelector.queryAll("button").forEach(button => {
-		button.removeAttribute("accesskey");
-		button.title = /(.+?)( \['\])?$/.exec(button.title)[1];
-	});
-	let selectedButton = widthSelector.query("button.selected");
-	let nextButtonInCycle = (selectedButton == selectedButton.parentElement.lastChild) ? selectedButton.parentElement.firstChild : selectedButton.nextSibling;
-	nextButtonInCycle.accessKey = "'";
-	nextButtonInCycle.title += ` [\']`;
-}
-
-/*******************/
-/* THEME SELECTION */
-/*******************/
-
-function injectThemeSelector() {
-	GWLog("injectThemeSelector");
-	let currentTheme = readCookie("theme") || "default";
-	let themeSelector = addUIElement(
-		"<div id='theme-selector' class='theme-selector'>" +
-		String.prototype.concat.apply("", GW.themeOptions.map(themeOption => {
-			let [name, desc, letter] = themeOption;
-			let selected = (name == currentTheme ? ' selected' : '');
-			let disabled = (name == currentTheme ? ' disabled' : '');
-			let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-			return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;})) +
-		"</div>");
-	themeSelector.queryAll("button").forEach(button => {
-		button.addActivateEvent(GW.themeSelectButtonClicked = (event) => {
-			GWLog("GW.themeSelectButtonClicked");
-			let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
-			setSelectedTheme(themeName);
-			if (GW.isMobile) toggleAppearanceAdjustUI();
-		});
-	});
-
-	// Inject transitions CSS, if animating changes is enabled.
-	if (GW.adjustmentTransitions) {
-		insertHeadHTML(
-			"<style id='theme-fade-transition'>" + 
-			`body {
-				transition:
-					opacity 0.5s ease-out,
-					background-color 0.3s ease-out;
-			}
-			body.transparent {
-				background-color: #777;
-				opacity: 0.0;
-				transition:
-					opacity 0.5s ease-in,
-					background-color 0.3s ease-in;
-			}` + 
-			"</style>");
-	}
-}
-function setSelectedTheme(themeName) {
-	GWLog("setSelectedTheme");
-	queryAll(".theme-selector button").forEach(button => {
-		button.removeClass("selected");
-		button.disabled = false;
-	});
-	queryAll(".theme-selector button.select-theme-" + themeName).forEach(button => {
-		button.addClass("selected");
-		button.disabled = true;
-	});
-	setTheme(themeName);
-	query("#theme-tweaker-ui .current-theme span").innerText = themeName;
-}
-function setTheme(newThemeName) {
-	var themeUnloadCallback = '';
-	var oldThemeName = '';
-	if (typeof(newThemeName) == 'undefined') {
-		newThemeName = readCookie('theme');
-		if (!newThemeName) return;
-	} else {
-		themeUnloadCallback = GW['themeUnloadCallback_' + (readCookie('theme') || 'default')];
-		oldThemeName = readCookie('theme') || 'default';
-
-		if (newThemeName == 'default') setCookie('theme', '');
-		else setCookie('theme', newThemeName);
-	}
-	if (themeUnloadCallback != null) themeUnloadCallback(newThemeName);
-
-	let makeNewStyle = function(newThemeName, colorSchemePreference) {
-		let styleSheetNameSuffix = (newThemeName == 'default') ? '' : ('-' + newThemeName);
+	makeNewStyle: (newThemeName, colorSchemePreference) => {
+		let styleSheetNameSuffix = (newThemeName == Appearance.defaultTheme) ? "" : ("-" + newThemeName);
 		let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='.css']").href);
 
-		let newStyle = document.createElement('link');
-		newStyle.setAttribute('class', 'theme');
-		if(colorSchemePreference)
-			newStyle.setAttribute('media', '(prefers-color-scheme: ' + colorSchemePreference + ')');
-		newStyle.setAttribute('rel', 'stylesheet');
-		newStyle.setAttribute('href', '/css/style' + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+		let newStyle = document.createElement("link");
+		newStyle.setAttribute("class", "theme");
+		if (colorSchemePreference)
+			newStyle.setAttribute("media", "(prefers-color-scheme: " + colorSchemePreference + ")");
+		newStyle.setAttribute("rel", "stylesheet");
+		newStyle.setAttribute("href", "/css/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
 		return newStyle;
-	}
+	},
 
-	let newMainStyle, newStyles;
-	if(newThemeName === 'default') {
-		newStyles = [makeNewStyle('dark', 'dark'), makeNewStyle('default', 'light')];
-		newMainStyle = (window.matchMedia('prefers-color-scheme: dark').matches ? newStyles[0] : newStyles[1]);
-	} else {
-		newStyles = [makeNewStyle(newThemeName)];
-		newMainStyle = newStyles[0];
-	}
+	setTheme: (newThemeName, save = true) => {
+		GWLog("Appearance.setTheme");
 
-	let oldStyles = queryAll("head link.theme");
-	newMainStyle.addEventListener('load', () => { oldStyles.forEach(x => removeElement(x)); });
-	newMainStyle.addEventListener('load', () => { postSetThemeHousekeeping(oldThemeName, newThemeName); });
-
-	if (GW.adjustmentTransitions) {
-		pageFadeTransition(false);
-		setTimeout(() => {
-			newStyles.forEach(newStyle => query('head').insertBefore(newStyle, oldStyles[0].nextSibling));
-		}, 500);
-	} else {
-		newStyles.forEach(newStyle => query('head').insertBefore(newStyle, oldStyles[0].nextSibling));
-	}
-}
-function postSetThemeHousekeeping(oldThemeName = "", newThemeName = (readCookie('theme') || 'default')) {
-	document.body.className = document.body.className.replace(new RegExp("(^|\\s+)theme-\\w+(\\s+|$)"), "$1").trim();
-	document.body.addClass("theme-" + newThemeName);
-
-	recomputeUIElementsContainerHeight(true);
-
-	let themeLoadCallback = GW['themeLoadCallback_' + newThemeName];
-	if (themeLoadCallback != null) themeLoadCallback(oldThemeName);
-
-	recomputeUIElementsContainerHeight();
-	adjustUIForWindowSize();
-	window.addEventListener('resize', GW.windowResized = (event) => {
-		GWLog("GW.windowResized");
-		adjustUIForWindowSize();
-		recomputeUIElementsContainerHeight();
-	});
-
-	generateImagesOverlay();
-
-	if (window.adjustmentTransitions) pageFadeTransition(true);
-	updateThemeTweakerSampleText();
-
-	if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== 'undefined') {
-		window.matchMedia('(orientation: portrait)').addListener(generateImagesOverlay);
-	}
-}
-
-function pageFadeTransition(fadeIn) {
-	if (fadeIn) {
-		query("body").removeClass("transparent");
-	} else {
-		query("body").addClass("transparent");
-	}
-}
-
-GW.themeLoadCallback_less = (fromTheme = "") => {
-	GWLog("themeLoadCallback_less");
-	injectSiteNavUIToggle();
-	if (!GW.isMobile) {
-		injectPostNavUIToggle();
-		injectAppearanceAdjustUIToggle();
-	}
-
-	registerInitializer('shortenDate', true, () => query(".top-post-meta") != null, function () {
-		let dtf = new Intl.DateTimeFormat([], 
-			(window.innerWidth < 1100) ? 
-				{ month: 'short', day: 'numeric', year: 'numeric' } : 
-					{ month: 'long', day: 'numeric', year: 'numeric' });
-		let postDate = query(".top-post-meta .date");
-		postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
-	});
-
-	if (GW.isMobile) {
-		query("#content").insertAdjacentHTML("beforeend", "<div id='theme-less-mobile-first-row-placeholder'></div>");
-	}
-
-	if (!GW.isMobile) {
-		registerInitializer('addSpans', true, () => query(".top-post-meta") != null, function () {
-			queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
-				element.innerHTML = "<span>" + element.innerHTML + "</span>";
-			});
-		});
-
-		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
-			// If state is not set (user has never clicked on the Less theme's appearance
-			// adjustment UI toggle) then show it, but then hide it after a short time.
-			registerInitializer('engageAppearanceAdjustUI', true, () => query("#ui-elements-container") != null, function () {
-				toggleAppearanceAdjustUI();
-				setTimeout(toggleAppearanceAdjustUI, 3000);
-			});
-		}
-
-		if (fromTheme != "") {
-			allUIToggles = queryAll("#ui-elements-container div[id$='-ui-toggle']");
-			setTimeout(function () {
-				allUIToggles.forEach(toggle => { toggle.addClass("highlighted"); });
-			}, 300);
-			setTimeout(function () {
-				allUIToggles.forEach(toggle => { toggle.removeClass("highlighted"); });
-			}, 1800);
-		}
-
-		// Unset the height of the #ui-elements-container.
-		query("#ui-elements-container").style.height = "";
-
-		// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
-		GW.themeTweaker.filtersExclusionPaths.themeLess = [
-			"#content #secondary-bar",
-			"#content .post .top-post-meta .date",
-			"#content .post .top-post-meta .comment-count",
-		];
-		applyFilters(GW.currentFilters);
-	}
-
-	// We pre-query the relevant elements, so we don't have to run querySelectorAll
-	// on every firing of the scroll listener.
-	GW.scrollState = {
-		"lastScrollTop":					window.pageYOffset || document.documentElement.scrollTop,
-		"unbrokenDownScrollDistance":		0,
-		"unbrokenUpScrollDistance":			0,
-		"siteNavUIToggleButton":			query("#site-nav-ui-toggle button"),
-		"siteNavUIElements":				queryAll("#primary-bar, #secondary-bar, .page-toolbar"),
-		"appearanceAdjustUIToggleButton":	query("#appearance-adjust-ui-toggle button")
-	};
-	addScrollListener(updateSiteNavUIState, "updateSiteNavUIStateScrollListener");
-}
-
-// Hide the post-nav-ui toggle if none of the elements to be toggled are visible; 
-// otherwise, show it.
-function updatePostNavUIVisibility() {
-	GWLog("updatePostNavUIVisibility");
-	var hidePostNavUIToggle = true;
-	queryAll("#quick-nav-ui a, #new-comment-nav-ui").forEach(element => {
-		if (getComputedStyle(element).visibility == "visible" ||
-			element.style.visibility == "visible" ||
-			element.style.visibility == "unset")
-			hidePostNavUIToggle = false;
-	});
-	queryAll("#quick-nav-ui, #post-nav-ui-toggle").forEach(element => {
-		element.style.visibility = hidePostNavUIToggle ? "hidden" : "";
-	});
-}
-
-// Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
-// NOTE: The UIs are re-shown on scroll up ONLY if the user has them set to be 
-// engaged; if they're manually disengaged, they are not re-engaged by scroll.
-function updateSiteNavUIState(event) {
-	GWLog("updateSiteNavUIState");
-	let newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-	GW.scrollState.unbrokenDownScrollDistance = (newScrollTop > GW.scrollState.lastScrollTop) ? 
-														(GW.scrollState.unbrokenDownScrollDistance + newScrollTop - GW.scrollState.lastScrollTop) : 
-													 	0;
-	GW.scrollState.unbrokenUpScrollDistance = (newScrollTop < GW.scrollState.lastScrollTop) ?
-													 (GW.scrollState.unbrokenUpScrollDistance + GW.scrollState.lastScrollTop - newScrollTop) :
-													 0;
-	GW.scrollState.lastScrollTop = newScrollTop;
-
-	// Hide site nav UI and appearance adjust UI when scrolling a full page down.
-	if (GW.scrollState.unbrokenDownScrollDistance > window.innerHeight) {
-		if (GW.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
-		if (GW.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) toggleAppearanceAdjustUI();
-	}
-
-	// On mobile, make site nav UI translucent on ANY scroll down.
-	if (GW.isMobile)
-		GW.scrollState.siteNavUIElements.forEach(element => {
-			if (GW.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
-			else element.removeClass("translucent-on-scroll");
-		});
-
-	// Show site nav UI when scrolling a full page up, or to the top.
-	if ((GW.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
-		 GW.scrollState.lastScrollTop == 0) &&
-		(!GW.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
-		 localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
-
-	// On desktop, show appearance adjust UI when scrolling to the top.
-	if ((!GW.isMobile) && 
-		(GW.scrollState.lastScrollTop == 0) &&
-		(!GW.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
-		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) toggleAppearanceAdjustUI();
-}
-
-GW.themeUnloadCallback_less = (toTheme = "") => {
-	GWLog("themeUnloadCallback_less");
-	removeSiteNavUIToggle();
-	if (!GW.isMobile) {
-		removePostNavUIToggle();
-		removeAppearanceAdjustUIToggle();
-	}
-	window.removeEventListener('resize', updatePostNavUIVisibility);
-
-	document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
-
-	removeElement("#theme-less-mobile-first-row-placeholder");
-
-	if (!GW.isMobile) {
-		// Remove spans
-		queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
-			element.innerHTML = element.firstChild.innerHTML;
-		});
-	}
-
-	(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
-
-	// Reset filtered elements selector to default.
-	delete GW.themeTweaker.filtersExclusionPaths.themeLess;
-	applyFilters(GW.currentFilters);
-}
-
-GW.themeLoadCallback_dark = (fromTheme = "") => {
-	GWLog("themeLoadCallback_dark");
-	insertHeadHTML(
-		"<style id='dark-theme-adjustments'>" + 
-		`.markdown-reference-link a { color: #d200cf; filter: invert(100%); }` + 
-		`#bottom-bar.decorative::before { filter: invert(100%); }` +
-		"</style>");
-	registerInitializer('makeImagesGlow', true, () => query("#images-overlay") != null, () => {
-		queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
-			image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
-			image.style.width = parseInt(image.style.width) + 12 + "px";
-			image.style.height = parseInt(image.style.height) + 12 + "px";
-			image.style.top = parseInt(image.style.top) - 6 + "px";
-			image.style.left = parseInt(image.style.left) - 6 + "px";
-		});
-	});
-}
-GW.themeUnloadCallback_dark = (toTheme = "") => {
-	GWLog("themeUnloadCallback_dark");
-	removeElement("#dark-theme-adjustments");
-}
-
-GW.themeLoadCallback_brutalist = (fromTheme = "") => {
-	GWLog("themeLoadCallback_brutalist");
-	let bottomBarLinks = queryAll("#bottom-bar a");
-	if (!GW.isMobile && bottomBarLinks.length == 5) {
-		let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
-		bottomBarLinks.forEach((link, i) => {
-			link.dataset.originalText = link.textContent;
-			link.textContent = newLinkTexts[i];
-		});
-	}
-}
-GW.themeUnloadCallback_brutalist = (toTheme = "") => {
-	GWLog("themeUnloadCallback_brutalist");
-	let bottomBarLinks = queryAll("#bottom-bar a");
-	if (!GW.isMobile && bottomBarLinks.length == 5) {
-		bottomBarLinks.forEach(link => {
-			link.textContent = link.dataset.originalText;
-		});
-	}
-}
-
-GW.themeLoadCallback_classic = (fromTheme = "") => {
-	GWLog("themeLoadCallback_classic");
-	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
-		button.innerHTML = "";
-	});
-}
-GW.themeUnloadCallback_classic = (toTheme = "") => {
-	GWLog("themeUnloadCallback_classic");
-	if (GW.isMobile && window.innerWidth <= 900) return;
-	queryAll(".comment-item .comment-controls .action-button").forEach(button => {
-		button.innerHTML = button.dataset.label;
-	});
-}
-
-/********************************************/
-/* APPEARANCE CUSTOMIZATION (THEME TWEAKER) */
-/********************************************/
-
-function injectThemeTweaker() {
-	GWLog("injectThemeTweaker");
-	let themeTweakerUI = addUIElement("<div id='theme-tweaker-ui' style='display: none;'>" + 
-	`<div class='main-theme-tweaker-window'>
-		<h1>Customize appearance</h1>
-		<button type='button' class='minimize-button minimize' tabindex='-1'></button>
-		<button type='button' class='help-button' tabindex='-1'></button>
-		<p class='current-theme'>Current theme: <span>` + 
-		(readCookie("theme") || "default") + 
-		`</span></p>
-		<p class='theme-selector'></p>
-		<div class='controls-container'>
-			<div id='theme-tweak-section-sample-text' class='section' data-label='Sample text'>
-				<div class='sample-text-container'><span class='sample-text'>
-					<p>Less Wrong (text)</p>
-					<p><a href="#">Less Wrong (link)</a></p>
-				</span></div>
-			</div>
-			<div id='theme-tweak-section-text-size-adjust' class='section' data-label='Text size'>
-				<button type='button' class='text-size-adjust-button decrease' title='Decrease text size'></button>
-				<button type='button' class='text-size-adjust-button default' title='Reset to default text size'></button>
-				<button type='button' class='text-size-adjust-button increase' title='Increase text size'></button>
-			</div>
-			<div id='theme-tweak-section-invert' class='section' data-label='Invert (photo-negative)'>
-				<input type='checkbox' id='theme-tweak-control-invert'></input>
-				<label for='theme-tweak-control-invert'>Invert colors</label>
-			</div>
-			<div id='theme-tweak-section-saturate' class='section' data-label='Saturation'>
-				<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
-				<div class='notch theme-tweak-slider-notch-saturate' title='Reset saturation to default value (100%)'></div>
-			</div>
-			<div id='theme-tweak-section-brightness' class='section' data-label='Brightness'>
-				<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
-				<div class='notch theme-tweak-slider-notch-brightness' title='Reset brightness to default value (100%)'></div>
-			</div>
-			<div id='theme-tweak-section-contrast' class='section' data-label='Contrast'>
-				<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
-				<div class='notch theme-tweak-slider-notch-contrast' title='Reset contrast to default value (100%)'></div>
-			</div>
-			<div id='theme-tweak-section-hue-rotate' class='section' data-label='Hue rotation'>
-				<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
-				<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
-				<div class='notch theme-tweak-slider-notch-hue-rotate' title='Reset hue to default (0° away from standard colors for theme)'></div>
-			</div>
-		</div>
-		<div class='buttons-container'>
-			<button type="button" class="reset-defaults-button">Reset to defaults</button>
-			<button type='button' class='ok-button default-button'>OK</button>
-			<button type='button' class='cancel-button'>Cancel</button>
-		</div>
-	</div>
-	<div class="clippy-container">
-		<span class="hint">Hi, I'm Bobby the Basilisk! Click on the minimize button (<img src='data:image/gif;base64,R0lGODlhFgAUAPIAMQAAAAMDA394f7+4v9/Y3//4/2JX/38AACwAAAAAFgAUAAADRki63B6kyEkrFbCMzbvnWPSNXqiRqImm2Uqq7gfH3Uxv9p3TNuD/wFqLAywChCKi8Yc83XDD52AXCwmu2KxWG+h6v+BwNwEAOw==' />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won't be saved until you click "OK"!</span>)
-		<div class='clippy'></div>
-		<button type='button' class='clippy-close-button' tabindex='-1' title='Hide theme tweaker assistant (you can bring him back by clicking the ? button in the title bar)'></button>
-	</div>
-	<div class='help-window' style='display: none;'>
-		<h1>Theme tweaker help</h1>
-		<div id='theme-tweak-section-clippy' class='section' data-label='Theme Tweaker Assistant'>
-			<input type='checkbox' id='theme-tweak-control-clippy' checked='checked'></input>
-			<label for='theme-tweak-control-clippy'>Show Bobby the Basilisk</label>
-		</div>
-		<div class='buttons-container'>
-			<button type='button' class='ok-button default-button'>OK</button>
-			<button type='button' class='cancel-button'>Cancel</button>
-		</div>
-	</div>
-	` + "</div>");
-
-	// Clicking the background overlay closes the theme tweaker.
-	themeTweakerUI.addActivateEvent(GW.themeTweaker.UIOverlayClicked = (event) => {
-		GWLog("GW.themeTweaker.UIOverlayClicked");
-		if (event.type == 'mousedown') {
-			themeTweakerUI.style.opacity = "0.01";
+		let themeUnloadCallback = "";
+		let oldThemeName = "";
+		if (typeof(newThemeName) == "undefined") {
+			newThemeName = Appearance.currentTheme;
+			if (newThemeName == Appearance.defaultTheme)
+				return;
 		} else {
-			toggleThemeTweakerUI();
-			themeTweakerUI.style.opacity = "1.0";
-			themeTweakReset();
+			oldThemeName = Appearance.currentTheme;
+			themeUnloadCallback = Appearance.themeUnloadCallbacks[oldThemeName];
+
+			Appearance.currentTheme = newThemeName;
+			if (save)
+				Appearance.saveCurrentTheme();
 		}
-	}, true);
+		if (themeUnloadCallback != null)
+			themeUnloadCallback(newThemeName);
 
-	// Intercept clicks, so they don't "fall through" the background overlay.
-	(query("#theme-tweaker-ui > div")||{}).addActivateEvent((event) => { event.stopPropagation(); }, true);
+		let newMainStyle, newStyles;
+		if (newThemeName === Appearance.defaultTheme) {
+			newStyles = [ Appearance.makeNewStyle("dark", "dark"), Appearance.makeNewStyle(Appearance.defaultTheme, "light") ];
+			newMainStyle = (window.matchMedia("prefers-color-scheme: dark").matches ? newStyles[0] : newStyles[1]);
+		} else {
+			newStyles = [ Appearance.makeNewStyle(newThemeName) ];
+			newMainStyle = newStyles[0];
+		}
 
-	let sampleTextContainer = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container");
-	themeTweakerUI.queryAll("input").forEach(field => {
-		// All input types in the theme tweaker receive a 'change' event when
-		// their value is changed. (Range inputs, in particular, receive this 
-		// event when the user lets go of the handle.) This means we should
-		// update the filters for the entire page, to match the new setting.
-		field.addEventListener("change", GW.themeTweaker.fieldValueChanged = (event) => {
-			GWLog("GW.themeTweaker.fieldValueChanged");
-			if (event.target.id == 'theme-tweak-control-invert') {
-				GW.currentFilters['invert'] = event.target.checked ? '100%' : '0%';
-			} else if (event.target.type == 'range') {
-				let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
-				query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
-				GW.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
-			} else if (event.target.id == 'theme-tweak-control-clippy') {
-				query(".clippy-container").style.display = event.target.checked ? "block" : "none";
+		let oldStyles = queryAll("head link.theme");
+		newMainStyle.addEventListener("load", (event) => { oldStyles.forEach(x => removeElement(x)); });
+		newMainStyle.addEventListener("load", (event) => { Appearance.postSetThemeHousekeeping(oldThemeName, newThemeName); });
+
+		if (Appearance.adjustmentTransitions) {
+			pageFadeTransition(false);
+			setTimeout(() => {
+				newStyles.forEach(newStyle => document.head.insertBefore(newStyle, oldStyles[0].nextSibling));
+			}, 500);
+		} else {
+			newStyles.forEach(newStyle => document.head.insertBefore(newStyle, oldStyles[0].nextSibling));
+		}
+
+		Appearance.updateThemeSelectorsState();
+	},
+
+	postSetThemeHousekeeping: (oldThemeName = "", newThemeName = null) => {
+		GWLog("Appearance.postSetThemeHousekeeping");
+
+		if (newThemeName == null)
+			newThemeName = Appearance.getSavedTheme();
+
+		document.body.className = document.body.className.replace(new RegExp("(^|\\s+)theme-\\w+(\\s+|$)"), "$1").trim();
+		document.body.addClass("theme-" + newThemeName);
+
+		recomputeUIElementsContainerHeight(true);
+
+		let themeLoadCallback = Appearance.themeLoadCallbacks[newThemeName];
+		if (themeLoadCallback != null)
+			themeLoadCallback(oldThemeName);
+
+		recomputeUIElementsContainerHeight();
+		adjustUIForWindowSize();
+		window.addEventListener("resize", GW.windowResized = (event) => {
+			GWLog("GW.windowResized");
+			adjustUIForWindowSize();
+			recomputeUIElementsContainerHeight();
+		});
+
+		generateImagesOverlay();
+
+		if (Appearance.adjustmentTransitions)
+			pageFadeTransition(true);
+		Appearance.updateThemeTweakerSampleText();
+
+		if (typeof(window.msMatchMedia || window.MozMatchMedia || window.WebkitMatchMedia || window.matchMedia) !== "undefined") {
+			window.matchMedia("(orientation: portrait)").addListener(generateImagesOverlay);
+		}
+	},
+
+	themeLoadCallbacks: {
+		brutalist: (fromTheme = "") => {
+			GWLog("Appearance.themeLoadCallbacks.brutalist");
+
+			let bottomBarLinks = queryAll("#bottom-bar a");
+			if (!GW.isMobile && bottomBarLinks.length == 5) {
+				let newLinkTexts = [ "First", "Previous", "Top", "Next", "Last" ];
+				bottomBarLinks.forEach((link, i) => {
+					link.dataset.originalText = link.textContent;
+					link.textContent = newLinkTexts[i];
+				});
 			}
-			// Clear the sample text filters.
-			sampleTextContainer.style.filter = "";
-			// Apply the new filters globally.
-			applyFilters(GW.currentFilters);
+		},
+
+		classic: (fromTheme = "") => {
+			GWLog("Appearance.themeLoadCallbacks.classic");
+
+			queryAll(".comment-item .comment-controls .action-button").forEach(button => {
+				button.innerHTML = "";
+			});
+		},
+
+		dark: (fromTheme = "") => {
+			GWLog("Appearance.themeLoadCallbacks.dark");
+
+			insertHeadHTML(`<style id="dark-theme-adjustments">`  
+				+ `.markdown-reference-link a { color: #d200cf; filter: invert(100%); }`
+				+ `#bottom-bar.decorative::before { filter: invert(100%); }`
+				+ `</style>`);
+			registerInitializer("makeImagesGlow", true, () => query("#images-overlay") != null, () => {
+				queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
+					image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
+					image.style.width = parseInt(image.style.width) + 12 + "px";
+					image.style.height = parseInt(image.style.height) + 12 + "px";
+					image.style.top = parseInt(image.style.top) - 6 + "px";
+					image.style.left = parseInt(image.style.left) - 6 + "px";
+				});
+			});
+		},
+
+		less: (fromTheme = "") => {
+			GWLog("Appearance.themeLoadCallbacks.less");
+
+			injectSiteNavUIToggle();
+			if (!GW.isMobile) {
+				injectPostNavUIToggle();
+				Appearance.injectAppearanceAdjustUIToggle();
+			}
+
+			registerInitializer("shortenDate", true, () => query(".top-post-meta") != null, function () {
+				let dtf = new Intl.DateTimeFormat([], 
+					(window.innerWidth < 1100) ? 
+						{ month: "short", day: "numeric", year: "numeric" } : 
+							{ month: "long", day: "numeric", year: "numeric" });
+				let postDate = query(".top-post-meta .date");
+				postDate.innerHTML = dtf.format(new Date(+ postDate.dataset.jsDate));
+			});
+
+			if (GW.isMobile) {
+				query("#content").insertAdjacentHTML("beforeend", `<div id="theme-less-mobile-first-row-placeholder"></div>`);
+			}
+
+			if (!GW.isMobile) {
+				registerInitializer("addSpans", true, () => query(".top-post-meta") != null, function () {
+					queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
+						element.innerHTML = "<span>" + element.innerHTML + "</span>";
+					});
+				});
+
+				if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == null) {
+					// If state is not set (user has never clicked on the Less theme’s appearance
+					// adjustment UI toggle) then show it, but then hide it after a short time.
+					registerInitializer("engageAppearanceAdjustUI", true, () => query("#ui-elements-container") != null, function () {
+						Appearance.toggleAppearanceAdjustUI();
+						setTimeout(Appearance.toggleAppearanceAdjustUI, 3000);
+					});
+				}
+
+				if (fromTheme != "") {
+					allUIToggles = queryAll("#ui-elements-container div[id$='-ui-toggle']");
+					setTimeout(function () {
+						allUIToggles.forEach(toggle => { toggle.addClass("highlighted"); });
+					}, 300);
+					setTimeout(function () {
+						allUIToggles.forEach(toggle => { toggle.removeClass("highlighted"); });
+					}, 1800);
+				}
+
+				// Unset the height of the #ui-elements-container.
+				query("#ui-elements-container").style.height = "";
+
+				// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
+				Appearance.filtersExclusionPaths.themeLess = [
+					"#content #secondary-bar",
+					"#content .post .top-post-meta .date",
+					"#content .post .top-post-meta .comment-count",
+				];
+				Appearance.applyFilters();
+			}
+
+			// We pre-query the relevant elements, so we don’t have to run querySelectorAll
+			// on every firing of the scroll listener.
+			GW.scrollState = {
+				"lastScrollTop":					window.pageYOffset || document.documentElement.scrollTop,
+				"unbrokenDownScrollDistance":		0,
+				"unbrokenUpScrollDistance":			0,
+				"siteNavUIToggleButton":			query("#site-nav-ui-toggle button"),
+				"siteNavUIElements":				queryAll("#primary-bar, #secondary-bar, .page-toolbar"),
+				"appearanceAdjustUIToggleButton":	query("#appearance-adjust-ui-toggle button")
+			};
+			addScrollListener(updateSiteNavUIState, "updateSiteNavUIStateScrollListener");
+		}
+	},
+
+	themeUnloadCallbacks: {
+		brutalist: (toTheme = "") => {
+			GWLog("Appearance.themeUnloadCallbacks.brutalist");
+
+			let bottomBarLinks = queryAll("#bottom-bar a");
+			if (!GW.isMobile && bottomBarLinks.length == 5) {
+				bottomBarLinks.forEach(link => {
+					link.textContent = link.dataset.originalText;
+				});
+			}
+		},
+
+		classic: (toTheme = "") => {
+			GWLog("Appearance.themeUnloadCallbacks.classic");
+
+			if (GW.isMobile && window.innerWidth <= 900)
+				return;
+
+			queryAll(".comment-item .comment-controls .action-button").forEach(button => {
+				button.innerHTML = button.dataset.label;
+			});
+		},
+
+		dark: (toTheme = "") => {
+			GWLog("Appearance.themeUnloadCallbacks.dark");
+
+			removeElement("#dark-theme-adjustments");
+		},
+
+		less: (toTheme = "") => {
+			GWLog("Appearance.themeUnloadCallbacks.less");
+
+			removeSiteNavUIToggle();
+			if (!GW.isMobile) {
+				removePostNavUIToggle();
+				Appearance.removeAppearanceAdjustUIToggle();
+			}
+
+			window.removeEventListener("resize", updatePostNavUIVisibility);
+
+			document.removeEventListener("scroll", GW["updateSiteNavUIStateScrollListener"]);
+
+			removeElement("#theme-less-mobile-first-row-placeholder");
+
+			if (!GW.isMobile) {
+				// Remove spans
+				queryAll(".top-post-meta .date, .top-post-meta .comment-count").forEach(element => {
+					element.innerHTML = element.firstChild.innerHTML;
+				});
+			}
+
+			(query(".top-post-meta .date")||{}).innerHTML = (query(".bottom-post-meta .date")||{}).innerHTML;
+
+			//	Reset filtered elements selector to default.
+			delete Appearance.filtersExclusionPaths.themeLess;
+			Appearance.applyFilters();
+		}
+	},
+
+	pageFadeTransition: (fadeIn) => {
+		if (fadeIn) {
+			document.body.removeClass("transparent");
+		} else {
+			document.body.addClass("transparent");
+		}
+	},
+
+	saveCurrentTheme: () => {
+		GWLog("Appearance.saveCurrentTheme");
+
+		if (Appearance.currentTheme == Appearance.defaultTheme)
+			setCookie("theme", "");
+		else
+			setCookie("theme", Appearance.currentTheme);
+	},
+
+	themeTweakReset: () => {
+		GWLog("Appearance.themeTweakReset");
+
+		Appearance.setTheme(Appearance.getSavedTheme());
+		Appearance.applyFilters(Appearance.getSavedFilters());
+		Appearance.setTextZoom(Appearance.getSavedTextZoom());
+	},
+
+	themeTweakSave: () => {
+		GWLog("Appearance.themeTweakSave");
+
+		Appearance.saveCurrentTheme();
+		Appearance.saveCurrentFilters();
+		Appearance.saveCurrentTextZoom();
+	},
+
+	themeTweakResetDefaults: () => {
+		GWLog("Appearance.themeTweakResetDefaults");
+
+		Appearance.setTheme(Appearance.defaultTheme);
+		Appearance.applyFilters(Appearance.defaultFilters);
+		Appearance.setTextZoom(Appearance.defaultTextZoom);
+	},
+
+	themeTweakerResetSettings: () => {
+		GWLog("Appearance.themeTweakerResetSettings");
+
+		Appearance.themeTweakerUIClippyControl.checked = Appearance.getSavedThemeTweakerClippyState();
+		Appearance.themeTweakerUIClippyContainer.style.display = Appearance.themeTweakerUIClippyControl.checked 
+																 ? "block" 
+																 : "none";
+	},
+
+	themeTweakerSaveSettings: () => {
+		GWLog("Appearance.themeTweakerSaveSettings");
+
+		Appearance.saveThemeTweakerClippyState();
+	},
+
+	getSavedThemeTweakerClippyState: () => {
+		return (JSON.parse(localStorage.getItem("theme-tweaker-settings") || `{ "showClippy": ${Appearance.defaultThemeTweakerClippyState} }` )["showClippy"]);
+	},
+
+	saveThemeTweakerClippyState: () => {
+		GWLog("Appearance.saveThemeTweakerClippyState");
+
+		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ "showClippy": Appearance.themeTweakerUIClippyControl.checked }));
+	},
+
+	getSavedAppearanceAdjustUIToggleState: () => {
+		return ((localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") || Appearance.defaultAppearanceAdjustUIToggleState);
+	},
+
+	saveAppearanceAdjustUIToggleState: () => {
+		GWLog("Appearance.saveAppearanceAdjustUIToggleState");
+
+		localStorage.setItem("appearance-adjust-ui-toggle-engaged", Appearance.appearanceAdjustUIToggle.query("button").hasClass("engaged"));
+	},
+
+	/******/
+	/*	UI.
+	 */
+
+	contentWidthSelectorHTML: () => {
+		return ("<div id='width-selector'>"
+			+ String.prototype.concat.apply("", Appearance.widthOptions.map(widthOption => {
+				let [name, desc, abbr] = widthOption;
+				let selected = (name == Appearance.currentWidth ? " selected" : "");
+				let disabled = (name == Appearance.currentWidth ? " disabled" : "");
+				return `<button type="button" class="select-width-${name}${selected}"${disabled} title="${desc}" tabindex="-1" data-name="${name}">${abbr}</button>`
+			}))
+		+ "</div>");
+	},
+
+	injectContentWidthSelector: () => {
+		GWLog("Appearance.injectContentWidthSelector");
+
+		//	Inject the content width selector widget and activate buttons.
+		Appearance.widthSelector = addUIElement(Appearance.contentWidthSelectorHTML());
+		Appearance.widthSelector.queryAll("button").forEach(button => {
+			button.addActivateEvent(Appearance.widthAdjustButtonClicked);
 		});
 
-		// Range inputs receive an 'input' event while being scrubbed, updating
-		// "live" as the handle is moved. We don't want to change the filters 
-		// for the actual page while this is happening, but we do want to change
-		// the filters for the *sample text*, so the user can see what effects
-		// his changes are having, live, without having to let go of the handle.
-		if (field.type == "range") field.addEventListener("input", GW.themeTweaker.fieldInputReceived = (event) => {
-			GWLog("GW.themeTweaker.fieldInputReceived");
-			var sampleTextFilters = GW.currentFilters;
+		//	Make sure the accesskey (to cycle to the next width) is on the right button.
+		Appearance.setWidthAdjustButtonsAccesskey();
 
+		//	Inject transitions CSS, if animating changes is enabled.
+		if (Appearance.adjustmentTransitions) {
+			insertHeadHTML(
+				"<style id='width-transition'>" + 
+				`#content,
+				#ui-elements-container,
+				#images-overlay {
+					transition:
+						max-width 0.3s ease;
+				}` + 
+				"</style>");
+		}
+	},
+
+	setWidthAdjustButtonsAccesskey: () => {
+		GWLog("Appearance.setWidthAdjustButtonsAccesskey");
+
+		Appearance.widthSelector.queryAll("button").forEach(button => {
+			button.removeAttribute("accesskey");
+			button.title = /(.+?)( \['\])?$/.exec(button.title)[1];
+		});
+		let selectedButton = Appearance.widthSelector.query("button.selected");
+		let nextButtonInCycle = selectedButton == selectedButton.parentElement.lastChild
+												  ? selectedButton.parentElement.firstChild 
+												  : selectedButton.nextSibling;
+		nextButtonInCycle.accessKey = "'";
+		nextButtonInCycle.title += ` [\']`;
+	},
+
+	injectTextSizeAdjustmentUI: () => {
+		GWLog("Appearance.injectTextSizeAdjustmentUI");
+
+		if (Appearance.textSizeAdjustmentWidget != null)
+			return;
+
+		let inject = () => {
+			GWLog("Appearance.injectTextSizeAdjustmentUI [INJECTING]");
+
+			Appearance.textSizeAdjustmentWidget = addUIElement("<div id='text-size-adjustment-ui'>"
+				+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>`
+				+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>`
+				+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size [=]" tabindex='-1' accesskey='='>&#xf067;</button>`
+			+ "</div>");
+
+			Appearance.textSizeAdjustmentWidget.queryAll("button").forEach(button => {
+				button.addActivateEvent(Appearance.textSizeAdjustButtonClicked);
+			});
+		};
+
+		if (query("#content.post-page") != null) {
+			inject();
+		} else {
+			document.addEventListener("DOMContentLoaded", () => {
+				if (!(   query(".post-body") == null 
+					  && query(".comment-body") == null))
+					inject();
+			}, { once: true });
+		}
+	},
+
+	themeSelectorHTML: () => {
+		return ("<div id='theme-selector' class='theme-selector'>"
+			+ String.prototype.concat.apply("", Appearance.themeOptions.map(themeOption => {
+				let [name, desc, letter] = themeOption;
+				let selected = (name == Appearance.currentTheme ? ' selected' : '');
+				let disabled = (name == Appearance.currentTheme ? ' disabled' : '');
+				let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
+				return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;
+			}))
+		+ "</div>");
+	},
+
+	injectThemeSelector: () => {
+		GWLog("Appearance.injectThemeSelector");
+
+		Appearance.themeSelector = addUIElement(Appearance.themeSelectorHTML());
+		Appearance.themeSelector.queryAll("button").forEach(button => {
+			button.addActivateEvent(Appearance.themeSelectButtonClicked);
+		});
+
+		// Inject transitions CSS, if animating changes is enabled.
+		if (Appearance.adjustmentTransitions) {
+			insertHeadHTML("<style id='theme-fade-transition'>" + 
+				`body {
+					transition:
+						opacity 0.5s ease-out,
+						background-color 0.3s ease-out;
+				}
+				body.transparent {
+					background-color: #777;
+					opacity: 0.0;
+					transition:
+						opacity 0.5s ease-in,
+						background-color 0.3s ease-in;
+				}` + 
+			"</style>");
+		}
+	},
+
+	updateThemeSelectorsState: () => {
+		GWLog("Appearance.updateThemeSelectorsState");
+
+		queryAll(".theme-selector button").forEach(button => {
+			button.removeClass("selected");
+			button.disabled = false;
+		});
+		queryAll(".theme-selector button.select-theme-" + Appearance.currentTheme).forEach(button => {
+			button.addClass("selected");
+			button.disabled = true;
+		});
+
+		Appearance.themeTweakerUI.query(".current-theme span").innerText = Appearance.currentTheme;
+	},
+
+	themeTweakerUIHTML: () => {
+		return (`<div id="theme-tweaker-ui" style="display: none;">` 
+			+ `<div class="main-theme-tweaker-window">
+				<h1>Customize appearance</h1>
+				<button type="button" class="minimize-button minimize" tabindex="-1"></button>
+				<button type="button" class="help-button" tabindex="-1"></button>
+				<p class="current-theme">Current theme: <span>` + 
+				Appearance.getSavedTheme() + 
+				`</span></p>
+				<p class="theme-selector"></p>
+				<div class="controls-container">
+					<div id="theme-tweak-section-sample-text" class="section" data-label="Sample text">
+						<div class="sample-text-container"><span class="sample-text">
+							<p>Less Wrong (text)</p>
+							<p><a href="#">Less Wrong (link)</a></p>
+						</span></div>
+					</div>
+					<div id="theme-tweak-section-text-size-adjust" class="section" data-label="Text size">
+						<button type="button" class="text-size-adjust-button decrease" title="Decrease text size"></button>
+						<button type="button" class="text-size-adjust-button default" title="Reset to default text size"></button>
+						<button type="button" class="text-size-adjust-button increase" title="Increase text size"></button>
+					</div>
+					<div id="theme-tweak-section-invert" class="section" data-label="Invert (photo-negative)">
+						<input type="checkbox" id="theme-tweak-control-invert"></input>
+						<label for="theme-tweak-control-invert">Invert colors</label>
+					</div>
+					<div id="theme-tweak-section-saturate" class="section" data-label="Saturation">
+						<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+						<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
+						<div class="notch theme-tweak-slider-notch-saturate" title="Reset saturation to default value (100%)"></div>
+					</div>
+					<div id="theme-tweak-section-brightness" class="section" data-label="Brightness">
+						<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+						<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
+						<div class="notch theme-tweak-slider-notch-brightness" title="Reset brightness to default value (100%)"></div>
+					</div>
+					<div id="theme-tweak-section-contrast" class="section" data-label="Contrast">
+						<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+						<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
+						<div class="notch theme-tweak-slider-notch-contrast" title="Reset contrast to default value (100%)"></div>
+					</div>
+					<div id="theme-tweak-section-hue-rotate" class="section" data-label="Hue rotation">
+						<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
+						<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
+						<div class="notch theme-tweak-slider-notch-hue-rotate" title="Reset hue to default (0° away from standard colors for theme)"></div>
+					</div>
+				</div>
+				<div class="buttons-container">
+					<button type="button" class="reset-defaults-button">Reset to defaults</button>
+					<button type="button" class="ok-button default-button">OK</button>
+					<button type="button" class="cancel-button">Cancel</button>
+				</div>
+			</div>
+			<div class="clippy-container">
+				<span class="hint">Hi, I’m Bobby the Basilisk! Click on the minimize button (<img src="data:image/gif;base64,R0lGODlhFgAUAPIAMQAAAAMDA394f7+4v9/Y3//4/2JX/38AACwAAAAAFgAUAAADRki63B6kyEkrFbCMzbvnWPSNXqiRqImm2Uqq7gfH3Uxv9p3TNuD/wFqLAywChCKi8Yc83XDD52AXCwmu2KxWG+h6v+BwNwEAOw==" />) to minimize the theme tweaker window, so that you can see what the page looks like with the current tweaked values. (But remember, <span>the changes won’t be saved until you click “OK”!</span>)
+				<div class="clippy"></div>
+				<button type="button" class="clippy-close-button" tabindex="-1" title="Hide theme tweaker assistant (you can bring him back by clicking the ? button in the title bar)"></button>
+			</div>
+			<div class="help-window" style="display: none;">
+				<h1>Theme tweaker help</h1>
+				<div id="theme-tweak-section-clippy" class="section" data-label="Theme Tweaker Assistant">
+					<input type="checkbox" id="theme-tweak-control-clippy" checked="checked"></input>
+					<label for="theme-tweak-control-clippy">Show Bobby the Basilisk</label>
+				</div>
+				<div class="buttons-container">
+					<button type="button" class="ok-button default-button">OK</button>
+					<button type="button" class="cancel-button">Cancel</button>
+				</div>
+			</div>
+		` + "</div>");
+	},
+
+	injectThemeTweaker: () => {
+		GWLog("Appearance.injectThemeTweaker");
+
+		Appearance.themeTweakerUI = addUIElement(Appearance.themeTweakerUIHTML());
+		Appearance.themeTweakerUIMainWindow = Appearance.themeTweakerUI.firstElementChild;
+		Appearance.themeTweakerUIHelpWindow = Appearance.themeTweakerUI.query(".help-window");
+		Appearance.themeTweakerUISampleTextContainer = Appearance.themeTweakerUI.query("#theme-tweak-section-sample-text .sample-text-container");
+		Appearance.themeTweakerUIClippyContainer = Appearance.themeTweakerUI.query(".clippy-container");
+		Appearance.themeTweakerUIClippyControl = Appearance.themeTweakerUI.query("#theme-tweak-control-clippy");
+
+		//	Clicking the background overlay closes the theme tweaker.
+		Appearance.themeTweakerUI.addActivateEvent(Appearance.themeTweakerUIOverlayClicked, true);
+
+		//	Intercept clicks, so they don’t “fall through” the background overlay.
+		Appearance.themeTweakerUIMainWindow.addActivateEvent((event) => {
+			event.stopPropagation();
+		}, true);
+
+		Appearance.themeTweakerUI.queryAll("input").forEach(field => {
+			/*	All input types in the theme tweaker receive a ‘change’ event 
+				when their value is changed. (Range inputs, in particular, 
+				receive this event when the user lets go of the handle.) This 
+				means we should update the filters for the entire page, to match 
+				the new setting.
+			 */
+			field.addEventListener("change", Appearance.themeTweakerUIFieldValueChanged);
+
+			/*	Range inputs receive an ‘input’ event while being scrubbed, 
+				updating “live” as the handle is moved. We don’t want to change 
+				the filters for the actual page while this is happening, but we 
+				do want to change the filters for the *sample text*, so the user
+				can see what effects his changes are having, live, without 
+				having to let go of the handle.
+			 */
+			if (field.type == "range")
+				field.addEventListener("input", Appearance.themeTweakerUIFieldInputReceived);
+		});
+
+		Appearance.themeTweakerUI.query(".minimize-button").addActivateEvent(Appearance.themeTweakerUIMinimizeButtonClicked);
+		Appearance.themeTweakerUI.query(".help-button").addActivateEvent(Appearance.themeTweakerUIHelpButtonClicked);
+		Appearance.themeTweakerUI.query(".reset-defaults-button").addActivateEvent(Appearance.themeTweakerUIResetDefaultsButtonClicked);
+		Appearance.themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(Appearance.themeTweakerUICancelButtonClicked);
+		Appearance.themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(Appearance.themeTweakerUIOKButtonClicked);
+		Appearance.themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(Appearance.themeTweakerUIHelpWindowCancelButtonClicked);
+		Appearance.themeTweakerUI.query(".help-window .ok-button").addActivateEvent(Appearance.themeTweakerUIHelpWindowOKButtonClicked);
+
+		Appearance.themeTweakerUI.queryAll(".notch").forEach(notch => {
+			notch.addActivateEvent(Appearance.themeTweakerUISliderNotchClicked);
+		});
+
+		Appearance.themeTweakerUI.query(".clippy-close-button").addActivateEvent(Appearance.themeTweakerUIClippyCloseButtonClicked);
+
+		insertHeadHTML(`<style id="theme-tweaker-style"></style>`);
+
+		Appearance.themeTweakerUI.query(".theme-selector").innerHTML = query("#theme-selector").innerHTML;
+		Appearance.themeTweakerUI.queryAll(".theme-selector button").forEach(button => {
+			button.addActivateEvent(Appearance.themeSelectButtonClicked);
+		});
+
+		Appearance.themeTweakerUI.queryAll("#theme-tweak-section-text-size-adjust button").forEach(button => {
+			button.addActivateEvent(Appearance.textSizeAdjustButtonClicked);
+		});
+
+		Appearance.themeTweakerToggle = addUIElement(`<div id="theme-tweaker-toggle">`
+										+ `<button 
+												type="button" 
+												tabindex="-1" 
+												title="Customize appearance [;]" 
+												accesskey=";"
+													>&#xf1de;</button>`
+										+ `</div>`);
+		Appearance.themeTweakerToggle.query("button").addActivateEvent(Appearance.themeTweakerToggleClicked);
+	},
+
+	showThemeTweakerUI: () => {
+		GWLog("Appearance.showThemeTweakerUI");
+
+		Appearance.themeTweakerUI.query(".current-theme span").innerText = Appearance.getSavedTheme();
+
+		Appearance.themeTweakerUI.query("#theme-tweak-control-invert").checked = (Appearance.currentFilters["invert"] == "100%");
+		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
+			let slider = Appearance.themeTweakerUI.query("#theme-tweak-control-" + sliderName);
+			slider.value = /^[0-9]+/.exec(Appearance.currentFilters[sliderName]) || slider.dataset["defaultValue"];
+			Appearance.themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset["labelSuffix"];
+		});
+
+		Appearance.toggleThemeTweakerUI();
+		event.target.disabled = true;
+	},
+
+	toggleThemeTweakerUI: () => {
+		GWLog("Appearance.toggleThemeTweakerUI");
+
+		Appearance.themeTweakerUI.style.display = Appearance.themeTweakerUI.style.display == "none" 
+											  ? "block" 
+											  : "none";
+		query("#theme-tweaker-style").innerHTML = Appearance.themeTweakerUI.style.display == "none" 
+												  ? "" 
+												  : `#content, #ui-elements-container > div:not(#theme-tweaker-ui) { pointer-events: none; }`;
+
+		if (Appearance.themeTweakerUI.style.display != "none") {
+			// Focus invert checkbox.
+			Appearance.themeTweakerUI.query("#theme-tweaker-ui #theme-tweak-control-invert").focus();
+			// Show sample text in appropriate font.
+			Appearance.updateThemeTweakerSampleText();
+			// Disable tab-selection of the search box.
+			setSearchBoxTabSelectable(false);
+			// Disable scrolling of the page.
+			togglePageScrolling(false);
+		} else {
+			query("#theme-tweaker-toggle button").disabled = false;
+			// Re-enable tab-selection of the search box.
+			setSearchBoxTabSelectable(true);
+			// Re-enable scrolling of the page.
+			togglePageScrolling(true);
+		}
+
+		// Set theme tweaker assistant visibility.
+		Appearance.themeTweakerUIClippyContainer.style.display = (Appearance.getSavedThemeTweakerClippyState() == true) ? "block" : "none";
+	},
+
+	toggleThemeTweakerHelpWindow: () => {
+		GWLog("Appearance.toggleThemeTweakerHelpWindow");
+
+		Appearance.themeTweakerUIHelpWindow.style.display = Appearance.themeTweakerUIHelpWindow.style.display == "none" 
+														? "block" 
+														: "none";
+		if (Appearance.themeTweakerUIHelpWindow.style.display != "none") {
+			// Focus theme tweaker assistant checkbox.
+			Appearance.themeTweakerUI.query("#theme-tweak-control-clippy").focus();
+			// Disable interaction on main theme tweaker window.
+			Appearance.themeTweakerUI.style.pointerEvents = "none";
+			Appearance.themeTweakerUIMainWindow.style.pointerEvents = "none";
+		} else {
+			// Re-enable interaction on main theme tweaker window.
+			Appearance.themeTweakerUI.style.pointerEvents = "auto";
+			Appearance.themeTweakerUIMainWindow.style.pointerEvents = "auto";
+		}
+	},
+
+	resetThemeTweakerUIDefaultState: () => {
+		GWLog("Appearance.resetThemeTweakerUIDefaultState");
+
+		Appearance.themeTweakerUI.query("#theme-tweak-control-invert").checked = false;
+
+		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
+			let slider = Appearance.themeTweakerUI.query("#theme-tweak-control-" + sliderName);
+			slider.value = slider.dataset["defaultValue"];
+			Appearance.themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset["labelSuffix"];
+		});
+	},
+
+	updateThemeTweakerSampleText: () => {
+		GWLog("Appearance.updateThemeTweakerSampleText");
+
+		let sampleText = Appearance.themeTweakerUISampleTextContainer.query("#theme-tweak-section-sample-text .sample-text");
+
+		// This causes the sample text to take on the properties of the body text of a post.
+		sampleText.removeClass("body-text");
+		let bodyTextElement = query(".post-body") || query(".comment-body");
+		sampleText.addClass("body-text");
+		sampleText.style.color = bodyTextElement ? 
+			getComputedStyle(bodyTextElement).color : 
+			getComputedStyle(query("#content")).color;
+
+		// Here we find out what is the actual background color that will be visible behind
+		// the body text of posts, and set the sample text’s background to that.
+		let findStyleBackground = (selector) => {
+			let x;
+			Array.from(query("link[rel=stylesheet]").sheet.cssRules).forEach(rule => {
+				if (rule.selectorText == selector)
+					x = rule;
+			});
+			return x.style.backgroundColor;
+		};
+
+		sampleText.parentElement.style.backgroundColor = findStyleBackground("#content::before") || findStyleBackground("body") || "#fff";
+	},
+
+	injectAppearanceAdjustUIToggle: () => {
+		GWLog("Appearance.injectAppearanceAdjustUIToggle");
+
+		Appearance.appearanceAdjustUIToggle = addUIElement(`<div id="appearance-adjust-ui-toggle"><button type="button" tabindex="-1">&#xf013;</button></div>`);
+		Appearance.appearanceAdjustUIToggle.query("button").addActivateEvent(Appearance.appearanceAdjustUIToggleClicked);
+
+		if (GW.isMobile) {
+			let themeSelectorCloseButton = Appearance.appearanceAdjustUIToggle.query("button").cloneNode(true);
+			themeSelectorCloseButton.addClass("theme-selector-close-button");
+			themeSelectorCloseButton.innerHTML = "&#xf057;";
+			themeSelectorCloseButton.addActivateEvent(Appearance.appearanceAdjustUIToggleButtonClicked);
+			Appearance.themeSelector.appendChild(themeSelectorCloseButton);
+		} else {
+			if (Appearance.getSavedAppearanceAdjustUIToggleState() == true)
+				Appearance.toggleAppearanceAdjustUI();
+		}
+	},
+
+	removeAppearanceAdjustUIToggle: () => {
+		GWLog("Appearance.removeAppearanceAdjustUIToggle");
+
+		queryAll(Appearance.themeLessAppearanceAdjustUIElementsSelector).forEach(element => {
+			element.removeClass("engaged");
+		});
+		removeElement("#appearance-adjust-ui-toggle");
+	},
+
+	toggleAppearanceAdjustUI: () => {
+		GWLog("Appearance.toggleAppearanceAdjustUI");
+
+		queryAll(Appearance.themeLessAppearanceAdjustUIElementsSelector).forEach(element => {
+			element.toggleClass("engaged");
+		});
+	},
+
+	/**********/
+	/*	Events.
+	 */
+
+	appearanceAdjustUIToggleButtonClicked: (event) => {
+		GWLog("Appearance.appearanceAdjustUIToggleButtonClicked");
+
+		Appearance.toggleAppearanceAdjustUI();
+		Appearance.saveAppearanceAdjustUIToggleState();
+	},
+
+	widthAdjustButtonClicked: (event) => {
+		GWLog("Appearance.widthAdjustButtonClicked");
+
+		// Determine which setting was chosen (i.e., which button was clicked).
+		let selectedWidth = event.target.dataset.name;
+
+		//	Switch width.
+		Appearance.currentWidth = selectedWidth;
+
+		// Save the new setting.
+		Appearance.saveCurrentWidth();
+
+		// Save current visible comment
+		let visibleComment = getCurrentVisibleComment();
+
+		// Actually change the content width.
+		Appearance.setContentWidth(selectedWidth);
+		event.target.parentElement.childNodes.forEach(button => {
+			button.removeClass("selected");
+			button.disabled = false;
+		});
+		event.target.addClass("selected");
+		event.target.disabled = true;
+
+		// Make sure the accesskey (to cycle to the next width) is on the right button.
+		Appearance.setWidthAdjustButtonsAccesskey();
+
+		// Regenerate images overlay.
+		generateImagesOverlay();
+
+		if (visibleComment)
+			visibleComment.scrollIntoView();
+	},
+
+	themeSelectButtonClicked: (event) => {
+		GWLog("Appearance.themeSelectButtonClicked");
+
+		let themeName = /select-theme-([^\s]+)/.exec(event.target.className)[1];
+		let save = (Appearance.themeTweakerUI.contains(event.target) == false);
+		Appearance.setTheme(themeName, save);
+		if (GW.isMobile)
+			Appearance.toggleAppearanceAdjustUI();
+	},
+
+	textSizeAdjustButtonClicked: (event) => {
+		GWLog("Appearance.textSizeAdjustButtonClicked");
+
+		var zoomFactor = Appearance.currentTextZoom;
+		if (event.target.hasClass("decrease")) {
+			zoomFactor -= 0.05;
+		} else if (event.target.hasClass("increase")) {
+			zoomFactor += 0.05;
+		} else {
+			zoomFactor = Appearance.defaultTextZoom;
+		}
+
+		let save = (   Appearance.textSizeAdjustmentWidget != null 
+					&& Appearance.textSizeAdjustmentWidget.contains(event.target));
+		Appearance.setTextZoom(zoomFactor, save);
+	},
+
+	themeTweakerToggleClicked: (event) => {
+		GWLog("Appearance.themeTweakerToggleClicked");
+
+		if (query("link[href^='/css/theme_tweaker.css']")) {
+			// Theme tweaker CSS is already loaded.
+			Appearance.showThemeTweakerUI();
+		} else {
+			// Load the theme tweaker CSS (if not loaded).
+			let themeTweakerStyleSheet = document.createElement("link");
+			themeTweakerStyleSheet.setAttribute("rel", "stylesheet");
+			themeTweakerStyleSheet.setAttribute("href", "/css/theme_tweaker.css");
+			themeTweakerStyleSheet.addEventListener("load", (event) => {
+				requestAnimationFrame(() => {
+					themeTweakerStyleSheet.disabled = false;
+				});
+				Appearance.showThemeTweakerUI();
+			});
+			document.head.appendChild(themeTweakerStyleSheet);
+		}
+	},
+
+	themeTweakerUIKeyPressed: (event) => {
+		GWLog("Appearance.themeTweakerUIKeyPressed");
+
+		if (event.key == "Escape") {
+			if (Appearance.themeTweakerUIHelpWindow.style.display != "none") {
+				Appearance.toggleThemeTweakerHelpWindow();
+				Appearance.themeTweakerResetSettings();
+			} else if (Appearance.themeTweakerUI.style.display != "none") {
+				Appearance.toggleThemeTweakerUI();
+				Appearance.themeTweakReset();
+			}
+		} else if (event.key == "Enter") {
+			if (Appearance.themeTweakerUIHelpWindow.style.display != "none") {
+				Appearance.toggleThemeTweakerHelpWindow();
+				Appearance.themeTweakerSaveSettings();
+			} else if (Appearance.themeTweakerUI.style.display != "none") {
+				Appearance.toggleThemeTweakerUI();
+				Appearance.themeTweakSave();
+			}
+		}
+	},
+
+	themeTweakerUIOverlayClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIOverlayClicked");
+
+		if (event.type == "mousedown") {
+			Appearance.themeTweakerUI.style.opacity = "0.01";
+		} else {
+			Appearance.toggleThemeTweakerUI();
+			Appearance.themeTweakerUI.style.opacity = "1.0";
+			Appearance.themeTweakReset();
+		}
+	},
+
+	themeTweakerUIFieldValueChanged: (event) => {
+		GWLog("Appearance.themeTweakerUIFieldValueChanged");
+
+		if (event.target.id == "theme-tweak-control-invert") {
+			Appearance.currentFilters["invert"] = event.target.checked ? "100%" : "0%";
+		} else if (event.target.type == "range") {
 			let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
-			query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
-			sampleTextFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+			Appearance.themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
+			Appearance.currentFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+		} else if (event.target.id == "theme-tweak-control-clippy") {
+			Appearance.themeTweakerUIClippyContainer.style.display = event.target.checked ? "block" : "none";
+		}
 
-			sampleTextContainer.style.filter = filterStringFromFilters(sampleTextFilters);
-		});
-	});
+		// Clear the sample text filters.
+		Appearance.themeTweakerUISampleTextContainer.style.filter = "";
 
-	themeTweakerUI.query(".minimize-button").addActivateEvent(GW.themeTweaker.minimizeButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.minimizeButtonClicked");
-		let themeTweakerStyle = query("#theme-tweaker-style");
+		// Apply the new filters globally.
+		Appearance.applyFilters();
+	},
+
+	themeTweakerUIFieldInputReceived: (event) => {
+		GWLog("Appearance.themeTweakerUIFieldInputReceived");
+
+		let sampleTextFilters = Appearance.currentFilters;
+		let sliderName = /^theme-tweak-control-(.+)$/.exec(event.target.id)[1];
+		Appearance.themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = event.target.value + event.target.dataset["labelSuffix"];
+		sampleTextFilters[sliderName] = event.target.value + event.target.dataset["valueSuffix"];
+
+		Appearance.themeTweakerUISampleTextContainer.style.filter = Appearance.filterStringFromFilters(sampleTextFilters);
+	},
+
+	themeTweakerUIMinimizeButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIMinimizeButtonClicked");
+
+		let themeTweakerStyleBlock = Appearance.themeTweakerUI.query("#theme-tweaker-style");
 
 		if (event.target.hasClass("minimize")) {
 			event.target.removeClass("minimize");
-			themeTweakerStyle.innerHTML = 
+			themeTweakerStyleBlock.innerHTML = 
 				`#theme-tweaker-ui .main-theme-tweaker-window {
 					width: 320px;
 					height: 31px;
@@ -1865,213 +2244,137 @@ function injectThemeTweaker() {
 			event.target.addClass("maximize");
 		} else {
 			event.target.removeClass("maximize");
-			themeTweakerStyle.innerHTML = 
+			themeTweakerStyleBlock.innerHTML = 
 				`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
 					pointer-events: none;
 				}`;
 			event.target.addClass("minimize");
 		}
-	});
-	themeTweakerUI.query(".help-button").addActivateEvent(GW.themeTweaker.helpButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.helpButtonClicked");
-		themeTweakerUI.query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"];
-		toggleThemeTweakerHelpWindow();
-	});
-	themeTweakerUI.query(".reset-defaults-button").addActivateEvent(GW.themeTweaker.resetDefaultsButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.resetDefaultsButtonClicked");
-		themeTweakerUI.query("#theme-tweak-control-invert").checked = false;
-		[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
-			let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
-			slider.value = slider.dataset['defaultValue'];
-			themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
-		});
-		GW.currentFilters = { };
-		applyFilters(GW.currentFilters);
+	},
 
-		GW.currentTextZoom = "1.0";
-		setTextZoom(GW.currentTextZoom);
+	themeTweakerUIHelpButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIHelpButtonClicked");
 
-		setSelectedTheme("default");
-	});
-	themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(GW.themeTweaker.cancelButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.cancelButtonClicked");
-		toggleThemeTweakerUI();
-		themeTweakReset();
-	});
-	themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(GW.themeTweaker.OKButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.OKButtonClicked");
-		toggleThemeTweakerUI();
-		themeTweakSave();
-	});
-	themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(GW.themeTweaker.helpWindowCancelButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.helpWindowCancelButtonClicked");
-		toggleThemeTweakerHelpWindow();
-		themeTweakerResetSettings();
-	});
-	themeTweakerUI.query(".help-window .ok-button").addActivateEvent(GW.themeTweaker.helpWindowOKButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.helpWindowOKButtonClicked");
-		toggleThemeTweakerHelpWindow();
-		themeTweakerSaveSettings();
-	});
+		Appearance.themeTweakerUIClippyControl.checked = Appearance.getSavedThemeTweakerClippyState();
+		Appearance.toggleThemeTweakerHelpWindow();
+	},
 
-	themeTweakerUI.queryAll(".notch").forEach(notch => {
-		notch.addActivateEvent(GW.themeTweaker.sliderNotchClicked = (event) => {
-			GWLog("GW.themeTweaker.sliderNotchClicked");
-			let slider = event.target.parentElement.query("input[type='range']");
-			slider.value = slider.dataset['defaultValue'];
-			event.target.parentElement.query(".theme-tweak-control-label").innerText = slider.value + slider.dataset['labelSuffix'];
-			GW.currentFilters[/^theme-tweak-control-(.+)$/.exec(slider.id)[1]] = slider.value + slider.dataset['valueSuffix'];
-			applyFilters(GW.currentFilters);
-		});
-	});
+	themeTweakerUIResetDefaultsButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIResetDefaultsButtonClicked");
 
-	themeTweakerUI.query(".clippy-close-button").addActivateEvent(GW.themeTweaker.clippyCloseButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.clippyCloseButtonClicked");
-		themeTweakerUI.query(".clippy-container").style.display = "none";
-		localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': false }));
-		themeTweakerUI.query("#theme-tweak-control-clippy").checked = false;
-	});
+		Appearance.themeTweakResetDefaults();
+		Appearance.resetThemeTweakerUIDefaultState();
+	},
 
-	query("head").insertAdjacentHTML("beforeend","<style id='theme-tweaker-style'></style>");
+	themeTweakerUICancelButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUICancelButtonClicked");
 
-	themeTweakerUI.query(".theme-selector").innerHTML = query("#theme-selector").innerHTML;
-	themeTweakerUI.queryAll(".theme-selector button").forEach(button => {
-		button.addActivateEvent(GW.themeSelectButtonClicked);
-	});
+		Appearance.toggleThemeTweakerUI();
+		Appearance.themeTweakReset();
+	},
 
-	themeTweakerUI.queryAll("#theme-tweak-section-text-size-adjust button").forEach(button => {
-		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
-	});
+	themeTweakerUIOKButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIOKButtonClicked");
 
-	let themeTweakerToggle = addUIElement(`<div id='theme-tweaker-toggle'><button type='button' tabindex='-1' title="Customize appearance [;]" accesskey=';'>&#xf1de;</button></div>`);
-	themeTweakerToggle.query("button").addActivateEvent(GW.themeTweaker.toggleButtonClicked = (event) => {
-		GWLog("GW.themeTweaker.toggleButtonClicked");
-		GW.themeTweakerStyleSheetAvailable = () => {
-			GWLog("GW.themeTweakerStyleSheetAvailable");
-			themeTweakerUI.query(".current-theme span").innerText = (readCookie("theme") || "default");
+		Appearance.toggleThemeTweakerUI();
+		Appearance.themeTweakSave();
+	},
 
-			themeTweakerUI.query("#theme-tweak-control-invert").checked = (GW.currentFilters['invert'] == "100%");
-			[ "saturate", "brightness", "contrast", "hue-rotate" ].forEach(sliderName => {
-				let slider = themeTweakerUI.query("#theme-tweak-control-" + sliderName);
-				slider.value = /^[0-9]+/.exec(GW.currentFilters[sliderName]) || slider.dataset['defaultValue'];
-				themeTweakerUI.query("#theme-tweak-label-" + sliderName).innerText = slider.value + slider.dataset['labelSuffix'];
-			});
+	themeTweakerUIHelpWindowCancelButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIHelpWindowCancelButtonClicked");
 
-			toggleThemeTweakerUI();
-			event.target.disabled = true;
-		};
+		Appearance.toggleThemeTweakerHelpWindow();
+		Appearance.themeTweakerResetSettings();
+	},
 
-		if (query("link[href^='/css/theme_tweaker.css']")) {
-			// Theme tweaker CSS is already loaded.
-			GW.themeTweakerStyleSheetAvailable();
-		} else {
-			// Load the theme tweaker CSS (if not loaded).
-			let themeTweakerStyleSheet = document.createElement('link');
-			themeTweakerStyleSheet.setAttribute('rel', 'stylesheet');
-			themeTweakerStyleSheet.setAttribute('href', '/css/theme_tweaker.css');
-			themeTweakerStyleSheet.addEventListener('load', GW.themeTweakerStyleSheetAvailable);
-			query("head").appendChild(themeTweakerStyleSheet);
-		}
-	});
-}
-function toggleThemeTweakerUI() {
-	GWLog("toggleThemeTweakerUI");
-	let themeTweakerUI = query("#theme-tweaker-ui");
-	themeTweakerUI.style.display = (themeTweakerUI.style.display == "none") ? "block" : "none";
-	query("#theme-tweaker-style").innerHTML = (themeTweakerUI.style.display == "none") ? "" : 
-		`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-			pointer-events: none;
-		}`;
-	if (themeTweakerUI.style.display != "none") {
-		// Save selected theme.
-		GW.currentTheme = (readCookie("theme") || "default");
-		// Focus invert checkbox.
-		query("#theme-tweaker-ui #theme-tweak-control-invert").focus();
-		// Show sample text in appropriate font.
-		updateThemeTweakerSampleText();
-		// Disable tab-selection of the search box.
-		setSearchBoxTabSelectable(false);
-		// Disable scrolling of the page.
-		togglePageScrolling(false);
-	} else {
-		query("#theme-tweaker-toggle button").disabled = false;
-		// Re-enable tab-selection of the search box.
-		setSearchBoxTabSelectable(true);
-		// Re-enable scrolling of the page.
-		togglePageScrolling(true);
+	themeTweakerUIHelpWindowOKButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIHelpWindowOKButtonClicked");
+
+		Appearance.toggleThemeTweakerHelpWindow();
+		Appearance.themeTweakerSaveSettings();
+	},
+
+	themeTweakerUISliderNotchClicked: (event) => {
+		GWLog("Appearance.themeTweakerUISliderNotchClicked");
+
+		let slider = event.target.parentElement.query("input[type='range']");
+		slider.value = slider.dataset["defaultValue"];
+		event.target.parentElement.query(".theme-tweak-control-label").innerText = slider.value + slider.dataset["labelSuffix"];
+		Appearance.currentFilters[/^theme-tweak-control-(.+)$/.exec(slider.id)[1]] = slider.value + slider.dataset["valueSuffix"];
+		Appearance.applyFilters();
+	},
+
+	themeTweakerUIClippyCloseButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUIClippyCloseButtonClicked");
+
+		Appearance.themeTweakerUIClippyContainer.style.display = "none";
+		Appearance.themeTweakerUIClippyControl.checked = false;
+		Appearance.saveThemeTweakerClippyState();
 	}
-	// Set theme tweaker assistant visibility.
-	query(".clippy-container").style.display = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')["showClippy"] ? "block" : "none";
-}
+};
+
 function setSearchBoxTabSelectable(selectable) {
 	GWLog("setSearchBoxTabSelectable");
 	query("input[type='search']").tabIndex = selectable ? "" : "-1";
 	query("input[type='search'] + button").tabIndex = selectable ? "" : "-1";
 }
-function toggleThemeTweakerHelpWindow() {
-	GWLog("toggleThemeTweakerHelpWindow");
-	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
-	themeTweakerHelpWindow.style.display = (themeTweakerHelpWindow.style.display == "none") ? "block" : "none";
-	if (themeTweakerHelpWindow.style.display != "none") {
-		// Focus theme tweaker assistant checkbox.
-		query("#theme-tweaker-ui #theme-tweak-control-clippy").focus();
-		// Disable interaction on main theme tweaker window.
-		query("#theme-tweaker-ui").style.pointerEvents = "none";
-		query("#theme-tweaker-ui .main-theme-tweaker-window").style.pointerEvents = "none";
-	} else {
-		// Re-enable interaction on main theme tweaker window.
-		query("#theme-tweaker-ui").style.pointerEvents = "auto";
-		query("#theme-tweaker-ui .main-theme-tweaker-window").style.pointerEvents = "auto";
+
+// Hide the post-nav-ui toggle if none of the elements to be toggled are visible; 
+// otherwise, show it.
+function updatePostNavUIVisibility() {
+	GWLog("updatePostNavUIVisibility");
+	var hidePostNavUIToggle = true;
+	queryAll("#quick-nav-ui a, #new-comment-nav-ui").forEach(element => {
+		if (getComputedStyle(element).visibility == "visible" ||
+			element.style.visibility == "visible" ||
+			element.style.visibility == "unset")
+			hidePostNavUIToggle = false;
+	});
+	queryAll("#quick-nav-ui, #post-nav-ui-toggle").forEach(element => {
+		element.style.visibility = hidePostNavUIToggle ? "hidden" : "";
+	});
+}
+
+// Hide the site nav and appearance adjust UIs on scroll down; show them on scroll up.
+// NOTE: The UIs are re-shown on scroll up ONLY if the user has them set to be 
+// engaged; if they're manually disengaged, they are not re-engaged by scroll.
+function updateSiteNavUIState(event) {
+	GWLog("updateSiteNavUIState");
+	let newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+	GW.scrollState.unbrokenDownScrollDistance = (newScrollTop > GW.scrollState.lastScrollTop) ? 
+														(GW.scrollState.unbrokenDownScrollDistance + newScrollTop - GW.scrollState.lastScrollTop) : 
+														0;
+	GW.scrollState.unbrokenUpScrollDistance = (newScrollTop < GW.scrollState.lastScrollTop) ?
+													 (GW.scrollState.unbrokenUpScrollDistance + GW.scrollState.lastScrollTop - newScrollTop) :
+													 0;
+	GW.scrollState.lastScrollTop = newScrollTop;
+
+	// Hide site nav UI and appearance adjust UI when scrolling a full page down.
+	if (GW.scrollState.unbrokenDownScrollDistance > window.innerHeight) {
+		if (GW.scrollState.siteNavUIToggleButton.hasClass("engaged")) toggleSiteNavUI();
+		if (GW.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) 
+			Appearance.toggleAppearanceAdjustUI();
 	}
-}
-function themeTweakReset() {
-	GWLog("themeTweakReset");
-	setSelectedTheme(GW.currentTheme);
-	GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
-	applyFilters(GW.currentFilters);
-	GW.currentTextZoom = `${parseFloat(localStorage.getItem("text-zoom")) || 1.0}`;
-	setTextZoom(GW.currentTextZoom);
-}
-function themeTweakSave() {
-	GWLog("themeTweakSave");
-	GW.currentTheme = (readCookie("theme") || "default");
-	localStorage.setItem("theme-tweaks", JSON.stringify(GW.currentFilters));
-	localStorage.setItem("text-zoom", GW.currentTextZoom);
-}
 
-function themeTweakerResetSettings() {
-	GWLog("themeTweakerResetSettings");
-	query("#theme-tweak-control-clippy").checked = JSON.parse(localStorage.getItem("theme-tweaker-settings") || '{ "showClippy": true }')['showClippy'];
-	query(".clippy-container").style.display = query("#theme-tweak-control-clippy").checked ? "block" : "none";
-}
-function themeTweakerSaveSettings() {
-	GWLog("themeTweakerSaveSettings");
-	localStorage.setItem("theme-tweaker-settings", JSON.stringify({ 'showClippy': query("#theme-tweak-control-clippy").checked }));
-}
-function updateThemeTweakerSampleText() {
-	GWLog("updateThemeTweakerSampleText");
-	let sampleText = query("#theme-tweaker-ui #theme-tweak-section-sample-text .sample-text");
-
-	// This causes the sample text to take on the properties of the body text of a post.
-	sampleText.removeClass("body-text");
-	let bodyTextElement = query(".post-body") || query(".comment-body");
-	sampleText.addClass("body-text");
-	sampleText.style.color = bodyTextElement ? 
-		getComputedStyle(bodyTextElement).color : 
-		getComputedStyle(query("#content")).color;
-
-	// Here we find out what is the actual background color that will be visible behind
-	// the body text of posts, and set the sample text’s background to that.
-	let findStyleBackground = (selector) => {
-		let x;
-		Array.from(query("link[rel=stylesheet]").sheet.cssRules).forEach(rule => {
-			if(rule.selectorText == selector)
-				x = rule;
+	// On mobile, make site nav UI translucent on ANY scroll down.
+	if (GW.isMobile)
+		GW.scrollState.siteNavUIElements.forEach(element => {
+			if (GW.scrollState.unbrokenDownScrollDistance > 0) element.addClass("translucent-on-scroll");
+			else element.removeClass("translucent-on-scroll");
 		});
-		return x.style.backgroundColor;
-	};
 
-	sampleText.parentElement.style.backgroundColor = findStyleBackground("#content::before") || findStyleBackground("body") || "#fff";
+	// Show site nav UI when scrolling a full page up, or to the top.
+	if ((GW.scrollState.unbrokenUpScrollDistance > window.innerHeight || 
+		 GW.scrollState.lastScrollTop == 0) &&
+		(!GW.scrollState.siteNavUIToggleButton.hasClass("engaged") && 
+		 localStorage.getItem("site-nav-ui-toggle-engaged") != "false")) toggleSiteNavUI();
+
+	// On desktop, show appearance adjust UI when scrolling to the top.
+	if ((!GW.isMobile) && 
+		(GW.scrollState.lastScrollTop == 0) &&
+		(!GW.scrollState.appearanceAdjustUIToggleButton.hasClass("engaged")) && 
+		(localStorage.getItem("appearance-adjust-ui-toggle-engaged") != "false")) 
+			Appearance.toggleAppearanceAdjustUI();
 }
 
 /*********************/
@@ -2165,52 +2468,6 @@ function updateNewCommentNavUI(newCommentsCount, hnsDate = -1) {
 	if (hnsDate != -1) {
 		query("#hns-date-picker input").value = (new Date(+ hnsDate - (new Date()).getTimezoneOffset() * 60e3)).toISOString().slice(0, 16).replace('T', ' ');
 	}
-}
-
-/***************************/
-/* TEXT SIZE ADJUSTMENT UI */
-/***************************/
-
-GW.themeTweaker.textSizeAdjustButtonClicked = (event) => {
-	GWLog("GW.themeTweaker.textSizeAdjustButtonClicked");
-	var zoomFactor = parseFloat(GW.currentTextZoom) || 1.0;
-	if (event.target.hasClass("decrease")) {
-		zoomFactor = (zoomFactor - 0.05).toFixed(2);
-	} else if (event.target.hasClass("increase")) {
-		zoomFactor = (zoomFactor + 0.05).toFixed(2);
-	} else {
-		zoomFactor = 1.0;
-	}
-	setTextZoom(zoomFactor);
-	GW.currentTextZoom = `${zoomFactor}`;
-
-	if (event.target.parentElement.id == "text-size-adjustment-ui") {
-		localStorage.setItem("text-zoom", GW.currentTextZoom);
-	}
-};
-
-function injectTextSizeAdjustmentUIReal() {
-	GWLog("injectTextSizeAdjustmentUIReal");
-	let textSizeAdjustmentUIContainer = addUIElement("<div id='text-size-adjustment-ui'>"
-	+ `<button type='button' class='text-size-adjust-button decrease' title="Decrease text size [-]" tabindex='-1' accesskey='-'>&#xf068;</button>`
-	+ `<button type='button' class='text-size-adjust-button default' title="Reset to default text size [0]" tabindex='-1' accesskey='0'>A</button>`
-	+ `<button type='button' class='text-size-adjust-button increase' title="Increase text size [=]" tabindex='-1' accesskey='='>&#xf067;</button>`
-	+ "</div>");
-
-	textSizeAdjustmentUIContainer.queryAll("button").forEach(button => {
-		button.addActivateEvent(GW.themeTweaker.textSizeAdjustButtonClicked);
-	});
-
-	GW.currentTextZoom = `${parseFloat(localStorage.getItem("text-zoom")) || 1.0}`;
-}
-
-function injectTextSizeAdjustmentUI() {
-	GWLog("injectTextSizeAdjustmentUI");
-	if (query("#text-size-adjustment-ui") != null) return;
-	if (query("#content.post-page") != null) injectTextSizeAdjustmentUIReal();
-	else document.addEventListener("DOMContentLoaded", () => {
-		if (!(query(".post-body") == null && query(".comment-body") == null)) injectTextSizeAdjustmentUIReal();
-	}, {once: true});
 }
 
 /********************************/
@@ -2426,56 +2683,6 @@ function removePostNavUIToggle() {
 function togglePostNavUI() {
 	GWLog("togglePostNavUI");
 	queryAll("#quick-nav-ui, #new-comment-nav-ui, #hns-date-picker, #post-nav-ui-toggle button").forEach(element => {
-		element.toggleClass("engaged");
-	});
-}
-
-/*******************************/
-/* APPEARANCE ADJUST UI TOGGLE */
-/*******************************/
-
-function injectAppearanceAdjustUIToggle() {
-	GWLog("injectAppearanceAdjustUIToggle");
-	let appearanceAdjustUIToggle = addUIElement("<div id='appearance-adjust-ui-toggle'><button type='button' tabindex='-1'>&#xf013;</button></div>");
-	appearanceAdjustUIToggle.query("button").addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked = (event) => {
-		GWLog("GW.appearanceAdjustUIToggleButtonClicked");
-		toggleAppearanceAdjustUI();
-		localStorage.setItem("appearance-adjust-ui-toggle-engaged", event.target.hasClass("engaged"));
-	});
-
-	if (GW.isMobile) {
-		let themeSelectorCloseButton = appearanceAdjustUIToggle.query("button").cloneNode(true);
-		themeSelectorCloseButton.addClass("theme-selector-close-button");
-		themeSelectorCloseButton.innerHTML = "&#xf057;";
-		query("#theme-selector").appendChild(themeSelectorCloseButton);
-		themeSelectorCloseButton.addActivateEvent(GW.appearanceAdjustUIToggleButtonClicked);
-	} else {
-		if (localStorage.getItem("appearance-adjust-ui-toggle-engaged") == "true") toggleAppearanceAdjustUI();
-	}
-}
-GW.themes = {
-	less: {
-		appearanceAdjustUIElementsSelector: [
-			"#comments-view-mode-selector", 
-			"#theme-selector", 
-			"#dark-mode-selector",
-			"#width-selector", 
-			"#text-size-adjustment-ui", 
-			"#theme-tweaker-toggle", 
-			"#appearance-adjust-ui-toggle button"
-		].join(", ")
-	}
-};
-function removeAppearanceAdjustUIToggle() {
-	GWLog("removeAppearanceAdjustUIToggle");
-	queryAll(GW.themes.less.appearanceAdjustUIElementsSelector).forEach(element => {
-		element.removeClass("engaged");
-	});
-	removeElement("#appearance-adjust-ui-toggle");
-}
-function toggleAppearanceAdjustUI() {
-	GWLog("toggleAppearanceAdjustUI");
-	queryAll(GW.themes.less.appearanceAdjustUIElementsSelector).forEach(element => {
 		element.toggleClass("engaged");
 	});
 }
@@ -3092,10 +3299,10 @@ function addCommentParentPopups() {
 	});
 
 	// Due to filters vs. fixed elements, we need to be smarter about selecting which elements to filter...
-	GW.themeTweaker.filtersExclusionPaths.commentParentPopups = [
+	Appearance.filtersExclusionPaths.commentParentPopups = [
 		"#content .comments .comment-thread"
 	];
-	applyFilters(GW.currentFilters);
+	Appearance.applyFilters();
 }
 
 /***************/
@@ -3997,25 +4204,26 @@ addTriggerListener('navBarLoaded', {priority: 3000, fn: function () {
 	GW.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	// Backward compatibility
-	let storedTheme = localStorage.getItem('selected-theme');
+	let storedTheme = localStorage.getItem("selected-theme");
 	if (storedTheme) {
-		setTheme(storedTheme);
-		localStorage.removeItem('selected-theme');
+		Appearance.setTheme(storedTheme);
+		localStorage.removeItem("selected-theme");
 	}
 
 	// Animate width & theme adjustments?
-	GW.adjustmentTransitions = false;
-
+	Appearance.adjustmentTransitions = false;
 	// Add the content width selector.
-	injectContentWidthSelector();
+	Appearance.injectContentWidthSelector();
 	// Add the text size adjustment widget.
-	injectTextSizeAdjustmentUI();
+	Appearance.injectTextSizeAdjustmentUI();
+	// Add the theme selector.
+	Appearance.injectThemeSelector();
+	// Add the theme tweaker.
+	Appearance.injectThemeTweaker();
+
 	// Add the dark mode selector.
 	DarkMode.injectModeSelector();
-	// Add the theme selector.
-	injectThemeSelector();
-	// Add the theme tweaker.
-	injectThemeTweaker();
+
 	// Add the quick-nav UI.
 	injectQuickNavUI();
 
@@ -4155,10 +4363,12 @@ function mainInitializer() {
 	if (GW.isMobile) injectPostNavUIToggle();
 
 	// Add the toggle for the appearance adjustment UI elements on mobile.
-	if (GW.isMobile) injectAppearanceAdjustUIToggle();
+	if (GW.isMobile)
+		Appearance.injectAppearanceAdjustUIToggle();
 
 	// Add the antikibitzer.
-	if (GW.useFancyFeatures) injectAntiKibitzer();
+	if (GW.useFancyFeatures)
+		injectAntiKibitzer();
 
 	// Add comment parent popups.
 	injectPreviewPopupToggle();
@@ -4185,27 +4395,7 @@ function mainInitializer() {
 	});
 
 	// Add event listeners for Escape and Enter, for the theme tweaker.
-	let themeTweakerHelpWindow = query("#theme-tweaker-ui .help-window");
-	let themeTweakerUI = query("#theme-tweaker-ui");
-	document.addEventListener("keyup", GW.themeTweaker.keyPressed = (event) => {
-		if (event.key == "Escape") {
-			if (themeTweakerHelpWindow.style.display != "none") {
-				toggleThemeTweakerHelpWindow();
-				themeTweakerResetSettings();
-			} else if (themeTweakerUI.style.display != "none") {
-				toggleThemeTweakerUI();
-				themeTweakReset();
-			}
-		} else if (event.key == "Enter") {
-			if (themeTweakerHelpWindow.style.display != "none") {
-				toggleThemeTweakerHelpWindow();
-				themeTweakerSaveSettings();
-			} else if (themeTweakerUI.style.display != "none") {
-				toggleThemeTweakerUI();
-				themeTweakSave();
-			}
-		}
-	});
+	document.addEventListener("keyup", Appearance.themeTweakerUIKeyPressed);
 
 	// Add event listener for . , ; (for navigating listings pages).
 	let listings = queryAll("h1.listing a[href^='/posts'], #content > .comment-thread .comment-meta a.date");
@@ -4341,7 +4531,7 @@ window.addEventListener("pageshow", badgePostsWithNewComments);
 addTriggerListener('pageLayoutFinished', {priority: 100, fn: function () {
 	GWLog("INITIALIZER pageLayoutFinished");
 
-	postSetThemeHousekeeping();
+	Appearance.postSetThemeHousekeeping();
 
 	focusImageSpecifiedByURL();
 
@@ -4375,7 +4565,7 @@ function generateImagesOverlay() {
 		clonedImage.style.borderWidth = Math.round(parseFloat(getComputedStyle(image).borderWidth)) + "px";
 		clonedImageContainer.appendChild(clonedImage);
 
-		let zoomLevel = parseFloat(GW.currentTextZoom);
+		let zoomLevel = Appearance.currentTextZoom;
 
 		clonedImageContainer.style.top = image.getBoundingClientRect().top * zoomLevel - parseFloat(getComputedStyle(image).marginTop) + window.scrollY + "px";
 		clonedImageContainer.style.left = image.getBoundingClientRect().left * zoomLevel - parseFloat(getComputedStyle(image).marginLeft) - imagesOverlayLeftOffset + "px";
