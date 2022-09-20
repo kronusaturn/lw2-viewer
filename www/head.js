@@ -397,6 +397,8 @@ Appearance = {
 			});
 		}
 
+		Appearance.currentTextZoom = zoomFactor;
+
 		Appearance.textZoomStyleBlock.innerHTML = `${Appearance.textSizeAdjustTargetElementsSelector} { zoom: ${zoomFactor}; }`;
 
 		if (window.generateImagesOverlay) {
@@ -405,7 +407,6 @@ Appearance = {
 			});
 		}
 
-		Appearance.currentTextZoom = zoomFactor;
 		if (save)
 			Appearance.saveCurrentTextZoom();
 	},
