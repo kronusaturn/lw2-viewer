@@ -182,6 +182,13 @@ Appearance = {
 		[ "fluid",	"Full-width (fluid) content column",	"F" ]
 	],
 
+	textSizeAdjustTargetElementsSelector: [
+		".post", 
+		".comment", 
+		".posting-controls", 
+		".sample-text"
+	].join(", "),
+
 	themeOptions: [
 		[ "default",		"Default theme (dark text on light background)",	"A" ],
 		[ "dark",			"Dark theme (light text on dark background)",		"B" ],
@@ -390,10 +397,7 @@ Appearance = {
 			});
 		}
 
-		Appearance.textZoomStyleBlock.innerHTML = 
-			`.post, .comment, .comment-controls {
-				zoom: ${zoomFactor};
-			}`;
+		Appearance.textZoomStyleBlock.innerHTML = `${Appearance.textSizeAdjustTargetElementsSelector} { zoom: ${zoomFactor}; }`;
 
 		if (window.generateImagesOverlay) {
 			requestAnimationFrame(() => {
