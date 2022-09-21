@@ -12,20 +12,22 @@
   `(uiop:run-program (append *wrapper-program* (list ,@program-args)) ,@lisp-args))
 
 (defun image-statistics (image-filename)
-  (let* ((result-list (with-semaphore (*image-convert-semaphore*)
-			(run-program ("convert" image-filename "-format" "%w %h\\n" "info:")
-				     :output (lambda (stream)
-					       (let ((width-height (split-sequence #\Space (read-line stream)))
-						     (animation-frames 1))
-						 (iter (while (read-line stream nil))
-						       (incf animation-frames))
-						 (list* animation-frames width-height))))))
+  (let* ((result (with-semaphore (*image-convert-semaphore*)
+		   (run-program ("convert" image-filename "-format" "%w %h %[orientation]\\n" "info:")
+				:output (lambda (stream)
+					  (destructuring-bind (&optional width height orientation) (split-sequence #\Space (read-line stream))
+					    (when (ppcre:scan "^(?:Right|Left)" orientation)
+					      (rotatef width height))
+					    (let ((animation-frames 1))
+					      (iter (while (read-line stream nil))
+						    (incf animation-frames))
+					      (alist :width (parse-integer width)
+						     :height (parse-integer height)
+						     :orientation orientation
+						     :animation-frames animation-frames)))))))
 	 (mime-type (run-program ("file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
-    (destructuring-bind (animation-frames width height) result-list
-      (alist :width (parse-integer width)
-	     :height (parse-integer height)
-	     :animation-frames animation-frames
-	     :mime-type mime-type))))
+    (alist* :mime-type mime-type
+	    result)))
 
 (defun string-to-brightness (color-string)
   (let ((color-value (parse-integer color-string :radix 16)))
@@ -100,7 +102,7 @@
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
 (sb-ext:defglobal *image-threads* (make-hash-table :test 'equal :synchronized t))
-(defparameter *current-version* 3)
+(defparameter *current-version* 4)
 
 (defun filename-to-uri (filename)
   (concatenate 'base-string "/proxy-assets/" filename))
