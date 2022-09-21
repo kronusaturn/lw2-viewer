@@ -162,7 +162,7 @@ deferredCalls = null;
 /*	Return the currently selected text, as HTML (rather than unstyled text).
 	*/
 function getSelectionHTML() {
-	var container = document.createElement("div");
+	let container = newElement("DIV");
 	container.appendChild(window.getSelection().getRangeAt(0).cloneContents());
 	return container.innerHTML;
 }
@@ -172,12 +172,9 @@ function getSelectionHTML() {
 	returns the created element.
 	*/
 function addUIElement(element_html) {
-	var ui_elements_container = query("#ui-elements-container");
-	if (!ui_elements_container) {
-		ui_elements_container = document.createElement("nav");
-		ui_elements_container.id = "ui-elements-container";
-		query("body").appendChild(ui_elements_container);
-	}
+	let ui_elements_container = query("#ui-elements-container");
+	if (ui_elements_container == null)
+		ui_elements_container = document.body.appendChild(newElement("NAV", { "id": "ui-elements-container" }));
 
 	ui_elements_container.insertAdjacentHTML("beforeend", element_html);
 	return ui_elements_container.lastElementChild;
@@ -201,14 +198,13 @@ String.prototype.hasPrefix = function (prefix) {
 /*	Toggles whether the page is scrollable.
 	*/
 function togglePageScrolling(enable) {
-	let body = query("body");
 	if (!enable) {
 		GW.scrollPositionBeforeScrollingDisabled = window.scrollY;
-		body.addClass("no-scroll");
-		body.style.top = `-${GW.scrollPositionBeforeScrollingDisabled}px`;
+		document.body.addClass("no-scroll");
+		document.body.style.top = `-${GW.scrollPositionBeforeScrollingDisabled}px`;
 	} else {
-		body.removeClass("no-scroll");
-		body.removeAttribute("style");
+		document.body.removeClass("no-scroll");
+		document.body.removeAttribute("style");
 		window.scrollTo(0, GW.scrollPositionBeforeScrollingDisabled);
 	}
 }
@@ -810,11 +806,12 @@ function voteEvent(voteButton, numClicks) {
 
 function initializeVoteButtons() {
 	// Color the upvote/downvote buttons with an embedded style sheet.
-	insertHeadHTML("<style id='vote-buttons'>" + `
+	insertHeadHTML(`<style id="vote-buttons">
 		:root {
 			--GW-upvote-button-color: #00d800;
 			--GW-downvote-button-color: #eb4c2a;
-		}\n` + "</style>");
+		}
+	</style>`);
 }
 
 function processVoteData(voteData) {
@@ -857,7 +854,7 @@ function getCurrentVisibleComment() {
 	let px = window.innerWidth/2, py = 5;
 	let commentItem = document.elementFromPoint(px, py).closest(".comment-item") || document.elementFromPoint(px, py+60).closest(".comment-item"); // Mind the gap between threads
 	let bottomBar = query("#bottom-bar");
-	let bottomOffset = (bottomBar ? bottomBar.getBoundingClientRect().top : query("body").getBoundingClientRect().bottom);
+	let bottomOffset = (bottomBar ? bottomBar.getBoundingClientRect().top : document.body.getBoundingClientRect().bottom);
 	let atbottom =  bottomOffset <= window.innerHeight;
 	if (atbottom) {
 		let hashci = location.hash && query(location.hash);
@@ -1279,15 +1276,17 @@ Appearance = { ...Appearance,
 	 */
 
 	makeNewStyle: (newThemeName, colorSchemePreference) => {
-		let styleSheetNameSuffix = (newThemeName == Appearance.defaultTheme) ? "" : ("-" + newThemeName);
+		let styleSheetNameSuffix = newThemeName == Appearance.defaultTheme
+								   ? "" 
+								   : ("-" + newThemeName);
 		let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='.css']").href);
 
-		let newStyle = document.createElement("link");
-		newStyle.setAttribute("class", "theme");
-		if (colorSchemePreference)
-			newStyle.setAttribute("media", "(prefers-color-scheme: " + colorSchemePreference + ")");
-		newStyle.setAttribute("rel", "stylesheet");
-		newStyle.setAttribute("href", "/css/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1]);
+		let newStyle = newElement("LINK", {
+			"class": "theme",
+			"rel": "stylesheet",
+			"href": ("/css/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1]),
+			"media": (colorSchemePreference ? ("(prefers-color-scheme: " + colorSchemePreference + ")") : "")
+		});
 		return newStyle;
 	},
 
@@ -1395,10 +1394,10 @@ Appearance = { ...Appearance,
 		dark: (fromTheme = "") => {
 			GWLog("Appearance.themeLoadCallbacks.dark");
 
-			insertHeadHTML(`<style id="dark-theme-adjustments">`  
-				+ `.markdown-reference-link a { color: #d200cf; filter: invert(100%); }`
-				+ `#bottom-bar.decorative::before { filter: invert(100%); }`
-				+ `</style>`);
+			insertHeadHTML(`<style id="dark-theme-adjustments">
+				.markdown-reference-link a { color: #d200cf; filter: invert(100%); }
+				#bottom-bar.decorative::before { filter: invert(100%); }
+			</style>`);
 			registerInitializer("makeImagesGlow", true, () => query("#images-overlay") != null, () => {
 				queryAll(GW.imageFocus.overlayImagesSelector).forEach(image => {
 					image.style.filter = "drop-shadow(0 0 0 #000) drop-shadow(0 0 0.5px #fff) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)";
@@ -1649,14 +1648,14 @@ Appearance = { ...Appearance,
 		//	Inject transitions CSS, if animating changes is enabled.
 		if (Appearance.adjustmentTransitions) {
 			insertHeadHTML(
-				"<style id='width-transition'>" + 
-				`#content,
-				#ui-elements-container,
-				#images-overlay {
-					transition:
-						max-width 0.3s ease;
-				}` + 
-				"</style>");
+				`<style id="width-transition">
+					#content,
+					#ui-elements-container,
+					#images-overlay {
+						transition:
+							max-width 0.3s ease;
+					}
+				</style>`);
 		}
 	},
 
@@ -1726,10 +1725,17 @@ Appearance = { ...Appearance,
 			button.addActivateEvent(Appearance.themeSelectButtonClicked);
 		});
 
-		// Inject transitions CSS, if animating changes is enabled.
+		//	Add close button.
+		if (GW.isMobile) {
+			let themeSelectorCloseButton = newElement("BUTTON", { "class": "theme-selector-close-button" }, { "innerHTML": "&#xf057;" });
+			themeSelectorCloseButton.addActivateEvent(Appearance.themeSelectorCloseButtonClicked);
+			Appearance.themeSelector.appendChild(themeSelectorCloseButton);
+		}
+
+		//	Inject transitions CSS, if animating changes is enabled.
 		if (Appearance.adjustmentTransitions) {
-			insertHeadHTML("<style id='theme-fade-transition'>" + 
-				`body {
+			insertHeadHTML(`<style id="theme-fade-transition">
+				body {
 					transition:
 						opacity 0.5s ease-out,
 						background-color 0.3s ease-out;
@@ -1740,8 +1746,8 @@ Appearance = { ...Appearance,
 					transition:
 						opacity 0.5s ease-in,
 						background-color 0.3s ease-in;
-				}` + 
-			"</style>");
+				}
+			</style>`);
 		}
 	},
 
@@ -2017,15 +2023,9 @@ Appearance = { ...Appearance,
 		Appearance.appearanceAdjustUIToggle = addUIElement(`<div id="appearance-adjust-ui-toggle"><button type="button" tabindex="-1">&#xf013;</button></div>`);
 		Appearance.appearanceAdjustUIToggle.query("button").addActivateEvent(Appearance.appearanceAdjustUIToggleButtonClicked);
 
-		if (GW.isMobile) {
-			let themeSelectorCloseButton = Appearance.appearanceAdjustUIToggle.query("button").cloneNode(true);
-			themeSelectorCloseButton.addClass("theme-selector-close-button");
-			themeSelectorCloseButton.innerHTML = "&#xf057;";
-			themeSelectorCloseButton.addActivateEvent(Appearance.appearanceAdjustUIToggleButtonClicked);
-			Appearance.themeSelector.appendChild(themeSelectorCloseButton);
-		} else {
-			if (Appearance.getSavedAppearanceAdjustUIToggleState() == true)
-				Appearance.toggleAppearanceAdjustUI();
+		if (  !GW.isMobile 
+			&& Appearance.getSavedAppearanceAdjustUIToggleState() == true) {
+			Appearance.toggleAppearanceAdjustUI();
 		}
 	},
 
@@ -2049,6 +2049,13 @@ Appearance = { ...Appearance,
 	/**********/
 	/*	Events.
 	 */
+
+	themeSelectorCloseButtonClicked: (event) => {
+		GWLog("Appearance.themeSelectorCloseButtonClicked");
+
+		Appearance.toggleAppearanceAdjustUI();
+		Appearance.saveAppearanceAdjustUIToggleState();
+	},
 
 	appearanceAdjustUIToggleButtonClicked: (event) => {
 		GWLog("Appearance.appearanceAdjustUIToggleButtonClicked");
@@ -2122,13 +2129,14 @@ Appearance = { ...Appearance,
 		GWLog("Appearance.themeTweakerToggleClicked");
 
 		if (query("link[href^='/css/theme_tweaker.css']")) {
-			// Theme tweaker CSS is already loaded.
+			//	Theme tweaker CSS is already loaded.
 			Appearance.showThemeTweakerUI();
 		} else {
-			// Load the theme tweaker CSS (if not loaded).
-			let themeTweakerStyleSheet = document.createElement("link");
-			themeTweakerStyleSheet.setAttribute("rel", "stylesheet");
-			themeTweakerStyleSheet.setAttribute("href", "/css/theme_tweaker.css");
+			//	Load the theme tweaker CSS (if not loaded).
+			let themeTweakerStyleSheet = newElement("LINK", {
+				"rel": "stylesheet",
+				"href": "/css/theme_tweaker.css"
+			});
 			themeTweakerStyleSheet.addEventListener("load", (event) => {
 				requestAnimationFrame(() => {
 					themeTweakerStyleSheet.disabled = false;
@@ -2543,8 +2551,7 @@ function injectCommentsViewModeSelector() {
 // }
 // 
 // function htmlToElement(html) {
-//     var template = document.createElement('template');
-//     template.innerHTML = html.trim();
+//     let template = newElement("TEMPLATE", { }, { "innerHTML": html.trim() });
 //     return template.content;
 // }
 
@@ -3164,7 +3171,7 @@ function addCommentParentPopups() {
 
 					currentPreviewPopup = {linkTag: linkTag};
 					
-					let popup = document.createElement("iframe");
+					let popup = newElement("IFRAME");
 					currentPreviewPopup.element = popup;
 
 					let popupTarget = linkHref;
@@ -3212,9 +3219,11 @@ function addCommentParentPopups() {
 					};
 
 					popup.addEventListener("load", () => {
-						let hideButton = popup.contentDocument.createElement("div");
-						hideButton.className = "popup-hide-button";
-						hideButton.insertAdjacentText('beforeend', "\uF070");
+						let hideButton = newElement("DIV", {
+							"class": "popup-hide-button"
+						}, {
+							"innerHTML": "&#xf070;"
+						});
 						hideButton.onclick = (event) => {
 							removePreviewPopup(currentPreviewPopup);
 							setPreviewPopupsEnabled(false);
@@ -3222,9 +3231,9 @@ function addCommentParentPopups() {
 						}
 						popup.contentDocument.body.appendChild(hideButton);
 						
-						let body = popup.contentDocument.body;
-						body.addEventListener("click", clickListener);
-						body.style.cursor = "pointer";
+						let popupBody = popup.contentDocument.body;
+						popupBody.addEventListener("click", clickListener);
+						popupBody.style.cursor = "pointer";
 
 						recenter();
 					});
@@ -4287,7 +4296,7 @@ function mainInitializer() {
 		}
 	}
 	if (getQueryVariable("chrono") == "t") {
-		insertHeadHTML("<style>.comment-minimize-button::after { display: none; }</style>");
+		insertHeadHTML(`<style> .comment-minimize-button::after { display: none; } </style>`);
 	}
 
 	// On mobile, replace the labels for the checkboxes on the edit post form
@@ -4483,7 +4492,7 @@ function mainInitializer() {
 		removeElement("style", styleTag.parentElement);
 	});
 	if (aggregatedStyles != "") {
-		insertHeadHTML("<style id='mathjax-styles'>" + aggregatedStyles + "</style>");
+		insertHeadHTML(`<style id="mathjax-styles"> ${aggregatedStyles} </style>`);
 	}
 
 	// Add listeners to switch between word count and read time.
@@ -4537,15 +4546,15 @@ addTriggerListener('pageLayoutFinished', {priority: 100, fn: function () {
 
 	// FOR TESTING ONLY, COMMENT WHEN DEPLOYING.
 // 	query("input[type='search']").value = GW.isMobile;
-// 	insertHeadHTML("<style>" +
-// 		`@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}` + 
-// 		`@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}` + 
-// 		"</style>");
+// 	insertHeadHTML(`<style>
+// 		@media only screen and (hover:none) { #nav-item-search input { background-color: red; }}
+// 		@media only screen and (hover:hover) { #nav-item-search input { background-color: LightGreen; }}
+// 	</style>`);
 }});
 
 function generateImagesOverlay() {
 	GWLog("generateImagesOverlay");
-	// Don't do this on the about page.
+	// Don’t do this on the about page.
 	if (query(".about-page") != null) return;
 	return;
 
@@ -4553,11 +4562,11 @@ function generateImagesOverlay() {
 	removeElement("#images-overlay");
 
 	// Create new.
-	query("body").insertAdjacentHTML("afterbegin", "<div id='images-overlay'></div>");
+	document.body.insertAdjacentHTML("afterbegin", "<div id='images-overlay'></div>");
 	let imagesOverlay = query("#images-overlay");
 	let imagesOverlayLeftOffset = imagesOverlay.getBoundingClientRect().left;
 	queryAll(".post-body img").forEach(image => {
-		let clonedImageContainer = document.createElement("div");
+		let clonedImageContainer = newElement("DIV");
 
 		let clonedImage = image.cloneNode(true);
 		clonedImage.style.borderStyle = getComputedStyle(image).borderStyle;

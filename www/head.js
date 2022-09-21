@@ -87,7 +87,7 @@ Element.prototype.swapClasses = function (classes, whichToAdd) {
 /* DOM helpers */
 
 function insertHeadHTML(html) {
-	document.head.insertAdjacentHTML("beforeend", html);
+	document.head.insertAdjacentHTML("beforeend", html.replace(/\s+/, " "));
 }
 
 /********************/
@@ -146,8 +146,10 @@ Array.prototype.clone = function() {
 	return JSON.parse(JSON.stringify(this));
 };
 
+/********************************************************************/
 /*	Reads the value of named cookie.
-	Returns the cookie as a string, or null if no such cookie exists. */
+	Returns the cookie as a string, or null if no such cookie exists.
+ */
 function readCookie(name) {
 	var nameEQ = name + "=";
 	var ca = document.cookie.split(';');
@@ -157,6 +159,21 @@ function readCookie(name) {
 		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
 	}
 	return null;
+}
+
+/***************************************************************************/
+/*	Create and return a new element with the specified tag name, attributes,
+	and object properties.
+ */
+function newElement(tagName, attributes = { }, properties = { }) {
+	let element = document.createElement(tagName);
+	for (const attrName in attributes)
+		if (attributes.hasOwnProperty(attrName))
+			element.setAttribute(attrName, attributes[attrName]);
+	for (const propName in properties)
+		if (properties.hasOwnProperty(propName))
+			element[propName] = properties[propName];
+	return element;
 }
 
 /****************************/
@@ -598,30 +615,36 @@ Element.prototype.constructCommentControls = function() {
 	
 	let commentType = commentControls.parentElement.id.replace(/s$/, "");
 	commentControls.innerHTML = "";
-	let replyButton = document.createElement("button");
+	let replyButton;
 	if (commentControls.parentElement.hasClass("comments")) {
-		replyButton.className = "new-comment-button action-button";
-		replyButton.innerHTML = (commentType == "nomination" ? "Add nomination" : "Post new " + commentType);
-		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : ""));
-		replyButton.setAttribute("title", "Post new " + commentType + (commentType == "comment" ? " [n]" : ""));
+		replyButton = newElement("BUTTON", {
+			"class": "new-comment-button action-button",
+			"accesskey": (commentType == "comment" ? "n" : ""),
+			"title": ("Post new " + commentType + (commentType == "comment" ? " [n]" : "")),
+			"tabindex": "-1"
+		}, {
+			"innerHTML": (commentType == "nomination" ? "Add nomination" : "Post new " + commentType)
+		})
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
 			let buttonsList = [];
-			if(!commentControls.parentElement.query(".comment-thread"))
+			if (!commentControls.parentElement.query(".comment-thread"))
 				buttonsList.push("delete-button");
 			buttonsList.push("retract-button", "edit-button");
 			buttonsList.forEach(buttonClass => {
-				let button = commentControls.appendChild(document.createElement("button"));
-				button.addClass(buttonClass);
+				let button = commentControls.appendChild(newElement("BUTTON", { "class": buttonClass }));
 				button.updateCommentControlButton();
 			});
 		}
-		replyButton.className = "reply-button action-button";
-		replyButton.innerHTML = "Reply";
-		replyButton.dataset.label = "Reply";
+		replyButton = newElement("BUTTON", {
+			"class": "reply-button action-button",
+			"data-label": "Reply",
+			"tabindex": "-1"
+		}, {
+			"innerHTML": "Reply"
+		});
 	}
 	commentControls.appendChild(replyButton);
-	replyButton.tabIndex = '-1';
 
 	// Activate buttons.
 	commentControls.queryAll(".action-button").forEach(button => {
@@ -678,12 +701,11 @@ GW.commentActionButtonClicked = (event) => {
 };
 
 function initializeCommentControls() {
-	e = document.createElement("div");
-	e.className = "comment-controls posting-controls";
+	e = newElement("DIV", { "class": "comment-controls posting-controls" });
 	document.currentScript.insertAdjacentElement("afterend", e);
 	e.constructCommentControls();
 
-	if(window.location.hash) {
+	if (window.location.hash) {
 		let comment = e.closest(".comment-item");
 		if(comment && window.location.hash == "#" + comment.id)
 			expandAncestorsOf(comment);

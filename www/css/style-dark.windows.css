@@ -4806,7 +4806,9 @@ li {
 	width: unset;
 	background-color: transparent;
 	top: 0;
-	right: -3px;
+	right: 0;
+	margin: 0;
+	font-size: 31px;
 }
 #theme-selector .theme-selector-close-button,
 #theme-selector .theme-selector-close-button:focus,
