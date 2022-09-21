@@ -1167,7 +1167,16 @@ DarkMode = {
 			modeSelector = replacedElement.firstElementChild;
 			unwrap(replacedElement);
 		} else {
-			modeSelector = DarkMode.modeSelector = addUIElement(DarkMode.modeSelectorHTML());
+			if (GW.isMobile) {
+				if (Appearance.themeSelector == null)
+					return;
+
+				Appearance.themeSelectorAuxiliaryControlsContainer.insertAdjacentHTML("beforeend", DarkMode.modeSelectorHTML());
+			} else {
+				addUIElement(DarkMode.modeSelectorHTML());
+			}
+
+			modeSelector = DarkMode.modeSelector = query("#dark-mode-selector");
 		}
 
 		//  Add event listeners and update state.
@@ -1255,6 +1264,7 @@ Appearance = { ...Appearance,
 	noFilters: { },
 
 	themeSelector: null,
+	themeSelectorAuxiliaryControlsContainer: null,
 
 	themeTweakerToggle: null,
 
@@ -1725,11 +1735,20 @@ Appearance = { ...Appearance,
 			button.addActivateEvent(Appearance.themeSelectButtonClicked);
 		});
 
-		//	Add close button.
 		if (GW.isMobile) {
+			//	Add close button.
 			let themeSelectorCloseButton = newElement("BUTTON", { "class": "theme-selector-close-button" }, { "innerHTML": "&#xf057;" });
 			themeSelectorCloseButton.addActivateEvent(Appearance.themeSelectorCloseButtonClicked);
 			Appearance.themeSelector.appendChild(themeSelectorCloseButton);
+
+			//	Inject auxiliary controls container.
+			Appearance.themeSelectorAuxiliaryControlsContainer = newElement("DIV", { "class": "auxiliary-controls-container" });
+			Appearance.themeSelector.appendChild(Appearance.themeSelectorAuxiliaryControlsContainer);
+
+			//	Inject mobile versions of various UI elements.
+			Appearance.injectThemeTweakerToggle();
+			injectAntiKibitzerToggle();
+			DarkMode.injectModeSelector();
 		}
 
 		//	Inject transitions CSS, if animating changes is enabled.
@@ -1901,14 +1920,34 @@ Appearance = { ...Appearance,
 			button.addActivateEvent(Appearance.textSizeAdjustButtonClicked);
 		});
 
-		Appearance.themeTweakerToggle = addUIElement(`<div id="theme-tweaker-toggle">`
-										+ `<button 
-												type="button" 
-												tabindex="-1" 
-												title="Customize appearance [;]" 
-												accesskey=";"
-													>&#xf1de;</button>`
-										+ `</div>`);
+		if (GW.isMobile == false)
+			Appearance.injectThemeTweakerToggle();
+	},
+
+	themeTweakerToggleHTML: () => {
+		return (`<div id="theme-tweaker-toggle">`
+					+ `<button 
+							type="button" 
+							tabindex="-1" 
+							title="Customize appearance [;]" 
+							accesskey=";"
+								>&#xf1de;</button>`
+				+ `</div>`);
+	},
+
+	injectThemeTweakerToggle: () => {
+		GWLog("Appearance.injectThemeTweakerToggle");
+
+		if (GW.isMobile) {
+			if (Appearance.themeSelector == null)
+				return;
+
+			Appearance.themeSelectorAuxiliaryControlsContainer.insertAdjacentHTML("beforeend", Appearance.themeTweakerToggleHTML());
+			Appearance.themeTweakerToggle = Appearance.themeSelector.query("#theme-tweaker-toggle");
+		} else {
+			Appearance.themeTweakerToggle = addUIElement(Appearance.themeTweakerToggleHTML());	
+		}
+
 		Appearance.themeTweakerToggle.query("button").addActivateEvent(Appearance.themeTweakerToggleClicked);
 	},
 
@@ -2779,15 +2818,43 @@ function numToAlpha(n) {
 	return ret;
 }
 
-function injectAntiKibitzer() {
-	GWLog("injectAntiKibitzer");
-	// Inject anti-kibitzer toggle controls.
-	let antiKibitzerToggle = addUIElement("<div id='anti-kibitzer-toggle'><button type='button' tabindex='-1' accesskey='g' title='Toggle anti-kibitzer (show/hide authors & karma values) [g]'></button>");
-	antiKibitzerToggle.query("button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
+function activateAntiKibitzer() {
+	GWLog("activateAntiKibitzer");
+
+	//	Activate anti-kibitzer mode (if needed).
+	if (localStorage.getItem("antikibitzer") == "true")
+		toggleAntiKibitzerMode();
+
+	//	Remove temporary CSS that hides the authors and karma values.
+	removeElement("#antikibitzer-temp");
+
+	//	Inject controls (if desktop).
+	if (GW.isMobile == false)
+		injectAntiKibitzerToggle();
+}
+
+function injectAntiKibitzerToggle() {
+	GWLog("injectAntiKibitzerToggle");
+
+	let antiKibitzerHTML = `<div id="anti-kibitzer-toggle">
+		<button type="button" tabindex="-1" accesskey="g" title="Toggle anti-kibitzer (show/hide authors & karma values) [g]"></button>
+	</div>`;
+
+	if (GW.isMobile) {
+		if (Appearance.themeSelector == null)
+			return;
+
+		Appearance.themeSelectorAuxiliaryControlsContainer.insertAdjacentHTML("beforeend", antiKibitzerHTML);
+	} else {
+		addUIElement(antiKibitzerHTML);	
+	}
+
+	//	Activate anti-kibitzer toggle button.
+	query("#anti-kibitzer-toggle button").addActivateEvent(GW.antiKibitzerToggleButtonClicked = (event) => {
 		GWLog("GW.antiKibitzerToggleButtonClicked");
-		if (query("#anti-kibitzer-toggle").hasClass("engaged") && 
-			!event.shiftKey &&
-			!confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
+		if (   query("#anti-kibitzer-toggle").hasClass("engaged")
+			&& !event.shiftKey 
+			&& !confirm("Are you sure you want to turn OFF the anti-kibitzer?\n\n(This will reveal the authors and karma values of all posts and comments!)")) {
 			event.target.blur();
 			return;
 		}
@@ -2795,13 +2862,6 @@ function injectAntiKibitzer() {
 		toggleAntiKibitzerMode();
 		event.target.blur();
 	});
-
-	// Activate anti-kibitzer mode (if needed).
-	if (localStorage.getItem("antikibitzer") == "true")
-		toggleAntiKibitzerMode();
-
-	// Remove temporary CSS that hides the authors and karma values.
-	removeElement("#antikibitzer-temp");
 }
 
 function toggleAntiKibitzerMode() {
@@ -4230,8 +4290,9 @@ addTriggerListener('navBarLoaded', {priority: 3000, fn: function () {
 	// Add the theme tweaker.
 	Appearance.injectThemeTweaker();
 
-	// Add the dark mode selector.
-	DarkMode.injectModeSelector();
+	// Add the dark mode selector (if desktop).
+	if (GW.isMobile == false)
+		DarkMode.injectModeSelector();
 
 	// Add the quick-nav UI.
 	injectQuickNavUI();
@@ -4375,9 +4436,9 @@ function mainInitializer() {
 	if (GW.isMobile)
 		Appearance.injectAppearanceAdjustUIToggle();
 
-	// Add the antikibitzer.
+	// Activate the antikibitzer.
 	if (GW.useFancyFeatures)
-		injectAntiKibitzer();
+		activateAntiKibitzer();
 
 	// Add comment parent popups.
 	injectPreviewPopupToggle();

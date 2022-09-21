@@ -4749,7 +4749,7 @@ li {
 	background-color: #000;
 	width: calc(100vw - 20px);
 	max-width: 360px;
-	padding: 0 0 3px 0;
+	padding: 0;
 	overflow: hidden;
 	max-height: 0;
 	transition: 
@@ -4816,53 +4816,57 @@ li {
 #theme-selector .theme-selector-close-button:hover {
 	box-shadow: none;
 }
-	
+
+/*=============================*/
+/* THEME SELECTOR AUX CONTROLS */
+/*=============================*/
+
+#theme-selector .auxiliary-controls-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	padding: 0.75em 0 0 0;
+	margin: 8px;
+	border-top: 1px solid #fff;
+}
+
 /*===============*/
 /* THEME TWEAKER */
 /*===============*/
 
-#theme-selector {
-	padding: 0 0 64px 0;
+#theme-selector #theme-tweaker-toggle {
+	position: relative;
+	top: unset;
+	left: unset;
+	padding: 0;
 }
-#theme-selector ~ #theme-tweaker-toggle {
-	top: 100%;
+
+#theme-selector #theme-tweaker-toggle button {
+	display: block;
+	width: unset;
+	margin: 0;
+	transform: none;
+	position: relative;
+	background-image: none;
+	padding: 0.5em 0.625em 0.375em 0.625em;
+	margin: 0;
+	opacity: 1.0;
 }
-#theme-selector ~ #theme-tweaker-toggle::after {
-	content: "Open theme tweaker";
-	position: absolute;
+#theme-selector #theme-tweaker-toggle button::after {
+	content: "Theme tweaker";
 	font-size: 0.625em;
 	white-space: nowrap;
-	left: -50%;
-	top: 100%;
+	text-align: center;
+	display: block;
+	padding: 0;
+	margin: 0.5em 0 0 0;
+	max-width: unset;
+	position: static;
+	font-family: 'Concourse', 'a_Avante', 'GW-Symbols';
+	font-weight: normal;
 }
-#theme-selector.engaged ~ #theme-tweaker-toggle {
-	visibility: visible;
-	top: 530px;
-	left: 0;
-	right: 0;
-	margin: auto;
-	z-index: 11111;
-	transition: 
-		top 0.2s ease,
-		visibility 0.2s ease;
-}
-@media only screen and (max-height: 675px) {
-	#theme-selector.engaged ~ #theme-tweaker-toggle {	
-		top: 492px;
-	}
-}
-@supports (width: -moz-fit-content) {
-	#theme-selector.engaged ~ #theme-tweaker-toggle {
-		width: -moz-fit-content;
-	}
-}
-@supports (width: fit-content) {
-	#theme-selector.engaged ~ #theme-tweaker-toggle {
-		width: fit-content;
-	}
-}
-#theme-selector.engaged ~ #theme-tweaker-toggle button {
-	opacity: 1.0;
+#theme-selector #theme-tweaker-toggle button::before {
+	display: none;
 }
 
 #theme-tweaker-ui {
@@ -4873,34 +4877,77 @@ li {
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
 
-#theme-selector ~ #anti-kibitzer-toggle {
-	top: 100%;
+#theme-selector #anti-kibitzer-toggle {
+	position: relative;
+	top: unset;
 	bottom: unset;
+	left: unset;
+	right: unset;
+	margin: unset;
+	box-shadow: unset;
+	border-radius: unset;
+	overflow: visible;
+}
+
+#theme-selector #anti-kibitzer-toggle button {
+	width: 48px;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	background-image: unset;
+	border-radius: 10px;
+}
+#theme-selector #anti-kibitzer-toggle button::before {
+	width: 100%;
+	visibility: unset;
+	position: static;
+	padding: 0;
+	text-align: center;
+}
+#theme-selector #anti-kibitzer-toggle button::after {
+	content: "\F007\2004\F164";
+	position: static;
+	color: transparent;
+}
+
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#theme-selector #dark-mode-selector {
+	position: static;
+	opacity: 1.0;
+	outline: none;
+	border-radius: 10px;
+}
+
+#theme-selector #dark-mode-selector button {
+	width: 54px;
+	height: 100%;
+	margin: 0;
+	padding: 0 0 0.5em 0;
+	border-radius: 0;
+	background-image: none;
+	box-shadow: none;
+	border: none;
+	background-color: transparent;
+}
+#theme-selector #dark-mode-selector button::before {
+	display: none;
+}
+#theme-selector #dark-mode-selector button::after {
+	content: attr(data-name);
+	visibility: visible;
+	max-width: unset;
 	left: 0;
 	right: 0;
-	margin: auto;
-	box-shadow: none;
-	width: calc(100vw - 44px);
-	max-width: 330px;
-	text-align: right;
-	pointer-events: none;
-}
-#theme-selector.engaged ~ #anti-kibitzer-toggle {
-	visibility: visible;
-	z-index: 11110;
-	top: 530px;
-	transition: 
-		top 0.2s ease,
-		visibility 0.2s ease;
-}
-@media only screen and (max-height: 675px) {
-	#theme-selector.engaged ~ #anti-kibitzer-toggle {	
-		top: 492px;
-	}
-}
-#theme-selector.engaged ~ #anti-kibitzer-toggle button {
-	pointer-events: auto;
-	display: inline-block;
+	bottom: 0;
+	top: unset;
+	text-shadow: none;
+	font-size: 0.75em;
+	color: inherit;
+	padding: 0 0.25em 0.375em 0.25em;
+	text-align: center;
 }
 
 /*=================*/
@@ -7927,6 +7974,33 @@ select {
 		text-shadow: 
 			0 -1px 0 #000,
 			0 0.5px 0.5px #fff;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #575756;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		background-color: #191919;
+		box-shadow: 
+			0 0 10px 0   #575756         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #575756;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #aeaeae;
+	}
+	#theme-selector #dark-mode-selector {
+		background-color: #191919;
+		box-shadow: 
+			0 0 10px 0   #575756         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #575756;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #575756;
+		border-radius: 9px;
+		box-shadow: 0 0 2px 0 #575756;
 	}
 
 	#quick-nav-ui {

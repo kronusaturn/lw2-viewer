@@ -107,7 +107,7 @@
 	background-color: #fff;
 	width: calc(100vw - 20px);
 	max-width: 360px;
-	padding: 0 0 3px 0;
+	padding: 0;
 	overflow: hidden;
 	max-height: 0;
 	transition: 
@@ -174,44 +174,57 @@
 #theme-selector .theme-selector-close-button:hover {
 	box-shadow: none;
 }
-	
+
+/*=============================*/
+/* THEME SELECTOR AUX CONTROLS */
+/*=============================*/
+
+#theme-selector .auxiliary-controls-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	padding: 0.75em 0 0 0;
+	margin: 8px;
+	border-top: 1px solid #000;
+}
+
 /*===============*/
 /* THEME TWEAKER */
 /*===============*/
 
-#theme-selector {
-	padding: 0 0 64px 0;
+#theme-selector #theme-tweaker-toggle {
+	position: relative;
+	top: unset;
+	left: unset;
+	padding: 0;
 }
-#theme-selector ~ #theme-tweaker-toggle {
-	top: 100%;
+
+#theme-selector #theme-tweaker-toggle button {
+	display: block;
+	width: unset;
+	margin: 0;
+	transform: none;
+	position: relative;
+	background-image: none;
+	padding: 0.5em 0.625em 0.375em 0.625em;
+	margin: 0;
+	opacity: 1.0;
 }
-#theme-selector ~ #theme-tweaker-toggle::after {
-	content: "Open theme tweaker";
-	position: absolute;
+#theme-selector #theme-tweaker-toggle button::after {
+	content: "Theme tweaker";
 	font-size: 0.625em;
 	white-space: nowrap;
-	left: -50%;
-	top: 100%;
+	text-align: center;
+	display: block;
+	padding: 0;
+	margin: 0.5em 0 0 0;
+	max-width: unset;
+	position: static;
+	font-family: <?php echo $UI_font; ?>;
+	font-weight: normal;
 }
-#theme-selector.engaged ~ #theme-tweaker-toggle {
-	visibility: visible;
-	top: 530px;
-	left: 0;
-	right: 0;
-	margin: auto;
-	z-index: 11111;
-	transition: 
-		top 0.2s ease,
-		visibility 0.2s ease;
-}
-@media only screen and (max-height: 675px) {
-	#theme-selector.engaged ~ #theme-tweaker-toggle {	
-		top: 492px;
-	}
-}
-<?php fit_content("#theme-selector.engaged ~ #theme-tweaker-toggle"); ?>
-#theme-selector.engaged ~ #theme-tweaker-toggle button {
-	opacity: 1.0;
+#theme-selector #theme-tweaker-toggle button::before {
+	display: none;
 }
 
 #theme-tweaker-ui {
@@ -222,34 +235,77 @@
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
 
-#theme-selector ~ #anti-kibitzer-toggle {
-	top: 100%;
+#theme-selector #anti-kibitzer-toggle {
+	position: relative;
+	top: unset;
 	bottom: unset;
+	left: unset;
+	right: unset;
+	margin: unset;
+	box-shadow: unset;
+	border-radius: unset;
+	overflow: visible;
+}
+
+#theme-selector #anti-kibitzer-toggle button {
+	width: 48px;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	background-image: unset;
+	border-radius: 10px;
+}
+#theme-selector #anti-kibitzer-toggle button::before {
+	width: 100%;
+	visibility: unset;
+	position: static;
+	padding: 0;
+	text-align: center;
+}
+#theme-selector #anti-kibitzer-toggle button::after {
+	content: "\F007\2004\F164";
+	position: static;
+	color: transparent;
+}
+
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#theme-selector #dark-mode-selector {
+	position: static;
+	opacity: 1.0;
+	outline: none;
+	border-radius: 10px;
+}
+
+#theme-selector #dark-mode-selector button {
+	width: 54px;
+	height: 100%;
+	margin: 0;
+	padding: 0 0 0.5em 0;
+	border-radius: 0;
+	background-image: none;
+	box-shadow: none;
+	border: none;
+	background-color: transparent;
+}
+#theme-selector #dark-mode-selector button::before {
+	display: none;
+}
+#theme-selector #dark-mode-selector button::after {
+	content: attr(data-name);
+	visibility: visible;
+	max-width: unset;
 	left: 0;
 	right: 0;
-	margin: auto;
-	box-shadow: none;
-	width: calc(100vw - 44px);
-	max-width: 330px;
-	text-align: right;
-	pointer-events: none;
-}
-#theme-selector.engaged ~ #anti-kibitzer-toggle {
-	visibility: visible;
-	z-index: 11110;
-	top: 530px;
-	transition: 
-		top 0.2s ease,
-		visibility 0.2s ease;
-}
-@media only screen and (max-height: 675px) {
-	#theme-selector.engaged ~ #anti-kibitzer-toggle {	
-		top: 492px;
-	}
-}
-#theme-selector.engaged ~ #anti-kibitzer-toggle button {
-	pointer-events: auto;
-	display: inline-block;
+	bottom: 0;
+	top: unset;
+	text-shadow: none;
+	font-size: 0.75em;
+	color: inherit;
+	padding: 0 0.25em 0.375em 0.25em;
+	text-align: center;
 }
 
 /*=================*/
