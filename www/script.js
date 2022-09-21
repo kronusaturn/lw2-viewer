@@ -2015,7 +2015,7 @@ Appearance = { ...Appearance,
 		GWLog("Appearance.injectAppearanceAdjustUIToggle");
 
 		Appearance.appearanceAdjustUIToggle = addUIElement(`<div id="appearance-adjust-ui-toggle"><button type="button" tabindex="-1">&#xf013;</button></div>`);
-		Appearance.appearanceAdjustUIToggle.query("button").addActivateEvent(Appearance.appearanceAdjustUIToggleClicked);
+		Appearance.appearanceAdjustUIToggle.query("button").addActivateEvent(Appearance.appearanceAdjustUIToggleButtonClicked);
 
 		if (GW.isMobile) {
 			let themeSelectorCloseButton = Appearance.appearanceAdjustUIToggle.query("button").cloneNode(true);
