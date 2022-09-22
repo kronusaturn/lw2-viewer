@@ -366,16 +366,19 @@
 	     (process-span index size)))))
   t)
 
-(declaim (ftype (function (cffi:foreign-pointer fixnum (simple-array (unsigned-byte 8) (*))) boolean) version-equal))
+(declaim (ftype (function (cffi:foreign-pointer fixnum (simple-array (unsigned-byte 8) (*))) boolean) version-equal)
+	 (inline version-equal))
 
 (defun version-equal (array size version)
+  (declare (type (unsigned-byte 32) size)
+	   (type (simple-array (unsigned-byte 8) (*)) version))
   (if (>= size (length version))
-      (iter (for i from 0 below (length version))
-	    (when (/= (aref version i)
+      (loop for i from 0 below (length version)
+	 do (when (/= (aref version i)
 		      (cffi:mem-aref array :unsigned-char i))
 	      (return nil))
-	    (finally
-	     (return t)))))
+	 finally
+	   (return t))))
 
 (defstruct scoreboard
   (table (make-hash-table :test 'equalp))
@@ -387,6 +390,7 @@
   (waitqueue (sb-thread:make-waitqueue)))
 
 (defun call-with-scorecard (scoreboard key created-fn existing-fn)
+  (declare (type (function ()) created-fn existing-fn))
   (let ((table (scoreboard-table scoreboard))
 	scorecard
 	created)
