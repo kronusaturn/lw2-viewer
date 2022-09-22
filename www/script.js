@@ -1912,6 +1912,9 @@ Appearance = { ...Appearance,
 		insertHeadHTML(`<style id="theme-tweaker-style"></style>`);
 
 		Appearance.themeTweakerUI.query(".theme-selector").innerHTML = query("#theme-selector").innerHTML;
+		Appearance.themeTweakerUI.queryAll(".theme-selector > *:not([class^='select-theme-'])").forEach(element => {
+			element.remove();
+		});
 		Appearance.themeTweakerUI.queryAll(".theme-selector button").forEach(button => {
 			button.addActivateEvent(Appearance.themeSelectButtonClicked);
 		});
