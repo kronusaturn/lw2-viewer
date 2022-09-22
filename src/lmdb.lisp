@@ -419,6 +419,11 @@
 	 (funcall existing-fn)))))
 
 (defmacro scorecard-protect (scoreboard key when-not-ready when-ready)
+  "
+Protect multiple threads from simultaneous execution. When multiple threads
+evaluate SCORECARD-PROTECT with the same SCOREBOARD and KEYs that are EQUALP,
+only the first thread evaluates WHEN-NOT-READY, and other threads wait for it
+to finish. Finally, all threads evaluate WHEN-READY, and its values are returned."
   `(flet ((when-not-ready () ,when-not-ready)
 	  (when-ready () ,when-ready))
      (declare (dynamic-extent #'when-not-ready #'when-ready))
