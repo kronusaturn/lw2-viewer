@@ -490,6 +490,13 @@ input[type='range']::-ms-thumb {
 		-1px 0 0 1px #dfd8df,
 		-1px -1px 0 1px #dfd8df,
 		0 0 0 2px #030303;
+}
+#theme-tweaker-ui .main-theme-tweaker-window > button {
+	margin: 0.5em 0 0 0;
+}
+#theme-tweaker-ui .controls-container button,
+#theme-tweaker-ui .buttons-container button,
+#theme-tweaker-ui .help-window button {
 	margin: 0.5em 1px 0.5em 1em;
 	width: 7em;
 	padding: 7px 0 6px 0;
@@ -559,7 +566,7 @@ input[type='range']::-ms-thumb {
 	background-position: center center;
 }
 
-#theme-tweaker-ui .reset-defaults-button {
+#theme-tweaker-ui .buttons-container .reset-defaults-button {
 	width: 10em;
 	float: left;
 }
@@ -625,6 +632,11 @@ input[type='range']::-ms-thumb {
 #theme-tweaker-ui .clippy-container .hint {
 	line-height: 1.3;
 	color: #000;
+}
+#theme-tweaker-ui .clippy-container .hint img {
+	vertical-align: bottom;
+	position: relative;
+	bottom: 2px;
 }
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;
@@ -698,8 +710,8 @@ input[type='range']::-ms-thumb {
 
 #theme-tweaker-ui .clippy-close-button {
 	position: absolute;
-	top: 5px;
-	right: 11px;
+	top: 8px;
+	right: 8px;
 	width: 16px;
 	height: 16px;
 	border-radius: 8px;

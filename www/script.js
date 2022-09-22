@@ -1257,8 +1257,8 @@ DarkMode = {
 /****************************/
 
 Appearance = { ...Appearance,
-	/******************/
-	/*	Infrastructure.
+	/**************************************************************************/
+	/* INFRASTRUCTURE
 	 */
 
 	noFilters: { },
@@ -1281,8 +1281,8 @@ Appearance = { ...Appearance,
 
 	appearanceAdjustUIToggle: null,
 
-	/*****************/
-	/*	Functionality.
+	/**************************************************************************/
+	/* FUNCTIONALITY
 	 */
 
 	makeNewStyle: (newThemeName, colorSchemePreference) => {
@@ -1628,8 +1628,8 @@ Appearance = { ...Appearance,
 		localStorage.setItem("appearance-adjust-ui-toggle-engaged", Appearance.appearanceAdjustUIToggle.query("button").hasClass("engaged"));
 	},
 
-	/******/
-	/*	UI.
+	/**************************************************************************/
+	/* UI CONSTRUCTION & MANIPULATION
 	 */
 
 	contentWidthSelectorHTML: () => {
@@ -1871,9 +1871,11 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerUI.addActivateEvent(Appearance.themeTweakerUIOverlayClicked, true);
 
 		//	Intercept clicks, so they don’t “fall through” the background overlay.
-		Appearance.themeTweakerUIMainWindow.addActivateEvent((event) => {
-			event.stopPropagation();
-		}, true);
+		Array.from(Appearance.themeTweakerUI.children).forEach(themeTweakerUIWindow => {
+			themeTweakerUIWindow.addActivateEvent((event) => {
+				event.stopPropagation();
+			}, true);
+		});
 
 		Appearance.themeTweakerUI.queryAll("input").forEach(field => {
 			/*	All input types in the theme tweaker receive a ‘change’ event 
@@ -2088,8 +2090,8 @@ Appearance = { ...Appearance,
 		});
 	},
 
-	/**********/
-	/*	Events.
+	/**************************************************************************/
+	/* EVENTS
 	 */
 
 	themeSelectorCloseButtonClicked: (event) => {
@@ -2188,6 +2190,10 @@ Appearance = { ...Appearance,
 			document.head.appendChild(themeTweakerStyleSheet);
 		}
 	},
+
+	/***************************/
+	/*	Theme tweaker UI events.
+	 */
 
 	themeTweakerUIKeyPressed: (event) => {
 		GWLog("Appearance.themeTweakerUIKeyPressed");
