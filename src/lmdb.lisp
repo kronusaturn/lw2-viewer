@@ -366,47 +366,55 @@
 	     (process-span index size)))))
   t)
 
-(defun make-lmdb-memoized-wrapper (db-name fn return-type)
-  (lambda (&rest args)
-    (let* ((hash (hash-printable-object args))
-	   (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
-           (cached-value (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type))))
-      (if cached-value
-          cached-value
-          (let* ((new-value (apply fn hash args))
-                 (octets-value (string-to-octets new-value :external-format :utf-8)))
-	    (with-cache-transaction
-	      (with-db (db db-name) (lmdb:put db hash octets-value))
-	      (setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp)))
-	    (case return-type
-	      (:string new-value)
-	      (:byte-vector octets-value)
-	      ('write-memoized-data (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type)))))))))
+(declaim (ftype (function (cffi:foreign-pointer fixnum (simple-array (unsigned-byte 8) (*))) boolean) version-equal))
 
-(defun clean-memoized-database (db-name class-name now-hash)
-  (dolist (site *sites*)
-    (let ((*current-backend* (site-backend site)))
-      (when (and (typep *current-backend* 'backend-lmdb-cache)
-		 (typep *current-backend* class-name))
-	(unless (equalp now-hash (cache-get db-name "version" :value-type :byte-vector))
-	  (cache-del db-name "version")
-	  (truncate-database-nicely db-name)
-	  (with-cache-transaction
-	    (truncate-database db-name)
-	    (cache-put db-name "version" now-hash :value-type :byte-vector)))))))
+(defun version-equal (array size version)
+  (if (>= size (length version))
+      (iter (for i from 0 below (length version))
+	    (when (/= (aref version i)
+		      (cffi:mem-aref array :unsigned-char i))
+	      (return nil))
+	    (finally
+	     (return t)))))
+
+(defun make-lmdb-memoized-wrapper (db-name version fn return-type)
+  (let ((cached-return-type (lambda (array size)
+			      (declare (type fixnum size))
+			      (when (version-equal array size version)
+				(let* ((version-size (length version))
+				       (data-size (- size version-size)))
+				  (ecase return-type
+				    (:string (cffi:foreign-string-to-lisp array :offset (length version) :count data-size))
+				    ('write-memoized-data (write-memoized-data (cffi:inc-pointer array version-size) data-size))))))))
+    (lambda (&rest args)
+      (let* ((hash (hash-printable-object args))
+	     (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
+	     (cached-value (with-db (db db-name :read-only t) (lmdb:get db hash :return-type cached-return-type))))
+	(if cached-value
+	    cached-value
+	    (let* ((new-value (apply fn hash args))
+		   (octets-value (concatenate '(simple-array (unsigned-byte 8) (*))
+					      version
+					      (string-to-octets new-value :external-format :utf-8))))
+	      (with-cache-transaction
+		  (with-db (db db-name) (lmdb:put db hash octets-value))
+		(setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp)))
+	      (case return-type
+		(:string new-value)
+		('write-memoized-data (with-db (db db-name :read-only t) (lmdb:get db hash :return-type (lambda (array size)
+													  (write-memoized-data (cffi:inc-pointer array (length version)) (- size (length version))))))))))))))
 
 (defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
 	(alt-name (intern (format nil "~A*" name)))
-        (now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
+	(now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
     (alexandria:once-only (db-name now-hash)
 			  `(progn
-                             (define-cache-database ,class-name ,db-name)
-			     (clean-memoized-database ,db-name ,class-name ,now-hash)
-                             (declaim (ftype (function * string) ,name)
-                                      (ftype (function * (values &optional t)) ,alt-name))
-                             (let ((real-fn (lambda (current-memo-hash ,@lambda)
+			     (define-cache-database ,class-name ,db-name)
+			     (declaim (ftype (function * string) ,name)
+				      (ftype (function * (values &optional t)) ,alt-name))
+			     (let ((real-fn (lambda (current-memo-hash ,@lambda)
 					      (declare (ignorable current-memo-hash))
 					      ,@body)))
-                               (setf (fdefinition (quote ,name)) (make-lmdb-memoized-wrapper ,db-name real-fn :string)
-                                     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name real-fn 'write-memoized-data)))))))
+			       (setf (fdefinition (quote ,name)) (make-lmdb-memoized-wrapper ,db-name ,now-hash real-fn :string)
+				     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name ,now-hash real-fn 'write-memoized-data)))))))
