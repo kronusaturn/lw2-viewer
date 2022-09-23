@@ -140,6 +140,7 @@
 
 #theme-tweaker-ui .main-window .theme-select {
 	display: flex;
+	flex-flow: row wrap;
 	align-items: center;
 	margin: 0 -12px 1.25em -12px;
 	padding: 3px 12px 13px 12px;
@@ -167,6 +168,9 @@
 	display: inline-block;
 	padding: 1px 0 0 1px;
 	border: 4px solid #bfb8bf;
+	margin: 0;
+}
+#theme-tweaker-ui .theme-selector button + button {
 	margin: 0 0 0 14px;
 }
 #theme-tweaker-ui .theme-selector button:active,
@@ -768,7 +772,7 @@ input[type='range']::-ms-thumb {
 		top: 10px;
 		right: 8px;
 	}
-	#theme-tweaker-ui .main-theme-tweaker-window {
+	#theme-tweaker-ui .main-window {
 		max-width: unset;
 		max-height: unset;
 		left: 3px;
@@ -777,17 +781,14 @@ input[type='range']::-ms-thumb {
 		height: calc(100% - 5px)
 	}
 	#theme-tweaker-ui .controls-container {
-		max-height: calc(100% - 192px);
 		padding: 0.75em;
 	}
-	#theme-tweaker-ui .current-theme {
-		margin: 0.75em -8px 0 -8px;
+	#theme-tweaker-ui .main-window .theme-select {
 		box-shadow: none;
-		padding: 0 12px;
+		margin-bottom: 0;
 	}
-	#theme-tweaker-ui .theme-selector {
-		position: unset;
-		margin: 0.5em 0 1em 0;
+	#theme-tweaker-ui .main-window .theme-select .theme-selector {
+		margin: 1em 0 0.625em 0;
 		white-space: nowrap;
 	}
 	#theme-tweaker-ui .clippy-container .clippy {
@@ -795,10 +796,13 @@ input[type='range']::-ms-thumb {
 	}
 
 	#theme-tweaker-ui .controls-container {
-		margin-right: -12px;
+		margin-right: -16px;
 	}
 	#theme-tweaker-ui .controls-container::-webkit-scrollbar {
 		width: 32px;
+	}
+	#theme-tweaker-ui .main-window .buttons-container button:last-child {
+		margin-top: 1em;
 	}
 
 	@media only screen and (max-width: 369px) {
