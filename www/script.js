@@ -2214,7 +2214,7 @@ Appearance = { ...Appearance,
 					themeTweakerStyleSheet.disabled = false;
 				});
 				Appearance.showThemeTweakerUI();
-			});
+			}, { once: true });
 			document.head.appendChild(themeTweakerStyleSheet);
 		}
 	},
