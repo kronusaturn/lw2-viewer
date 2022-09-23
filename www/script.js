@@ -1268,6 +1268,8 @@ Appearance = { ...Appearance,
 
 	themeTweakerToggle: null,
 
+	themeTweakerStyleBlock: null,
+
 	themeTweakerUI: null,
 	themeTweakerUIMainWindow: null,
 	themeTweakerUIHelpWindow: null,
@@ -1786,56 +1788,67 @@ Appearance = { ...Appearance,
 	},
 
 	themeTweakerUIHTML: () => {
-		return (`<div id="theme-tweaker-ui" style="display: none;">` 
-			+ `<div class="main-theme-tweaker-window">
-				<h1>Customize appearance</h1>
-				<button type="button" class="minimize-button minimize" tabindex="-1"></button>
-				<button type="button" class="help-button" tabindex="-1"></button>
-				<p class="current-theme">Current theme: <span>` + 
-				Appearance.getSavedTheme() + 
-				`</span></p>
-				<p class="theme-selector"></p>
-				<div class="controls-container">
-					<div id="theme-tweak-section-sample-text" class="section" data-label="Sample text">
-						<div class="sample-text-container"><span class="sample-text">
-							<p>Less Wrong (text)</p>
-							<p><a href="#">Less Wrong (link)</a></p>
-						</span></div>
+		return (`<div id="theme-tweaker-ui" style="display: none;">\n` 
+			+ `<div class="theme-tweaker-window main-window">
+				<div class="theme-tweaker-window-title-bar">
+					<div class="theme-tweaker-window-title">
+						<h1>Customize appearance</h1>
 					</div>
-					<div id="theme-tweak-section-text-size-adjust" class="section" data-label="Text size">
-						<button type="button" class="text-size-adjust-button decrease" title="Decrease text size"></button>
-						<button type="button" class="text-size-adjust-button default" title="Reset to default text size"></button>
-						<button type="button" class="text-size-adjust-button increase" title="Increase text size"></button>
-					</div>
-					<div id="theme-tweak-section-invert" class="section" data-label="Invert (photo-negative)">
-						<input type="checkbox" id="theme-tweak-control-invert"></input>
-						<label for="theme-tweak-control-invert">Invert colors</label>
-					</div>
-					<div id="theme-tweak-section-saturate" class="section" data-label="Saturation">
-						<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-						<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
-						<div class="notch theme-tweak-slider-notch-saturate" title="Reset saturation to default value (100%)"></div>
-					</div>
-					<div id="theme-tweak-section-brightness" class="section" data-label="Brightness">
-						<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-						<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
-						<div class="notch theme-tweak-slider-notch-brightness" title="Reset brightness to default value (100%)"></div>
-					</div>
-					<div id="theme-tweak-section-contrast" class="section" data-label="Contrast">
-						<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
-						<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
-						<div class="notch theme-tweak-slider-notch-contrast" title="Reset contrast to default value (100%)"></div>
-					</div>
-					<div id="theme-tweak-section-hue-rotate" class="section" data-label="Hue rotation">
-						<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
-						<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
-						<div class="notch theme-tweak-slider-notch-hue-rotate" title="Reset hue to default (0° away from standard colors for theme)"></div>
+					<div class="theme-tweaker-window-title-bar-buttons-container">
+						<button type="button" class="help-button" tabindex="-1"></button>
+						<button type="button" class="minimize-button minimize" tabindex="-1"></button>
+						<button type="button" class="close-button" tabindex="-1"></button>
 					</div>
 				</div>
-				<div class="buttons-container">
-					<button type="button" class="reset-defaults-button">Reset to defaults</button>
-					<button type="button" class="ok-button default-button">OK</button>
-					<button type="button" class="cancel-button">Cancel</button>
+				<div class="theme-tweaker-window-content-view">
+					<div class="theme-select">
+						<p class="current-theme">Current theme:
+							<span>${Appearance.getSavedTheme()}</span>
+						</p>
+						<div class="theme-selector"></div>
+					</div>
+					<div class="controls-container">
+						<div id="theme-tweak-section-sample-text" class="section" data-label="Sample text">
+							<div class="sample-text-container"><span class="sample-text">
+								<p>Less Wrong (text)</p>
+								<p><a href="#">Less Wrong (link)</a></p>
+							</span></div>
+						</div>
+						<div id="theme-tweak-section-text-size-adjust" class="section" data-label="Text size">
+							<button type="button" class="text-size-adjust-button decrease" title="Decrease text size"></button>
+							<button type="button" class="text-size-adjust-button default" title="Reset to default text size"></button>
+							<button type="button" class="text-size-adjust-button increase" title="Increase text size"></button>
+						</div>
+						<div id="theme-tweak-section-invert" class="section" data-label="Invert (photo-negative)">
+							<input type="checkbox" id="theme-tweak-control-invert"></input>
+							<label for="theme-tweak-control-invert">Invert colors</label>
+						</div>
+						<div id="theme-tweak-section-saturate" class="section" data-label="Saturation">
+							<input type="range" id="theme-tweak-control-saturate" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+							<p class="theme-tweak-control-label" id="theme-tweak-label-saturate"></p>
+							<div class="notch theme-tweak-slider-notch-saturate" title="Reset saturation to default value (100%)"></div>
+						</div>
+						<div id="theme-tweak-section-brightness" class="section" data-label="Brightness">
+							<input type="range" id="theme-tweak-control-brightness" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+							<p class="theme-tweak-control-label" id="theme-tweak-label-brightness"></p>
+							<div class="notch theme-tweak-slider-notch-brightness" title="Reset brightness to default value (100%)"></div>
+						</div>
+						<div id="theme-tweak-section-contrast" class="section" data-label="Contrast">
+							<input type="range" id="theme-tweak-control-contrast" min="0" max="300" data-default-value="100" data-value-suffix="%" data-label-suffix="%">
+							<p class="theme-tweak-control-label" id="theme-tweak-label-contrast"></p>
+							<div class="notch theme-tweak-slider-notch-contrast" title="Reset contrast to default value (100%)"></div>
+						</div>
+						<div id="theme-tweak-section-hue-rotate" class="section" data-label="Hue rotation">
+							<input type="range" id="theme-tweak-control-hue-rotate" min="0" max="360" data-default-value="0" data-value-suffix="deg" data-label-suffix="°">
+							<p class="theme-tweak-control-label" id="theme-tweak-label-hue-rotate"></p>
+							<div class="notch theme-tweak-slider-notch-hue-rotate" title="Reset hue to default (0° away from standard colors for theme)"></div>
+						</div>
+					</div>
+					<div class="buttons-container">
+						<button type="button" class="reset-defaults-button">Reset to defaults</button>
+						<button type="button" class="ok-button default-button">OK</button>
+						<button type="button" class="cancel-button">Cancel</button>
+					</div>
 				</div>
 			</div>
 			<div class="clippy-container">
@@ -1843,18 +1856,24 @@ Appearance = { ...Appearance,
 				<div class="clippy"></div>
 				<button type="button" class="clippy-close-button" tabindex="-1" title="Hide theme tweaker assistant (you can bring him back by clicking the ? button in the title bar)"></button>
 			</div>
-			<div class="help-window" style="display: none;">
-				<h1>Theme tweaker help</h1>
-				<div id="theme-tweak-section-clippy" class="section" data-label="Theme Tweaker Assistant">
-					<input type="checkbox" id="theme-tweak-control-clippy" checked="checked"></input>
-					<label for="theme-tweak-control-clippy">Show Bobby the Basilisk</label>
+			<div class="theme-tweaker-window help-window" style="display: none;">
+				<div class="theme-tweaker-window-title-bar">
+					<div class="theme-tweaker-window-title">
+						<h1>Theme tweaker help</h1>
+					</div>
 				</div>
-				<div class="buttons-container">
-					<button type="button" class="ok-button default-button">OK</button>
-					<button type="button" class="cancel-button">Cancel</button>
+				<div class="theme-tweaker-window-content-view">
+					<div id="theme-tweak-section-clippy" class="section" data-label="Theme Tweaker Assistant">
+						<input type="checkbox" id="theme-tweak-control-clippy" checked="checked"></input>
+						<label for="theme-tweak-control-clippy">Show Bobby the Basilisk</label>
+					</div>
+					<div class="buttons-container">
+						<button type="button" class="ok-button default-button">OK</button>
+						<button type="button" class="cancel-button">Cancel</button>
+					</div>
 				</div>
 			</div>
-		` + "</div>");
+		` + `\n</div>`);
 	},
 
 	injectThemeTweaker: () => {
@@ -1897,11 +1916,12 @@ Appearance = { ...Appearance,
 				field.addEventListener("input", Appearance.themeTweakerUIFieldInputReceived);
 		});
 
-		Appearance.themeTweakerUI.query(".minimize-button").addActivateEvent(Appearance.themeTweakerUIMinimizeButtonClicked);
 		Appearance.themeTweakerUI.query(".help-button").addActivateEvent(Appearance.themeTweakerUIHelpButtonClicked);
+		Appearance.themeTweakerUI.query(".minimize-button").addActivateEvent(Appearance.themeTweakerUIMinimizeButtonClicked);
+		Appearance.themeTweakerUI.query(".close-button").addActivateEvent(Appearance.themeTweakerUICloseButtonClicked);
 		Appearance.themeTweakerUI.query(".reset-defaults-button").addActivateEvent(Appearance.themeTweakerUIResetDefaultsButtonClicked);
-		Appearance.themeTweakerUI.query(".main-theme-tweaker-window .cancel-button").addActivateEvent(Appearance.themeTweakerUICancelButtonClicked);
-		Appearance.themeTweakerUI.query(".main-theme-tweaker-window .ok-button").addActivateEvent(Appearance.themeTweakerUIOKButtonClicked);
+		Appearance.themeTweakerUI.query(".main-window .cancel-button").addActivateEvent(Appearance.themeTweakerUICancelButtonClicked);
+		Appearance.themeTweakerUI.query(".main-window .ok-button").addActivateEvent(Appearance.themeTweakerUIOKButtonClicked);
 		Appearance.themeTweakerUI.query(".help-window .cancel-button").addActivateEvent(Appearance.themeTweakerUIHelpWindowCancelButtonClicked);
 		Appearance.themeTweakerUI.query(".help-window .ok-button").addActivateEvent(Appearance.themeTweakerUIHelpWindowOKButtonClicked);
 
@@ -1912,6 +1932,7 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerUI.query(".clippy-close-button").addActivateEvent(Appearance.themeTweakerUIClippyCloseButtonClicked);
 
 		insertHeadHTML(`<style id="theme-tweaker-style"></style>`);
+		Appearance.themeTweakerStyleBlock = document.head.query("#theme-tweaker-style");
 
 		Appearance.themeTweakerUI.query(".theme-selector").innerHTML = query("#theme-selector").innerHTML;
 		Appearance.themeTweakerUI.queryAll(".theme-selector > *:not([class^='select-theme-'])").forEach(element => {
@@ -1975,14 +1996,13 @@ Appearance = { ...Appearance,
 	toggleThemeTweakerUI: () => {
 		GWLog("Appearance.toggleThemeTweakerUI");
 
-		Appearance.themeTweakerUI.style.display = Appearance.themeTweakerUI.style.display == "none" 
-											  ? "block" 
-											  : "none";
-		query("#theme-tweaker-style").innerHTML = Appearance.themeTweakerUI.style.display == "none" 
-												  ? "" 
-												  : `#content, #ui-elements-container > div:not(#theme-tweaker-ui) { pointer-events: none; }`;
+		let show = (Appearance.themeTweakerUI.style.display == "none");
 
-		if (Appearance.themeTweakerUI.style.display != "none") {
+		Appearance.themeTweakerUI.style.display = show ? "block" : "none";
+		Appearance.setThemeTweakerWindowMinimized(false);
+		Appearance.themeTweakerStyleBlock.innerHTML = show ? `#content, #ui-elements-container > div:not(#theme-tweaker-ui) { pointer-events: none; user-select: none; }` : "";
+
+		if (show) {
 			// Focus invert checkbox.
 			Appearance.themeTweakerUI.query("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 			// Show sample text in appropriate font.
@@ -1992,7 +2012,7 @@ Appearance = { ...Appearance,
 			// Disable scrolling of the page.
 			togglePageScrolling(false);
 		} else {
-			query("#theme-tweaker-toggle button").disabled = false;
+			Appearance.themeTweakerToggle.query("button").disabled = false;
 			// Re-enable tab-selection of the search box.
 			setSearchBoxTabSelectable(true);
 			// Re-enable scrolling of the page.
@@ -2001,6 +2021,14 @@ Appearance = { ...Appearance,
 
 		// Set theme tweaker assistant visibility.
 		Appearance.themeTweakerUIClippyContainer.style.display = (Appearance.getSavedThemeTweakerClippyState() == true) ? "block" : "none";
+	},
+
+	setThemeTweakerWindowMinimized: (minimize) => {
+		GWLog("Appearance.setThemeTweakerWindowMinimized");
+
+		Appearance.themeTweakerUIMainWindow.query(".minimize-button").swapClasses([ "minimize", "maximize" ], (minimize ? 1 : 0));
+		Appearance.themeTweakerUIMainWindow.classList.toggle("minimized", minimize);
+		Appearance.themeTweakerUI.classList.toggle("main-window-minimized", minimize);
 	},
 
 	toggleThemeTweakerHelpWindow: () => {
@@ -2260,52 +2288,16 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerUISampleTextContainer.style.filter = Appearance.filterStringFromFilters(sampleTextFilters);
 	},
 
+	themeTweakerUICloseButtonClicked: (event) => {
+		GWLog("Appearance.themeTweakerUICloseButtonClicked");
+
+		Appearance.toggleThemeTweakerUI();
+	},
+
 	themeTweakerUIMinimizeButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIMinimizeButtonClicked");
 
-		let themeTweakerStyleBlock = Appearance.themeTweakerUI.query("#theme-tweaker-style");
-
-		if (event.target.hasClass("minimize")) {
-			event.target.removeClass("minimize");
-			themeTweakerStyleBlock.innerHTML = 
-				`#theme-tweaker-ui .main-theme-tweaker-window {
-					width: 320px;
-					height: 31px;
-					overflow: hidden;
-					padding: 30px 0 0 0;
-					top: 20px;
-					right: 20px;
-					left: auto;
-				}
-				#theme-tweaker-ui::after {
-					top: 27px;
-					right: 27px;
-				}
-				#theme-tweaker-ui::before {
-					opacity: 0.0;
-					height: 0;
-				}
-				#theme-tweaker-ui .clippy-container {
-					opacity: 1.0;
-				}
-				#theme-tweaker-ui .clippy-container .hint span {
-					color: #c00;
-				}
-				#theme-tweaker-ui {
-					height: 0;
-				}
-				#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-					pointer-events: none;
-				}`;
-			event.target.addClass("maximize");
-		} else {
-			event.target.removeClass("maximize");
-			themeTweakerStyleBlock.innerHTML = 
-				`#content, #ui-elements-container > div:not(#theme-tweaker-ui) {
-					pointer-events: none;
-				}`;
-			event.target.addClass("minimize");
-		}
+		Appearance.setThemeTweakerWindowMinimized(event.target.hasClass("minimize"));
 	},
 
 	themeTweakerUIHelpButtonClicked: (event) => {
@@ -3994,7 +3986,7 @@ function keyboardHelpSetup() {
 	// Clicking the background overlay closes the keyboard help overlay.
 	keyboardHelpOverlay.addActivateEvent(GW.keyboardHelpOverlayClicked = (event) => {
 		GWLog("GW.keyboardHelpOverlayClicked");
-		if (event.type == 'mousedown') {
+		if (event.type == "mousedown") {
 			keyboardHelpOverlay.style.opacity = "0.01";
 		} else {
 			toggleKeyboardHelpOverlay(false);
