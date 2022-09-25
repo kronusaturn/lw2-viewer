@@ -1287,6 +1287,10 @@ Appearance = { ...Appearance,
 	/* FUNCTIONALITY
 	 */
 
+	/*	Return a new <link> element linking a style sheet (.css file) for the
+		given theme name and color scheme preference (i.e., value for the 
+		‘media’ attribute; may be “light”, “dark”, or “” [empty string]).
+	 */
 	makeNewStyle: (newThemeName, colorSchemePreference) => {
 		let styleSheetNameSuffix = newThemeName == Appearance.defaultTheme
 								   ? "" 
@@ -1562,6 +1566,8 @@ Appearance = { ...Appearance,
 		}
 	},
 
+	/*	Set the saved theme setting to the currently active theme.
+	 */
 	saveCurrentTheme: () => {
 		GWLog("Appearance.saveCurrentTheme");
 
@@ -1571,6 +1577,8 @@ Appearance = { ...Appearance,
 			setCookie("theme", Appearance.currentTheme);
 	},
 
+	/*	Reset theme, theme tweak filters, and text zoom to their saved settings.
+	 */
 	themeTweakReset: () => {
 		GWLog("Appearance.themeTweakReset");
 
@@ -1579,6 +1587,9 @@ Appearance = { ...Appearance,
 		Appearance.setTextZoom(Appearance.getSavedTextZoom());
 	},
 
+	/*	Set the saved theme, theme tweak filter, and text zoom settings to their
+		currently active values.
+	 */
 	themeTweakSave: () => {
 		GWLog("Appearance.themeTweakSave");
 
@@ -1587,12 +1598,15 @@ Appearance = { ...Appearance,
 		Appearance.saveCurrentTextZoom();
 	},
 
+	/*	Reset theme, theme tweak filters, and text zoom to their default levels.
+		(Do not save the new settings, however.)
+	 */
 	themeTweakResetDefaults: () => {
 		GWLog("Appearance.themeTweakResetDefaults");
 
-		Appearance.setTheme(Appearance.defaultTheme);
+		Appearance.setTheme(Appearance.defaultTheme, false);
 		Appearance.applyFilters(Appearance.defaultFilters);
-		Appearance.setTextZoom(Appearance.defaultTextZoom);
+		Appearance.setTextZoom(Appearance.defaultTextZoom, false);
 	},
 
 	themeTweakerResetSettings: () => {
@@ -2122,6 +2136,8 @@ Appearance = { ...Appearance,
 	/* EVENTS
 	 */
 
+	/*	Theme selector close button (on mobile version of theme selector).
+	 */
 	themeSelectorCloseButtonClicked: (event) => {
 		GWLog("Appearance.themeSelectorCloseButtonClicked");
 
@@ -2129,6 +2145,8 @@ Appearance = { ...Appearance,
 		Appearance.saveAppearanceAdjustUIToggleState();
 	},
 
+	/*	“Cog” button to toggle the appearance adjust UI (in “less” theme).
+	 */
 	appearanceAdjustUIToggleButtonClicked: (event) => {
 		GWLog("Appearance.appearanceAdjustUIToggleButtonClicked");
 
@@ -2136,6 +2154,8 @@ Appearance = { ...Appearance,
 		Appearance.saveAppearanceAdjustUIToggleState();
 	},
 
+	/*	Width adjust buttons (“normal”, “wide”, “fluid”).
+	 */
 	widthAdjustButtonClicked: (event) => {
 		GWLog("Appearance.widthAdjustButtonClicked");
 
@@ -2170,6 +2190,8 @@ Appearance = { ...Appearance,
 			visibleComment.scrollIntoView();
 	},
 
+	/*	Theme selector buttons (“A” through “I”).
+	 */
 	themeSelectButtonClicked: (event) => {
 		GWLog("Appearance.themeSelectButtonClicked");
 
@@ -2180,6 +2202,8 @@ Appearance = { ...Appearance,
 			Appearance.toggleAppearanceAdjustUI();
 	},
 
+	/*	The text size adjust (“-”, “A”, “+”) buttons.
+	 */
 	textSizeAdjustButtonClicked: (event) => {
 		GWLog("Appearance.textSizeAdjustButtonClicked");
 
@@ -2197,6 +2221,8 @@ Appearance = { ...Appearance,
 		Appearance.setTextZoom(zoomFactor, save);
 	},
 
+	/*	Theme tweaker toggle button.
+	 */
 	themeTweakerToggleClicked: (event) => {
 		GWLog("Appearance.themeTweakerToggleClicked");
 
@@ -2304,6 +2330,7 @@ Appearance = { ...Appearance,
 		GWLog("Appearance.themeTweakerUICloseButtonClicked");
 
 		Appearance.toggleThemeTweakerUI();
+		Appearance.themeTweakReset();
 	},
 
 	/*	Minimize button in main theme tweaker UI (title bar).
