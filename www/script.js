@@ -2223,6 +2223,8 @@ Appearance = { ...Appearance,
 	/*	Theme tweaker UI events.
 	 */
 
+	/*	Key pressed while theme tweaker is open.
+	 */
 	themeTweakerUIKeyPressed: (event) => {
 		GWLog("Appearance.themeTweakerUIKeyPressed");
 
@@ -2245,6 +2247,8 @@ Appearance = { ...Appearance,
 		}
 	},
 
+	/*	Theme tweaker overlay clicked.
+	 */
 	themeTweakerUIOverlayClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIOverlayClicked");
 
@@ -2257,6 +2261,10 @@ Appearance = { ...Appearance,
 		}
 	},
 
+	/*	In the theme tweaker, a slider clicked, or released after drag; or a
+		checkbox clicked (either in the main theme tweaker UI, or in the help
+		window).
+	 */
 	themeTweakerUIFieldValueChanged: (event) => {
 		GWLog("Appearance.themeTweakerUIFieldValueChanged");
 
@@ -2277,6 +2285,8 @@ Appearance = { ...Appearance,
 		Appearance.applyFilters();
 	},
 
+	/*	Theme tweaker slider dragged (live-update event).
+	 */
 	themeTweakerUIFieldInputReceived: (event) => {
 		GWLog("Appearance.themeTweakerUIFieldInputReceived");
 
@@ -2288,18 +2298,24 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerUISampleTextContainer.style.filter = Appearance.filterStringFromFilters(sampleTextFilters);
 	},
 
+	/*	Close button in main theme tweaker UI (title bar).
+	 */
 	themeTweakerUICloseButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUICloseButtonClicked");
 
 		Appearance.toggleThemeTweakerUI();
 	},
 
+	/*	Minimize button in main theme tweaker UI (title bar).
+	 */
 	themeTweakerUIMinimizeButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIMinimizeButtonClicked");
 
 		Appearance.setThemeTweakerWindowMinimized(event.target.hasClass("minimize"));
 	},
 
+	/*	Help (“?”) button in main theme tweaker UI (title bar).
+	 */
 	themeTweakerUIHelpButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIHelpButtonClicked");
 
@@ -2307,6 +2323,8 @@ Appearance = { ...Appearance,
 		Appearance.toggleThemeTweakerHelpWindow();
 	},
 
+	/*	“Reset Defaults” button in main theme tweaker UI.
+	 */
 	themeTweakerUIResetDefaultsButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIResetDefaultsButtonClicked");
 
@@ -2314,6 +2332,8 @@ Appearance = { ...Appearance,
 		Appearance.resetThemeTweakerUIDefaultState();
 	},
 
+	/*	“Cancel” button in main theme tweaker UI.
+	 */
 	themeTweakerUICancelButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUICancelButtonClicked");
 
@@ -2321,6 +2341,8 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakReset();
 	},
 
+	/*	“OK” button in main theme tweaker UI.
+	 */
 	themeTweakerUIOKButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIOKButtonClicked");
 
@@ -2328,6 +2350,8 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakSave();
 	},
 
+	/*	“Cancel” button in theme tweaker help window.
+	 */
 	themeTweakerUIHelpWindowCancelButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIHelpWindowCancelButtonClicked");
 
@@ -2335,6 +2359,8 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerResetSettings();
 	},
 
+	/*	“OK” button in theme tweaker help window.
+	 */
 	themeTweakerUIHelpWindowOKButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIHelpWindowOKButtonClicked");
 
@@ -2342,6 +2368,9 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerSaveSettings();
 	},
 
+	/*	The notch in the theme tweaker sliders (to reset the slider to its
+		default value).
+	 */
 	themeTweakerUISliderNotchClicked: (event) => {
 		GWLog("Appearance.themeTweakerUISliderNotchClicked");
 
@@ -2352,6 +2381,8 @@ Appearance = { ...Appearance,
 		Appearance.applyFilters();
 	},
 
+	/*	The close button in the “Bobby the Basilisk” help message.
+	 */
 	themeTweakerUIClippyCloseButtonClicked: (event) => {
 		GWLog("Appearance.themeTweakerUIClippyCloseButtonClicked");
 

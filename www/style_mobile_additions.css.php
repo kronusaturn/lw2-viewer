@@ -283,7 +283,7 @@
 	width: 54px;
 	height: 100%;
 	margin: 0;
-	padding: 0 0 0.5em 0;
+	padding: 0 0 0.75em 0;
 	border-radius: 0;
 	background-image: none;
 	box-shadow: none;
@@ -304,7 +304,7 @@
 	text-shadow: none;
 	font-size: 0.75em;
 	color: inherit;
-	padding: 0 0.25em 0.375em 0.25em;
+	padding: 0 0.25em 0.5em 0.25em;
 	text-align: center;
 }
 
