@@ -373,7 +373,7 @@ Appearance = {
 		GWLog("Appearance.setContentWidth");
 
 		document.head.removeClasses(Appearance.widthOptions.map(wo => "content-width-" + wo[0]));
-		document.head.addClass("content-width-" + widthOption || Appearance.currentWidth);
+		document.head.addClass("content-width-" + (widthOption || Appearance.currentWidth));
 	},
 
 	/*	Text zoom.
