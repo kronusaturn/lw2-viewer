@@ -335,7 +335,6 @@
 }
 
 #theme-tweaker-ui input[type='range'] {
-	width: 100%;
 	position: relative;
 	-webkit-appearance: none;
 	width: 100%;
@@ -772,6 +771,7 @@ input[type='range']::-ms-thumb {
 		top: 10px;
 		right: 8px;
 	}
+
 	#theme-tweaker-ui .main-window {
 		max-width: unset;
 		max-height: unset;
@@ -780,9 +780,7 @@ input[type='range']::-ms-thumb {
 		width: calc(100% - 5px);
 		height: calc(100% - 5px)
 	}
-	#theme-tweaker-ui .controls-container {
-		padding: 0.75em;
-	}
+
 	#theme-tweaker-ui .main-window .theme-select {
 		box-shadow: none;
 		margin-bottom: 0;
@@ -791,16 +789,40 @@ input[type='range']::-ms-thumb {
 		margin: 1em 0 0.625em 0;
 		white-space: nowrap;
 	}
+
 	#theme-tweaker-ui .clippy-container .clippy {
 		transform: scale(0.375) translate(-215px, 215px);
 	}
 
 	#theme-tweaker-ui .controls-container {
+		padding: 0.75em;
 		margin-right: -16px;
 	}
 	#theme-tweaker-ui .controls-container::-webkit-scrollbar {
 		width: 32px;
 	}
+	/*	Compensating for Firefox mobile scroll bar nonsense.
+	 */
+	@-moz-document url-prefix() {
+		#theme-tweaker-ui .controls-container {
+			padding-right: 1.25em;
+		}
+		#theme-tweaker-ui input[type='range'] {
+			padding: 0 0.5em 0 0.3em;
+			margin: 0 2.5em 0 1.5em;
+			width: calc(100% - 4em);
+		}
+		.theme-tweak-control-label {
+			margin-right: 4.45em;
+		}
+		.theme-tweak-control-label + .notch {
+			left: calc((100% - 4.8em) / 3 + 1.8em + 7px);
+		}
+		#theme-tweak-label-hue-rotate + .notch {
+			left: calc(3em);
+		}
+	}
+
 	#theme-tweaker-ui .main-window .buttons-container button:last-child {
 		margin-top: 1em;
 	}
