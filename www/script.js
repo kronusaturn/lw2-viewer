@@ -1309,22 +1309,41 @@ Appearance = { ...Appearance,
 	setTheme: (newThemeName, save = true) => {
 		GWLog("Appearance.setTheme");
 
-		let themeUnloadCallback = "";
 		let oldThemeName = "";
 		if (typeof(newThemeName) == "undefined") {
+			/*	If no theme name to set is given, that means we’re setting the 
+				theme initially, on page load. The .currentTheme value will have
+				been set by .setup().
+			 */
 			newThemeName = Appearance.currentTheme;
+
+			/*	If the selected (saved) theme is the default theme, then there’s
+				nothing to do.
+			 */
 			if (newThemeName == Appearance.defaultTheme)
 				return;
 		} else {
 			oldThemeName = Appearance.currentTheme;
-			themeUnloadCallback = Appearance.themeUnloadCallbacks[oldThemeName];
 
+			/*	When the unload callback runs, the .currentTheme value is still 
+				that of the old theme.
+			 */
+			let themeUnloadCallback = Appearance.themeUnloadCallbacks[oldThemeName];
+			if (themeUnloadCallback != null)
+				themeUnloadCallback(newThemeName);
+
+			/*	The old .currentTheme value is saved in oldThemeName.
+			 */
 			Appearance.currentTheme = newThemeName;
+
+			/*	The ‘save’ parameter might be false if this function is called 
+				from the theme tweaker, in which case we want to switch only 
+				temporarily, and preserve the saved setting until the user 
+				clicks “OK”.
+			 */
 			if (save)
 				Appearance.saveCurrentTheme();
 		}
-		if (themeUnloadCallback != null)
-			themeUnloadCallback(newThemeName);
 
 		let newMainStyle, newStyles;
 		if (newThemeName === Appearance.defaultTheme) {
@@ -1348,6 +1367,7 @@ Appearance = { ...Appearance,
 			newStyles.forEach(newStyle => document.head.insertBefore(newStyle, oldStyles[0].nextSibling));
 		}
 
+		//	Update UI state of all theme selectors.
 		Appearance.updateThemeSelectorsState();
 	},
 
@@ -1738,7 +1758,7 @@ Appearance = { ...Appearance,
 				let selected = (name == Appearance.currentTheme ? ' selected' : '');
 				let disabled = (name == Appearance.currentTheme ? ' disabled' : '');
 				let accesskey = letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
-				return `<button type='button' class='select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;
+				return `<button type='button' class='select-theme select-theme-${name}${selected}'${disabled} title="${desc} [${accesskey}]" data-theme-name="${name}" data-theme-description="${desc}" accesskey='${accesskey}' tabindex='-1'>${letter}</button>`;
 			}))
 		+ "</div>");
 	},
@@ -1789,7 +1809,7 @@ Appearance = { ...Appearance,
 	updateThemeSelectorsState: () => {
 		GWLog("Appearance.updateThemeSelectorsState");
 
-		queryAll(".theme-selector button").forEach(button => {
+		queryAll(".theme-selector button.select-theme").forEach(button => {
 			button.removeClass("selected");
 			button.disabled = false;
 		});
@@ -1949,7 +1969,7 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerStyleBlock = document.head.query("#theme-tweaker-style");
 
 		Appearance.themeTweakerUI.query(".theme-selector").innerHTML = query("#theme-selector").innerHTML;
-		Appearance.themeTweakerUI.queryAll(".theme-selector > *:not([class^='select-theme-'])").forEach(element => {
+		Appearance.themeTweakerUI.queryAll(".theme-selector > *:not(.select-theme)").forEach(element => {
 			element.remove();
 		});
 		Appearance.themeTweakerUI.queryAll(".theme-selector button").forEach(button => {
