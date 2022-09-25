@@ -1265,6 +1265,7 @@ Appearance = { ...Appearance,
 
 	themeSelector: null,
 	themeSelectorAuxiliaryControlsContainer: null,
+	themeSelectorInteractionBlockerOverlay: null,
 
 	themeTweakerToggle: null,
 
@@ -1785,6 +1786,10 @@ Appearance = { ...Appearance,
 			Appearance.injectThemeTweakerToggle();
 			injectAntiKibitzerToggle();
 			DarkMode.injectModeSelector();
+
+			//	Inject interaction blocker overlay.
+			Appearance.themeSelectorInteractionBlockerOverlay = Appearance.themeSelector.appendChild(newElement("DIV", { "class": "interaction-blocker-overlay" }));
+			Appearance.themeSelectorInteractionBlockerOverlay.addActivateEvent(event => { event.stopPropagation(); });
 		}
 
 		//	Inject transitions CSS, if animating changes is enabled.
@@ -1819,6 +1824,12 @@ Appearance = { ...Appearance,
 		});
 
 		Appearance.themeTweakerUI.query(".current-theme span").innerText = Appearance.currentTheme;
+	},
+
+	setThemeSelectorInteractable: (interactable) => {
+		GWLog("Appearance.setThemeSelectorInteractable");
+
+		Appearance.themeSelectorInteractionBlockerOverlay.classList.toggle("enabled", (interactable == false));
 	},
 
 	themeTweakerUIHTML: () => {
@@ -2150,6 +2161,13 @@ Appearance = { ...Appearance,
 		queryAll(Appearance.themeLessAppearanceAdjustUIElementsSelector).forEach(element => {
 			element.toggleClass("engaged");
 		});
+
+		if (GW.isMobile) {
+			Appearance.setThemeSelectorInteractable(false);
+			setTimeout(() => {
+				Appearance.setThemeSelectorInteractable(true);
+			}, 200);
+		}
 	},
 
 	/**************************************************************************/
@@ -2165,7 +2183,8 @@ Appearance = { ...Appearance,
 		Appearance.saveAppearanceAdjustUIToggleState();
 	},
 
-	/*	“Cog” button to toggle the appearance adjust UI (in “less” theme).
+	/*	“Cog” button (to toggle the appearance adjust UI widgets in “less” 
+		theme, or theme selector UI on mobile).
 	 */
 	appearanceAdjustUIToggleButtonClicked: (event) => {
 		GWLog("Appearance.appearanceAdjustUIToggleButtonClicked");
