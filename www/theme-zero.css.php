@@ -1732,9 +1732,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #aaa;
@@ -1778,6 +1779,33 @@ select {
 		text-shadow: 
 			0 -1px 0 #fff,
 			0 0.5px 0.5px #000;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #999;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		background-color: #eee;
+		box-shadow: 
+			0 0 10px 0   #aaa         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #999;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #444;
+	}
+	#theme-selector #dark-mode-selector {
+		background-color: #eee;
+		box-shadow: 
+			0 0 10px 0   #aaa         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #999;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #999;
+		border-radius: 8px;
+		box-shadow: 0 0 2px 0 #999;
 	}
 
 	#quick-nav-ui {

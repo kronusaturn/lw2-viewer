@@ -1988,9 +1988,9 @@ EOT;
 /* MOBILE */
 /*========*/
 
-/**************************************************************************/
+/*******************************************/
 @media only screen and (max-width: 1160px) {
-/**************************************************************************/
+/*******************************************/
 
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #888;
@@ -2059,7 +2059,7 @@ EOT;
 	}
 	#theme-selector #dark-mode-selector button.selected {
 		background-color: #999;
-		border-radius: 9px;
+		border-radius: 8px;
 		box-shadow: 0 0 2px 0 #999;
 	}
 
