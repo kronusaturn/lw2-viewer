@@ -4814,6 +4814,20 @@ li {
 	box-shadow: none;
 }
 
+#theme-selector .interaction-blocker-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	pointer-events: auto;
+	display: none;
+}
+#theme-selector .interaction-blocker-overlay.enabled {
+	display: block;
+}
+
 /*=============================*/
 /* THEME SELECTOR AUX CONTROLS */
 /*=============================*/
@@ -4941,7 +4955,7 @@ li {
 	bottom: 0;
 	top: unset;
 	text-shadow: none;
-	font-size: 0.75em;
+	font-size: 0.875rem;
 	color: inherit;
 	padding: 0 0.25em 0.5em 0.25em;
 	text-align: center;
@@ -5173,6 +5187,7 @@ li {
 	.nav-bar {
 		width: calc(100% + 8px);
 		margin: 0 -4px;
+		overflow: hidden;
 	}
 	.nav-bar .nav-inner::after {
 		display: none;
@@ -7672,9 +7687,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #000;
@@ -7723,6 +7739,52 @@ select {
 	}
 	#theme-selector .theme-selector-close-button {
 		font-weight: 400;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #000;
+		border-top-width: 2px;
+		margin: 8px 0 0 0;
+		padding: 8px;
+		padding-left: 8px;
+		padding-right: 8px;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		border: 2px solid #000;
+		box-shadow: none;
+		border-radius: 0;
+	}
+	#theme-selector #theme-tweaker-toggle button {
+		color: #000;
+	}
+	#theme-selector #anti-kibitzer-toggle button {
+		border-radius: 0;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #000;
+		color: #000;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before {
+		font-size: 1.5em;
+	}
+	#theme-selector #dark-mode-selector {
+		border: 2px solid #000;
+		border-radius: 0;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		color: #000;
+		box-shadow: 
+			0 0 0 2px #fff inset,
+			0 0 0 4px #000 inset;
+	}
+	#theme-selector #dark-mode-selector button.select-mode-light,
+	#theme-selector #dark-mode-selector button.select-mode-dark {
+		font-weight: 900;
+	}
+	#theme-selector #dark-mode-selector button::after {
+		font-size: 0.875rem;
+		font-weight: 700;
 	}
 
 	#quick-nav-ui {

@@ -827,20 +827,6 @@ input[type='range']::-ms-thumb {
 		margin-top: 1em;
 	}
 
-	#theme-selector .interaction-blocker-overlay {
-		position: fixed;
-		width: 100%;
-		height: 100%;
-		left: 0;
-		top: 0;
-		z-index: 1;
-		pointer-events: auto;
-		display: none;
-	}
-	#theme-selector .interaction-blocker-overlay.enabled {
-		display: block;
-	}
-
 	@media only screen and (max-width: 369px) {
 		#theme-tweaker-ui .theme-selector button {
 			margin: 0.5em 0.25em 0.5em 0.5em;

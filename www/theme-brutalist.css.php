@@ -1718,9 +1718,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #000;
@@ -1769,6 +1770,52 @@ select {
 	}
 	#theme-selector .theme-selector-close-button {
 		font-weight: 400;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #000;
+		border-top-width: 2px;
+		margin: 8px 0 0 0;
+		padding: 8px;
+		padding-left: 8px;
+		padding-right: 8px;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		border: 2px solid #000;
+		box-shadow: none;
+		border-radius: 0;
+	}
+	#theme-selector #theme-tweaker-toggle button {
+		color: #000;
+	}
+	#theme-selector #anti-kibitzer-toggle button {
+		border-radius: 0;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #000;
+		color: #000;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before {
+		font-size: 1.5em;
+	}
+	#theme-selector #dark-mode-selector {
+		border: 2px solid #000;
+		border-radius: 0;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		color: #000;
+		box-shadow: 
+			0 0 0 2px #fff inset,
+			0 0 0 4px #000 inset;
+	}
+	#theme-selector #dark-mode-selector button.select-mode-light,
+	#theme-selector #dark-mode-selector button.select-mode-dark {
+		font-weight: 900;
+	}
+	#theme-selector #dark-mode-selector button::after {
+		font-size: 0.875rem;
+		font-weight: 700;
 	}
 
 	#quick-nav-ui {

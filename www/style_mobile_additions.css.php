@@ -175,6 +175,20 @@
 	box-shadow: none;
 }
 
+#theme-selector .interaction-blocker-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	pointer-events: auto;
+	display: none;
+}
+#theme-selector .interaction-blocker-overlay.enabled {
+	display: block;
+}
+
 /*=============================*/
 /* THEME SELECTOR AUX CONTROLS */
 /*=============================*/
@@ -302,7 +316,7 @@
 	bottom: 0;
 	top: unset;
 	text-shadow: none;
-	font-size: 0.75em;
+	font-size: 0.875rem;
 	color: inherit;
 	padding: 0 0.25em 0.5em 0.25em;
 	text-align: center;
@@ -516,6 +530,7 @@
 	.nav-bar {
 		width: calc(100% + 8px);
 		margin: 0 -4px;
+		overflow: hidden;
 	}
 	.nav-bar .nav-inner::after {
 		display: none;

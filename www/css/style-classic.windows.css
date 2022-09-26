@@ -4814,6 +4814,20 @@ li {
 	box-shadow: none;
 }
 
+#theme-selector .interaction-blocker-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	z-index: 1;
+	pointer-events: auto;
+	display: none;
+}
+#theme-selector .interaction-blocker-overlay.enabled {
+	display: block;
+}
+
 /*=============================*/
 /* THEME SELECTOR AUX CONTROLS */
 /*=============================*/
@@ -4941,7 +4955,7 @@ li {
 	bottom: 0;
 	top: unset;
 	text-shadow: none;
-	font-size: 0.75em;
+	font-size: 0.875rem;
 	color: inherit;
 	padding: 0 0.25em 0.5em 0.25em;
 	text-align: center;
@@ -5173,6 +5187,7 @@ li {
 	.nav-bar {
 		width: calc(100% + 8px);
 		margin: 0 -4px;
+		overflow: hidden;
 	}
 	.nav-bar .nav-inner::after {
 		display: none;
@@ -8004,9 +8019,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #aaa;
 		text-shadow:
@@ -8050,6 +8066,33 @@ select {
 		text-shadow: 
 			0 -1px 0 #fff,
 			0 0.5px 0.5px #000;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #999;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		background-color: #e6e6e6;
+		box-shadow: 
+			0 0 10px 0   #999         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #999;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #444;
+	}
+	#theme-selector #dark-mode-selector {
+		background-color: #e6e6e6;
+		box-shadow: 
+			0 0 10px 0   #999         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #999;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #999;
+		border-radius: 8px;
+		box-shadow: 0 0 2px 0 #999;
 	}
 
 	#quick-nav-ui {

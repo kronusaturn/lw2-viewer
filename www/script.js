@@ -1266,6 +1266,7 @@ Appearance = { ...Appearance,
 	themeSelector: null,
 	themeSelectorAuxiliaryControlsContainer: null,
 	themeSelectorInteractionBlockerOverlay: null,
+	themeSelectorInteractableTimer: null,
 
 	themeTweakerToggle: null,
 
@@ -2163,8 +2164,9 @@ Appearance = { ...Appearance,
 		});
 
 		if (GW.isMobile) {
+			clearTimeout(Appearance.themeSelectorInteractableTimer);
 			Appearance.setThemeSelectorInteractable(false);
-			setTimeout(() => {
+			Appearance.themeSelectorInteractableTimer = setTimeout(() => {
 				Appearance.setThemeSelectorInteractable(true);
 			}, 200);
 		}

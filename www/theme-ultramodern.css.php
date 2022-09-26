@@ -2138,6 +2138,10 @@ input::selection {
 			padding: 6px 10px;
 		}
 
+		.active-bar {
+			margin: 0 -4px;
+		}
+
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {
 			background-color: #ccc;
 		}

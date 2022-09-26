@@ -2011,9 +2011,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #bbb;
 		text-shadow:
@@ -2063,6 +2064,33 @@ select {
 			1px 1px 0 #ccc,
 			0 0 8px #ccc;
 		opacity: 1.0;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #bbb;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		background-color: #fffffa;
+		box-shadow: 
+			0 0 10px 0   #bbb         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #bbb;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #444;
+	}
+	#theme-selector #dark-mode-selector {
+		background-color: #fffffa;
+		box-shadow: 
+			0 0 10px 0   #bbb         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #bbb;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #aaa;
+		border-radius: 8px;
+		box-shadow: 0 0 2px 0 #bbb;
 	}
 
 	#quick-nav-ui {

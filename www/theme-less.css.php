@@ -2679,9 +2679,10 @@ strong, b {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#site-nav-ui-toggle {
 		top: 10px;
 		left: 10px;
@@ -2763,6 +2764,52 @@ strong, b {
 	#theme-tweaker-toggle button {
 		color: #999;
 		font-weight: 400;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #aaa;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		box-shadow: none;
+		border: 1px solid #999;
+	}
+	#theme-selector #theme-tweaker-toggle button {
+		color: #819681;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		color: #819681;
+		opacity: 1.0;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before {
+		font-size: 1.5em;
+		font-weight: 300;
+	}
+	#theme-selector #anti-kibitzer-toggle button::after {
+		font-weight: 400;
+	}
+	#theme-selector #dark-mode-selector {
+		border: 1px solid #999;
+	}
+	#theme-selector #dark-mode-selector button {
+		color: #819681;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #c4dbc4;
+		color: #fff;
+	}
+	#theme-selector #dark-mode-selector button + button {
+		box-shadow: 
+			-1px 0 0 0 #999;
+	}
+	#theme-selector #dark-mode-selector button:first-child.selected {
+		border-radius: 10px 0 0 10px;
+	}
+	#theme-selector #dark-mode-selector button:last-child.selected {
+		border-radius: 0 10px 10px 0;
+	}
+	#theme-selector #dark-mode-selector button.selected::after {
+		text-shadow: 0 0 1px #fff;
 	}
 
 	#quick-nav-ui {
