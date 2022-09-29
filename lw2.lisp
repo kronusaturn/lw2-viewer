@@ -1277,6 +1277,16 @@ signaled condition to *HTML-OUTPUT*."
 			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
 			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
 				      (cdr (assoc :--id post))))
+			    (alist-bind (fm-crosspost foreign-post) post
+			      (alist-bind (is-crosspost hosted-here) fm-crosspost
+				(when is-crosspost
+				  (if-let (crosspost-site-host (backend-magnum-crosspost-site *current-backend*))
+				      (let* ((*current-site* (find-site crosspost-site-host))
+					     (crosspost-site-title (main-site-title *current-site*)))
+					(alist-bind (comment-count base-score) foreign-post
+					  <a class="crosspost" href=(generate-item-link :post foreign-post :absolute t)>Crossposted (if hosted-here "to" "from") (progn crosspost-site-title)
+						                                                                        \ \((safe (pretty-number (or base-score 0) "point")), (safe (pretty-number (or comment-count 0) "comment"))\)</a>))
+				      (error "Could not retrieve crossposted post. magnum-crosspost-site not configured.")))))
 			    (post-nav-links post post-sequences)
 			    (activate-client-trigger "postLoaded")
 			    (when show-comments

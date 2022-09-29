@@ -870,16 +870,20 @@ h1.post-title {
 /*===========*/
 
 .post-meta a,
-.post-meta .date {
+.post-meta .date,
+.crosspost {
 	color: #444;
 }
 
-.post-meta > * {
-	margin: 0;
+.post-meta > *,
+.crosspost {
 	text-shadow:
 		0px 0px 1px #777,
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
+}
+.post-meta > * {
+	margin: 0;
 }
 .post-meta .comment-count span,
 .post-meta .read-time span,

@@ -646,7 +646,28 @@
 		  (lw2-graphql-query-timeout-cached query-string "post-body-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))))))
   (backend-lw2-tags
    (declare (ignore auth-token))
-   (acons :tags (get-post-tags post-id :revalidate revalidate :force-revalidate force-revalidate) (call-next-method))))
+   (acons :tags (get-post-tags post-id :revalidate revalidate :force-revalidate force-revalidate) (call-next-method)))
+  (backend-magnum-crossposts
+   (declare (ignore auth-token))
+   (let ((post (call-next-method)))
+     (alist-bind (is-crosspost hosted-here foreign-post-id) (cdr (assoc :fm-crosspost post))
+       (cond ((not (and (backend-magnum-crosspost-site backend)
+			(not (boundp '*retrieve-crosspost*))
+			is-crosspost foreign-post-id))
+	      post)
+	     (:otherwise
+	      (let* ((*current-site* (find-site (backend-magnum-crosspost-site backend)))
+		     (*current-backend* (site-backend *current-site*))
+		     (*retrieve-crosspost* nil)
+		     (foreign-post (get-post-body foreign-post-id :revalidate revalidate :force-revalidate force-revalidate))
+		     (foreign-post-body (cdr (assoc :html-body foreign-post))))
+		(declare (special *retrieve-crosspost*))
+		(if foreign-post-body
+		    (list-cond*
+		     ((not hosted-here) :html-body foreign-post-body)
+		     (t :foreign-post foreign-post)
+		     post)
+		    post))))))))
 
 (defun get-post-comments-list (post-id view &rest rest &key auth-token parent-answer-id fields context)
   (declare (ignore fields context auth-token))

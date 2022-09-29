@@ -862,6 +862,10 @@ h1.listing.own-post-listing {
 	}
 }
 
+.crosspost, .crosspost:visited {
+	color: #000;
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/

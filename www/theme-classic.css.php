@@ -885,6 +885,12 @@ h1.listing.own-post-listing {
 	}
 }
 
+.crosspost, .crosspost:visited {
+	color: #6a8a6b;
+	background-color: #f8f8f8;
+	border: 1px solid #ccc;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/

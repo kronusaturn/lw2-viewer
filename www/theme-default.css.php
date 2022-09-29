@@ -976,6 +976,11 @@ h1.post-title {
 	}
 }
 
+.crosspost {
+	background-color: #eee;
+	border: 1px solid #ccc;
+}
+
 /*===========*/
 /* POST-META */
 /*===========*/

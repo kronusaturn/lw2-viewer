@@ -55,6 +55,7 @@
    (comment-sort-order (or null string) :backend-type backend-lw2)
    (tags list :graphql-ignore t)
    (submit-to-frontpage boolean :backend-type backend-lw2-misc-features)
+   (fm-crosspost list :backend-type backend-magnum-crossposts)
    (html-body (or null string) :context :body)))
 
 (defgeneric rectify-post* (backend post) ; TODO this should go in a more generic postprocessing method

@@ -2190,6 +2190,11 @@ h1.post-title {
 	display: none;
 }
 
+.crosspost {
+	padding: 0.1em 1em;
+	margin: 1em auto;
+}
+
 /**************/
 /* LINK POSTS */
 /**************/
@@ -6933,6 +6938,11 @@ h1.post-title {
 	.post-nav.next {
 		border-left: 1px dotted #777;
 	}
+}
+
+.crosspost {
+	background-color: #131313;
+	border: 1px solid #2c2c2c;
 }
 
 /*===========*/
