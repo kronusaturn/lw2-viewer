@@ -87,3 +87,13 @@
 
 (defun perceptual-invert-color-string (color-string)
   (multiple-value-call #'encode-css-color (multiple-value-call #'perceptual-invert-rgba (decode-css-color color-string))))
+
+(defun rewrite-css-colors (in-stream out-stream fn)
+  (flet ((replacer (target-string start end match-start match-end reg-starts reg-ends)
+	   (declare (ignore start end reg-starts reg-ends))
+	   (funcall fn (substring target-string match-start match-end))))
+    (declare (dynamic-extent #'replacer))
+  (loop for in-line = (read-line in-stream nil)
+     while in-line
+     do (let ((out-line (ppcre:regex-replace-all -css-color-scanner- in-line #'replacer)))
+	  (write-line out-line out-stream)))))
