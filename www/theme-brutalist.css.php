@@ -786,6 +786,10 @@ h1.post-title {
 	}
 }
 
+.crosspost {
+	border: 1px solid #000;
+}
+
 /*==========*/
 /* COMMENTS */
 /*==========*/

@@ -2123,6 +2123,11 @@ h1.post-title {
 	display: none;
 }
 
+.crosspost {
+	padding: 0.1em 1em;
+	margin: 1em auto;
+}
+
 /**************/
 /* LINK POSTS */
 /**************/

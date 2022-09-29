@@ -2112,6 +2112,11 @@ h1.post-title {
 	display: none;
 }
 
+.crosspost {
+	padding: 0.1em 1em;
+	margin: 1em auto;
+}
+
 /**************/
 /* LINK POSTS */
 /**************/
@@ -6652,6 +6657,10 @@ h1.listing.own-post-listing {
 	.post-nav.next {
 		border-left: 1px dotted #aaa;
 	}
+}
+
+.crosspost, .crosspost:visited {
+	color: #000;
 }
 
 /*==================*/
