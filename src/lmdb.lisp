@@ -134,7 +134,7 @@
 			 (make-environment-container
 			  :rwlock (make-rwlock)
 			  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
-							      :max-databases 1024 :max-readers 126 :open-flags 0 :mapsize *lmdb-mapsize*))))
+							      :max-databases 1024 :max-readers 512 :open-flags 0 :mapsize *lmdb-mapsize*))))
 		    (lmdb:open-environment (environment-container-environment new-environment) :create t)
 		    (prepare-environment new-environment (site-backend site))
 		    (setf (backend-lmdb-environment (site-backend site)) new-environment)
