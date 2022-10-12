@@ -2056,7 +2056,6 @@ Appearance = { ...Appearance,
 		});
 
 		Appearance.toggleThemeTweakerUI();
-		event.target.disabled = true;
 	},
 
 	toggleThemeTweakerUI: () => {
@@ -2069,6 +2068,8 @@ Appearance = { ...Appearance,
 		Appearance.themeTweakerStyleBlock.innerHTML = show ? `#content, #ui-elements-container > div:not(#theme-tweaker-ui) { pointer-events: none; user-select: none; }` : "";
 
 		if (show) {
+			// Disable button.
+			Appearance.themeTweakerToggle.query("button").disabled = true;
 			// Focus invert checkbox.
 			Appearance.themeTweakerUI.query("#theme-tweaker-ui #theme-tweak-control-invert").focus();
 			// Show sample text in appropriate font.
@@ -2078,6 +2079,7 @@ Appearance = { ...Appearance,
 			// Disable scrolling of the page.
 			togglePageScrolling(false);
 		} else {
+			// Re-enable button.
 			Appearance.themeTweakerToggle.query("button").disabled = false;
 			// Re-enable tab-selection of the search box.
 			setSearchBoxTabSelectable(true);

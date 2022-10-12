@@ -717,6 +717,7 @@ input[type='range']::-ms-thumb {
 	border-radius: 8px;
 	color: inherit;
 	padding: 1px 0;
+	background-color: transparent;
 	box-shadow: 
 		-1px -1px 0 #dfd8df inset,
 		0 -1px 0 #7f787f,
