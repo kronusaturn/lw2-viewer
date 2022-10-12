@@ -2026,6 +2026,26 @@ Appearance = { ...Appearance,
 	showThemeTweakerUI: () => {
 		GWLog("Appearance.showThemeTweakerUI");
 
+		if (query("link[href^='/css/theme_tweaker.css']") == null) {
+			//	Theme tweaker CSS needs to be loaded.
+
+			let themeTweakerStyleSheet = newElement("LINK", {
+				"rel": "stylesheet",
+				"href": "/css/theme_tweaker.css"
+			});
+
+			themeTweakerStyleSheet.addEventListener("load", (event) => {
+				requestAnimationFrame(() => {
+					themeTweakerStyleSheet.disabled = false;
+				});
+				Appearance.showThemeTweakerUI();
+			}, { once: true });
+
+			document.head.appendChild(themeTweakerStyleSheet);
+
+			return;
+		}
+
 		Appearance.themeTweakerUI.query(".current-theme span").innerText = Appearance.getSavedTheme();
 
 		Appearance.themeTweakerUI.query("#theme-tweak-control-invert").checked = (Appearance.currentFilters["invert"] == "100%");
@@ -2267,23 +2287,7 @@ Appearance = { ...Appearance,
 	themeTweakerToggleClicked: (event) => {
 		GWLog("Appearance.themeTweakerToggleClicked");
 
-		if (query("link[href^='/css/theme_tweaker.css']")) {
-			//	Theme tweaker CSS is already loaded.
-			Appearance.showThemeTweakerUI();
-		} else {
-			//	Load the theme tweaker CSS (if not loaded).
-			let themeTweakerStyleSheet = newElement("LINK", {
-				"rel": "stylesheet",
-				"href": "/css/theme_tweaker.css"
-			});
-			themeTweakerStyleSheet.addEventListener("load", (event) => {
-				requestAnimationFrame(() => {
-					themeTweakerStyleSheet.disabled = false;
-				});
-				Appearance.showThemeTweakerUI();
-			}, { once: true });
-			document.head.appendChild(themeTweakerStyleSheet);
-		}
+		Appearance.showThemeTweakerUI();
 	},
 
 	/***************************/
