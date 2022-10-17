@@ -20,6 +20,10 @@
 	--GW-comment-background-color-odd: #eee;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-toggle-widget-color: #aaa;
+	--GW-toggle-widget-hover-color: #555;
+	--GW-toggle-widget-shadow-color: rgba(255, 255, 255, 0.5);
 }
 
 /*======*/

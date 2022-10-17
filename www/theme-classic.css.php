@@ -387,22 +387,6 @@ body {
 	color: #000;
 }
 
-/*======================*/
-/* ANTI-KIBITZER TOGGLE */
-/*======================*/
-
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #888;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
-}
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: #444;
-}
-
 /*====================*/
 /* DARK MODE SELECTOR */
 /*====================*/

@@ -14,6 +14,9 @@
 /*	Color scheme.
 	*/
 :root {
+	--GW-toggle-widget-color: #999;
+	--GW-toggle-widget-hover-color: #000;
+	--GW-toggle-widget-shadow-color: rgba(255,255,255,0.5);
 }
 
 /*======*/
@@ -266,20 +269,20 @@ body {
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #999;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
-}
 #anti-kibitzer-toggle button:hover {
 	box-shadow: none;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	background-color: #000;
-	text-shadow: rgba(255,255,255,0.2) 0px 1px 1px;
+}
+
+/*======================*/
+/* PREVIEW POPUP TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle:hover, #preview-popup-toggle:hover {
+	--GW-toggle-widget-shadow-color: transparent;
 }
 
 /*====================*/

@@ -464,22 +464,6 @@ body {
 	color: <?php echo ($platform == 'Mac') ? '#aaa' : '#888'; ?>;
 }
 
-/*======================*/
-/* ANTI-KIBITZER TOGGLE */
-/*======================*/
-
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: var(--GW-toggle-widget-color);
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
-}
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: var(--GW-toggle-widget-hover-color);
-}
-
 /*====================*/
 /* DARK MODE SELECTOR */
 /*====================*/

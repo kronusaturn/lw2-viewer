@@ -19,6 +19,10 @@
 	--GW-comment-background-color-odd: #eee;
 	--GW-comment-background-color-even: #fff;
 	--GW-comment-background-color-target: #ffd;
+
+	--GW-toggle-widget-color: #aaa;
+	--GW-toggle-widget-hover-color: #777;
+	--GW-toggle-widget-shadow-color: rgba(255, 255, 255, 0.5);
 }
 
 /*======*/
@@ -365,22 +369,6 @@ body {
 }
 #hns-date-picker input:focus {
 	color: #000;
-}
-
-/*======================*/
-/* ANTI-KIBITZER TOGGLE */
-/*======================*/
-
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #aaa;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
-}
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: #777;
 }
 
 /*====================*/
