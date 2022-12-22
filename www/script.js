@@ -121,8 +121,8 @@ function urlEncodeQuery(params) {
 }
 
 function handleAjaxError(event) {
-	if(event.target.getResponseHeader("Content-Type") === "application/json") alert("Error: " + JSON.parse(event.target.responseText)["error"]);
-	else alert("Error: Something bad happened :(");
+	if(event.target.getResponseHeader("Content-Type") === "application/json") console.log("doAjax error: " + JSON.parse(event.target.responseText)["error"]);
+	else console.log("doAjax error: Something bad happened :(");
 }
 
 function doAjax(params) {
