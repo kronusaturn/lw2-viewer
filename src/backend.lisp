@@ -161,9 +161,11 @@
 	(unwind-protect
 	     (handler-bind (((or dex:http-request-failed usocket:ns-condition usocket:socket-condition)
 			     (lambda (condition)
-			       (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
+			       (if-let ((r (find-restart 'dex:ignore-and-continue condition))
+					(ct (gethash "content-type" (dex:response-headers condition))))
+				   (if (ppcre:scan "^application/json" ct)
 				       (invoke-restart r)
-				       (maybe-retry)))))
+				       (maybe-retry))))))
 	       (setf (values response status-code headers response-uri new-stream)
 		     (apply 'dex:request uri :use-connection-pool nil :keep-alive t :stream stream args))
 	       (unless (eq stream new-stream)
