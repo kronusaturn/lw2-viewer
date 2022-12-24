@@ -151,7 +151,64 @@
 		(when (> (fill-pointer vector) 0)
 		  (vector-pop vector))))))
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defstruct (token-bucket (:constructor %make-token-bucket))
+    (tokens internal-time-units-per-second :type fixnum)
+    (base-cost internal-time-units-per-second :type fixnum)
+    (last-update (get-internal-real-time) :type fixnum)
+    (tokens-per-unit 1 :type fixnum)
+    (token-limit internal-time-units-per-second :type fixnum))
+
+  (defun make-token-bucket (&key rate burst (fill-ratio 1.0))
+    (let* ((scaled-rate (rationalize (/ internal-time-units-per-second rate)))
+	   (base-cost (numerator scaled-rate))
+	   (tokens-per-unit (denominator scaled-rate))
+	   (token-limit (* base-cost burst)))
+      (%make-token-bucket
+       :base-cost base-cost
+       :tokens-per-unit tokens-per-unit
+       :token-limit token-limit
+       :tokens (round (* token-limit fill-ratio))))))
+
+(defun token-bucket-decrement (token-bucket n &optional with-punishment)
+  (let ((time (get-internal-real-time))
+	(timediff 0)
+	(tpu (token-bucket-tokens-per-unit token-bucket))
+	(limit (token-bucket-token-limit token-bucket))
+	(cost (round (* n (token-bucket-base-cost token-bucket))))
+	(result nil))
+    (declare (fixnum time timediff tpu limit))
+    (sb-ext:atomic-update (token-bucket-last-update token-bucket)
+			  (lambda (previous)
+			    (setf timediff (- time (min previous time)))
+			    (max previous time)))
+    (sb-ext:atomic-update (token-bucket-tokens token-bucket)
+			  (lambda (previous)
+			    (let ((new (+ previous (* timediff tpu) (- cost))))
+			      (setf result (> new 0))
+			      (if (or result with-punishment)
+				  (min new limit)
+				  previous))))
+    result))
+
+(defun parse-ipv4 (string)
+  (let ((l (map 'list #'parse-integer
+		(split-sequence:split-sequence #\. string))))
+    (loop with res = 0
+       for n in l
+       do (setf res (+ n (ash res 8)))
+       finally (return res))))
+
+(defparameter *rate-limit-cost-factor* 1)
+
+(sb-ext:defglobal *global-token-bucket* (make-token-bucket :rate 3 :burst 30))
+
+(defun check-rate-limit ()
+  (or (token-bucket-decrement *global-token-bucket* *rate-limit-cost-factor*)
+      (error "Rate limit exceeded. Try again later.")))
+
 (defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
+  (check-rate-limit)
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (stream (connection-pop uri-dest)))
