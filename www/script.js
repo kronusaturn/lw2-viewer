@@ -4193,14 +4193,8 @@ function insertMarkup(event) {
 	}
 
 	// Update textarea contents.
-	// The document.execCommand API is broken in Firefox 
-	// ( https://bugzilla.mozilla.org/show_bug.cgi?id=1220696 ), but using it
-	// allows native undo/redo to work; so we enable it in other browsers.
-	if (GW.isFirefox) {
-		textarea.value = textarea.value.substring(0, p0) + str + textarea.value.substring(p1);
-	} else {
-		document.execCommand("insertText", false, str);
-	}
+	document.execCommand("insertText", false, str);
+
 	// Expand textarea, if needed.
 	expandTextarea(textarea);
 
