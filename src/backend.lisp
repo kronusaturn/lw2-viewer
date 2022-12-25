@@ -201,7 +201,7 @@
 
 (defparameter *rate-limit-cost-factor* 1)
 
-(sb-ext:defglobal *global-token-bucket* (make-token-bucket :rate 3 :burst 30))
+(sb-ext:defglobal *global-token-bucket* (make-token-bucket :rate 3 :burst 180))
 
 (defun check-rate-limit ()
   (or (token-bucket-decrement *global-token-bucket* *rate-limit-cost-factor*)
