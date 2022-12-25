@@ -300,6 +300,15 @@ Element.prototype.addTextareaFeatures = function() {
 	}, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
+	textarea.addEventListener("keydown", (event) => {
+		// Special case for alt+4
+		// Generalize this before adding more.
+		if(event.altKey && event.key === '4') {
+			insertMarkup(event, "$", "$", "LaTeX formula");
+			event.stopPropagation();
+			event.preventDefault();
+		}
+	});
 
 	let form = textarea.closest("form");
 	if(form) form.addEventListener("submit", event => { textarea.value = MarkdownFromHTML(textarea.value)});
@@ -4219,7 +4228,7 @@ GW.guiEditButtons = [
 	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068;' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121;' ],
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9;' ],
-	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
+	[ 'formula', 'LaTeX [alt+4]', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
 	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc;' ]
 ];
 
