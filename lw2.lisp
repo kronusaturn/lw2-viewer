@@ -861,7 +861,7 @@ signaled condition to *HTML-OUTPUT*."
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications hide-cov)
+(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications)
   (unless *preview*
     (let ((out-stream *html-output*)
 	  (liu (logged-in-userid)))
@@ -879,11 +879,6 @@ signaled condition to *HTML-OUTPUT*."
 	    (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
 	  (format out-stream "<a class=\"new-private-message button\" href=\"/conversation~@[?to=~A~]\">~A</a>"
 		  to text)))
-      (when hide-cov
-	(let ((cov-pref (user-pref :hide-cov)))
-	  <form method="post">
-	  <button name="set-cov-pref" value=(if cov-pref 0 1)>("~:[Hide~;Show~] coronavirus posts" cov-pref)</button>
-	  </form>))
       (when (and new-post liu)
 	(format out-stream "<a class=\"new-post button\" href=\"/edit-post~@[?section=~A~]\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>"
 		(typecase new-post (string new-post) (t nil))))
@@ -1015,15 +1010,11 @@ signaled condition to *HTML-OUTPUT*."
 	       before after
 	       (offset :type fixnum)
 	       (limit :type fixnum :default (user-pref :items-per-page))
-	       (set-cov-pref :request-type :post)
 	       &without-csrf-check))
-  (when set-cov-pref
-    (set-user-pref :hide-cov (string= set-cov-pref "1")))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string
-			 :hide-tags (if (user-pref :hide-cov) (list (get-slug-tagid "coronavirus"))))
+	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string)
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
 		  (view-items-index (firstn posts limit)
@@ -1032,8 +1023,7 @@ signaled condition to *HTML-OUTPUT*."
 				    :content-class (format nil "index-page ~(~A~)-index-page" view)
 				    :top-nav (lambda ()
 					       (page-toolbar-to-html :title page-title
-								     :new-post (if (eq view :meta) "meta" t)
-								     :hide-cov (typep *current-site* 'lesswrong-viewer-site))
+								     :new-post (if (eq view :meta) "meta" t))
 					       (funcall sort-widget))))))))
 
 (defmacro route-component (name lambda-list &rest args)
