@@ -775,7 +775,7 @@
 
 (define-backend-function get-tag-comments-votes (tag-id auth-token)
   (backend-lw2-tags-comments
-   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "commentsOnTag") :fields '(:--id :current-user-vote :current-user-extended-vote))
+   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "tagDiscussionComments") :fields '(:--id :current-user-vote :current-user-extended-vote))
 					    :auth-token auth-token))))
 
 (define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))

@@ -1584,7 +1584,7 @@ signaled condition to *HTML-OUTPUT*."
 						 (when (typep *current-backend* 'backend-lw2-tags-comments)
 						   (finish-output *html-output*)
 						   (let ((*enable-voting* (not (null (logged-in-userid))))
-							 (comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
+							 (comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "tagDiscussionComments" :tag-id tag-id)))))
 						     (output-comments *html-output* "comment" comments nil :replies-open t)))))))))
      (:post ()
        (schema-bind (:tag tag (tag-id))
