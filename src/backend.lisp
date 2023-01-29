@@ -388,15 +388,17 @@
 
 (defun cache-update (cache-db key data)
   (let ((meta-db (format nil "~A-meta" cache-db))
-        (new-hash (hash-string data))
-        (current-time (get-unix-time)))
+	(new-hash (hash-string data))
+	(current-time (get-unix-time)))
     (with-cache-transaction
       (let* ((metadata (cache-get meta-db key :value-type :lisp))
-             (last-mod (if (equalp new-hash (cdr (assoc :city-128-hash metadata)))
-                           (or (cdr (assoc :last-modified metadata)) current-time)
-                           current-time)))
-        (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
-        (cache-put cache-db key data)))))
+	     (same-data (equalp new-hash (cdr (assoc :city-128-hash metadata))))
+	     (last-mod (if same-data
+			   (or (cdr (assoc :last-modified metadata)) current-time)
+			   current-time)))
+	(cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
+	(unless same-data
+	  (cache-put cache-db key data))))))
 
 (defun cache-mark-stale (cache-db key)
   (let ((meta-db (format nil "~A-meta" cache-db))
