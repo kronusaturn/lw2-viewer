@@ -724,8 +724,13 @@
 	     (declare (type cons contents))
 	     (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
 	     (loop for (elem-level text id) in contents do
-		  (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
-			  (- elem-level (- min-header-level 1)) id (clean-text-to-html text)))
+		  (let* #.(loop for regex in '("^[0-9]+\\. "
+					       "^[0-9]+: "
+					       "(?i)^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\\. "
+					       "^[A-Z]\. ")
+			     collect `(text (ppcre:regex-replace ,regex text "")))
+		    (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
+			    (- elem-level (- min-header-level 1)) id (clean-text-to-html text))))
 	     (format out-stream "</ul></nav>"))
 	   (style-hash-to-html (style-hash out-stream)
 	     (declare (type hash-table style-hash))

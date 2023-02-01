@@ -3773,14 +3773,6 @@ function mainInitializer() {
 	// Focus the textarea.
 	queryAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (GW.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
-	// Clean up ToC
-	queryAll(".contents-list li a").forEach(tocLink => {
-		tocLink.textContent = tocLink.textContent.replace(/^[0-9]+\. /, '');
-		tocLink.textContent = tocLink.textContent.replace(/^[0-9]+: /, '');
-		tocLink.textContent = tocLink.textContent.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
-		tocLink.textContent = tocLink.textContent.replace(/^[A-Z]\. /, '');
-	});
-
 	// If we're on a comment thread page...
 	if (query(".comments") != null) {
 		// Add comment-minimize buttons to every comment.
