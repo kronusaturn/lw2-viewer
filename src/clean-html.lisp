@@ -721,17 +721,17 @@
 		      return (progn (setf (gethash anchor used-anchors) t)
 				    anchor))))
 	   (contents-to-html (contents min-header-level out-stream)
-			     (declare (type cons contents)) 
-			     (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
-			     (loop for (elem-level text id) in contents do
-				  (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
-					  (- elem-level (- min-header-level 1)) id (clean-text-to-html text)))
-			     (format out-stream "</ul></nav>"))
+	     (declare (type cons contents))
+	     (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
+	     (loop for (elem-level text id) in contents do
+		  (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
+			  (- elem-level (- min-header-level 1)) id (clean-text-to-html text)))
+	     (format out-stream "</ul></nav>"))
 	   (style-hash-to-html (style-hash out-stream)
-			       (declare (type hash-table style-hash))
-			       (let ((style-list (alexandria:hash-table-keys style-hash)))
-				 (if style-list
-				   (format out-stream "<style>~{~A~}</style>" style-list)))))
+	     (declare (type hash-table style-hash))
+	     (let ((style-list (alexandria:hash-table-keys style-hash)))
+	       (if style-list
+		   (format out-stream "<style>~{~A~}</style>" style-list)))))
     (declare (ftype (function (plump:node &rest simple-string) boolean) only-child-is is-child-of-tag text-node-is-not))
     (handler-bind
       (((or plump:invalid-xml-character plump:discouraged-xml-character) #'abort))
