@@ -3775,10 +3775,10 @@ function mainInitializer() {
 
 	// Clean up ToC
 	queryAll(".contents-list li a").forEach(tocLink => {
-		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
-		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+: /, '');
-		tocLink.innerText = tocLink.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
-		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
+		tocLink.textContent = tocLink.textContent.replace(/^[0-9]+\. /, '');
+		tocLink.textContent = tocLink.textContent.replace(/^[0-9]+: /, '');
+		tocLink.textContent = tocLink.textContent.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
+		tocLink.textContent = tocLink.textContent.replace(/^[A-Z]\. /, '');
 	});
 
 	// If we're on a comment thread page...
