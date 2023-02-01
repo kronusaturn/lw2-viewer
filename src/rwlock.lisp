@@ -8,8 +8,9 @@
   (:import-from #:sb-sys
 		#:without-interrupts #:allow-with-interrupts #:with-interrupts)
   (:import-from #:alexandria
-		#:with-gensyms)
-  (:export #:rwlock #:make-rwlock #:read-lock #:read-unlock #:write-lock #:write-unlock #:with-read-lock #:with-write-lock))
+		#:with-gensyms
+		#:once-only)
+  (:export #:rwlock #:make-rwlock #:read-lock #:read-unlock #:write-lock #:write-unlock #:with-read-lock #:with-write-lock #:with-rwlock-protect))
 
 (in-package #:lw2.rwlock)
 
@@ -115,3 +116,23 @@
 
 (defmacro with-write-lock ((rwlock) &body body)
   `(with-rwlock (,rwlock :write) ,@body))
+
+(defmacro with-rwlock-protect (rwlock predicate-form write-form &body read-forms)
+  "
+Protect READ-FORMS from being evaluated when PREDICATE-FORM returns false.
+RWLOCK will be locked in read mode. If PREDICATE-FORM returns false, RWLOCK will
+be upgraded to write mode and WRITE-FORM will be evaluated. WRITE-FORM should
+ensure that PREDICATE-FORM will return true. PREDICATE-FORM may be evaluated
+more than once. Returns the values returned by READ-FORMS."
+  (once-only (rwlock)
+    (with-gensyms (predicate-fn write-fn read-fn)
+      `(flet ((,predicate-fn () ,predicate-form)
+	      (,write-fn () ,write-form)
+	      (,read-fn () ,@read-forms))
+	 (declare (dynamic-extent #',predicate-fn #',write-fn #',read-fn))
+	 (with-read-lock (,rwlock :upgrade-fn upgrade-lock)
+	   (unless (,predicate-fn)
+	     (upgrade-lock)
+	     (unless (,predicate-fn)
+	       (,write-fn)))
+	   (,read-fn))))))

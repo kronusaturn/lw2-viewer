@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.lmdb
   (:use #:cl #:sb-ext #:sb-thread #:alexandria #:iterate #:lw2.raw-memory-streams #:lw2.conditions #:lw2.sites #:lw2.context #:lw2.backend-modules #:lw2-viewer.config #:lw2.hash-utils)
-  (:import-from #:lw2.rwlock #:rwlock #:make-rwlock #:with-read-lock #:with-write-lock)
+  (:import-from #:lw2.rwlock #:rwlock #:make-rwlock #:with-read-lock #:with-write-lock #:with-rwlock-protect)
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction
@@ -114,10 +114,10 @@
 (define-backend-function get-current-environment ())
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
-  (with-read-lock (*db-environments-rwlock* :upgrade-fn upgrade-lock)
-    (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
-		 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
-      (upgrade-lock)
+  (with-rwlock-protect *db-environments-rwlock*
+    (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
+	 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
+    (progn
       (setf *environments-sites* *sites*)
       (let ((lmdb-cache-sites (remove-if (lambda (x) (not (typep (site-backend x) 'backend-lmdb-cache)))
 					 *environments-sites*)))
@@ -127,19 +127,19 @@
 						lmdb-cache-sites))
 	(dolist (site lmdb-cache-sites)
 	  (if-let (existing-environment (find-environment-with-path (backend-cache-db-path (site-backend site)) *db-environments*))
-		  (progn
-		    (setf (backend-lmdb-environment (site-backend site)) existing-environment)
-		    (prepare-environment existing-environment (site-backend site)))
-		  (let ((new-environment
-			 (make-environment-container
-			  :rwlock (make-rwlock)
-			  :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
-							      :max-databases 1024 :max-readers 512 :open-flags 0 :mapsize *lmdb-mapsize*))))
-		    (lmdb:open-environment (environment-container-environment new-environment) :create t)
-		    (prepare-environment new-environment (site-backend site))
-		    (setf (backend-lmdb-environment (site-backend site)) new-environment)
-		    (push new-environment *db-environments*)))))))
-  (backend-lmdb-environment backend))
+	      (progn
+		(setf (backend-lmdb-environment (site-backend site)) existing-environment)
+		(prepare-environment existing-environment (site-backend site)))
+	    (let ((new-environment
+		   (make-environment-container
+		    :rwlock (make-rwlock)
+		    :environment (lmdb:make-environment (backend-cache-db-path (site-backend site))
+							:max-databases 1024 :max-readers 512 :open-flags 0 :mapsize *lmdb-mapsize*))))
+	      (lmdb:open-environment (environment-container-environment new-environment) :create t)
+	      (prepare-environment new-environment (site-backend site))
+	      (setf (backend-lmdb-environment (site-backend site)) new-environment)
+	      (push new-environment *db-environments*))))))
+    (backend-lmdb-environment backend)))
 
 (uiop:chdir (asdf:system-source-directory "lw2-viewer"))
 
@@ -366,47 +366,111 @@
 	     (process-span index size)))))
   t)
 
-(defun make-lmdb-memoized-wrapper (db-name fn return-type)
-  (lambda (&rest args)
-    (let* ((hash (hash-printable-object args))
-	   (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
-           (cached-value (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type))))
-      (if cached-value
-          cached-value
-          (let* ((new-value (apply fn hash args))
-                 (octets-value (string-to-octets new-value :external-format :utf-8)))
-	    (with-cache-transaction
-	      (with-db (db db-name) (lmdb:put db hash octets-value))
-	      (setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp)))
-	    (case return-type
-	      (:string new-value)
-	      (:byte-vector octets-value)
-	      ('write-memoized-data (with-db (db db-name :read-only t) (lmdb:get db hash :return-type return-type)))))))))
+(declaim (ftype (function (cffi:foreign-pointer fixnum (simple-array (unsigned-byte 8) (*))) boolean) version-equal)
+	 (inline version-equal))
 
-(defun clean-memoized-database (db-name class-name now-hash)
-  (dolist (site *sites*)
-    (let ((*current-backend* (site-backend site)))
-      (when (and (typep *current-backend* 'backend-lmdb-cache)
-		 (typep *current-backend* class-name))
-	(unless (equalp now-hash (cache-get db-name "version" :value-type :byte-vector))
-	  (cache-del db-name "version")
-	  (truncate-database-nicely db-name)
-	  (with-cache-transaction
-	    (truncate-database db-name)
-	    (cache-put db-name "version" now-hash :value-type :byte-vector)))))))
+(defun version-equal (array size version)
+  (declare (type (unsigned-byte 32) size)
+	   (type (simple-array (unsigned-byte 8) (*)) version))
+  (if (>= size (length version))
+      (loop for i from 0 below (length version)
+	 do (when (/= (aref version i)
+		      (cffi:mem-aref array :unsigned-char i))
+	      (return nil))
+	 finally
+	   (return t))))
+
+(defstruct scoreboard
+  (table (make-hash-table :test 'equalp))
+  (mutex (sb-thread:make-mutex)))
+
+(defstruct scorecard
+  (ready nil)
+  (mutex (sb-thread:make-mutex))
+  (waitqueue (sb-thread:make-waitqueue)))
+
+(defun call-with-scorecard (scoreboard key created-fn existing-fn)
+  (declare (type (function ()) created-fn existing-fn))
+  (let ((table (scoreboard-table scoreboard))
+	scorecard
+	created)
+    (sb-thread:with-mutex ((scoreboard-mutex scoreboard))
+      (setf scorecard (gethash key table))
+      (unless scorecard
+	(setf created t
+	      scorecard (make-scorecard)
+	      (gethash key table) scorecard)))
+    (cond
+      (created
+       (unwind-protect
+	    (funcall created-fn)
+	 (setf (scorecard-ready scorecard) t)
+	 (sb-thread:with-mutex ((scorecard-mutex scorecard))
+	   (sb-thread:condition-broadcast (scorecard-waitqueue scorecard)))
+	 (sb-thread:with-mutex ((scoreboard-mutex scoreboard))
+	   (remhash key table)))
+       (funcall existing-fn))
+      (:otherwise
+	 (unless (scorecard-ready scorecard)
+	   (sb-thread:with-mutex ((scorecard-mutex scorecard))
+	     (loop until (scorecard-ready scorecard)
+		do (or (sb-thread:condition-wait (scorecard-waitqueue scorecard) (scorecard-mutex scorecard))
+		       (error "Waitqueue error.")))))
+	 (funcall existing-fn)))))
+
+(defmacro scorecard-protect (scoreboard key when-not-ready when-ready)
+  "
+Protect multiple threads from simultaneous execution. When multiple threads
+evaluate SCORECARD-PROTECT with the same SCOREBOARD and KEYs that are EQUALP,
+only the first thread evaluates WHEN-NOT-READY, and other threads wait for it
+to finish. Finally, all threads evaluate WHEN-READY, and its values are returned."
+  `(flet ((when-not-ready () ,when-not-ready)
+	  (when-ready () ,when-ready))
+     (declare (dynamic-extent #'when-not-ready #'when-ready))
+     (call-with-scorecard ,scoreboard ,key #'when-not-ready #'when-ready)))
+
+(defun make-lmdb-memoized-wrapper (db-name version scoreboard fn return-type)
+  (declare (type (simple-array (unsigned-byte 8) (*)) version))
+  (labels ((unchecked-return-type (array size)
+	     (declare (type (unsigned-byte 32) size))
+	     (let* ((version-size (length version))
+		    (data-size (- size version-size)))
+	       (ecase return-type
+		 (:string (cffi:foreign-string-to-lisp array :offset (length version) :count data-size))
+		 ('write-memoized-data (write-memoized-data (cffi:inc-pointer array version-size) data-size)))))
+	   (cached-return-type (array size)
+	     (when (version-equal array size version)
+	       (unchecked-return-type array size))))
+    (lambda (&rest args)
+      (let* ((hash (hash-printable-object args))
+	     (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
+	     (cached-value (cache-get db-name hash :key-type :byte-vector :return-type #'cached-return-type)))
+	(if cached-value
+	    cached-value
+	    (scorecard-protect scoreboard hash
+	      (let* ((new-value (apply fn hash args))
+		     (octets-value (concatenate '(simple-array (unsigned-byte 8) (*))
+						version
+						(string-to-octets new-value :external-format :utf-8))))
+		(with-cache-transaction
+		  (cache-put db-name hash octets-value :key-type :byte-vector :value-type :byte-vector)
+		  (setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))))
+	      (cache-get db-name hash :key-type :byte-vector :return-type #'unchecked-return-type)))))))
 
 (defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
 	(alt-name (intern (format nil "~A*" name)))
-        (now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
+	(scoreboard-name (intern (format nil "*~A-SCOREBOARD*" name)))
+	(now-hash (hash-file-list (list* "src/hash-utils.lisp" sources))))
     (alexandria:once-only (db-name now-hash)
 			  `(progn
-                             (define-cache-database ,class-name ,db-name)
-			     (clean-memoized-database ,db-name ,class-name ,now-hash)
-                             (declaim (ftype (function * string) ,name)
-                                      (ftype (function * (values &optional t)) ,alt-name))
-                             (let ((real-fn (lambda (current-memo-hash ,@lambda)
+			     (define-cache-database ,class-name ,db-name)
+			     (declaim (ftype (function * string) ,name)
+				      (ftype (function * (values &optional t)) ,alt-name))
+			     (eval-when (:compile-toplevel :load-toplevel :execute)
+			       (defglobal ,scoreboard-name (make-scoreboard)))
+			     (let ((real-fn (lambda (current-memo-hash ,@lambda)
 					      (declare (ignorable current-memo-hash))
 					      ,@body)))
-                               (setf (fdefinition (quote ,name)) (make-lmdb-memoized-wrapper ,db-name real-fn :string)
-                                     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name real-fn 'write-memoized-data)))))))
+			       (setf (fdefinition (quote ,name)) (make-lmdb-memoized-wrapper ,db-name ,now-hash ,scoreboard-name real-fn :string)
+				     (fdefinition (quote ,alt-name)) (make-lmdb-memoized-wrapper ,db-name ,now-hash ,scoreboard-name real-fn 'write-memoized-data)))))))
