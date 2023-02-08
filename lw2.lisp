@@ -1010,11 +1010,12 @@ signaled condition to *HTML-OUTPUT*."
 	       before after
 	       (offset :type fixnum)
 	       (limit :type fixnum :default (user-pref :items-per-page))
+	       (karma-threshold :type fixnum)
 	       &without-csrf-check))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total)
-	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string)
+	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string :karma-threshold karma-threshold)
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
 		  (view-items-index (firstn posts limit)

@@ -552,7 +552,7 @@
 		(t () (get-cached-result)))
 	      (query-and-put))))))
 
-(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 21) offset before after &allow-other-keys)
+(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 21) offset before after karma-threshold &allow-other-keys)
   (backend-lw2-legacy
    (let ((sort-key (alexandria:switch (sort :test #'string=)
 				      ("new" "new")
@@ -577,6 +577,7 @@
 				   :after after
 				   :limit limit
 				   :offset offset
+				   :karma-threshold karma-threshold
 				   view-terms)))
 	 (values terms cache-key))))))
 
