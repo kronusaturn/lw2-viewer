@@ -571,7 +571,7 @@
 			    ("reviews" (alist :view "reviews2019"))
 			    (t (values
 				(alist :sorted-by sort-key :filter "frontpage")
-				(if (not (or (string/= sort "new") (/= limit 21) offset before after)) "new-not-meta"))))
+				(if (not (or (string/= sort "new") (/= limit 21) offset before after karma-threshold)) "new-not-meta"))))
        (let ((terms
 	      (alist-without-null* :before before
 				   :after after
