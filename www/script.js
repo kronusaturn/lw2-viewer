@@ -2510,15 +2510,21 @@ function sortComments(mode) {
 }
 function commentKarmaValue(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = query(commentOrSelector);
-	return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").firstChild.textContent));
+	try {
+		return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").firstChild.textContent));
+	} catch(e) {return null};
 }
 function commentDate(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = query(commentOrSelector);
-	return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".date").dataset.jsDate));
+	try {
+		return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".date").dataset.jsDate));
+	} catch(e) {return null};
 }
 function commentVoteCount(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = query(commentOrSelector);
-	return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").title.split(" ")[0]));
+	try {
+		return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").title.split(" ")[0]));
+	} catch(e) {return null};
 }
 
 function injectCommentsSortModeSelector() {
