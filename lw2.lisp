@@ -1538,6 +1538,11 @@ signaled condition to *HTML-OUTPUT*."
 														(if post-count (format nil " (~A)" post-count)))</a></li>))
   </ul>)
 
+(define-json-endpoint (view-user-autocomplete forum-site "/-user-autocomplete")
+    (request-method
+     (:get (q)
+	  (lw2-search-query q :indexes '("test_users"))))) 
+
 (define-json-endpoint (view-karma-vote-tag forum-site "/karma-vote/tag")
   (let ((auth-token *current-auth-token*))
     (request-method
