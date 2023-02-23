@@ -4321,19 +4321,40 @@ li {
 
 .textarea-container .autocomplete-container {
 	position: absolute;
-	top: 32px;
-	right: 18px;
 	background-color: rgba(255, 255, 170, 0.75);
 	border: 1px solid rgba(7, 0, 238, 0.75);
-	max-height: calc(100% - 36px);
 	overflow-y: auto;
 	font-size: 1.125rem;
 	cursor: default;
 	backdrop-filter: blur(2px);
 }
+.textarea-container .autocomplete-container.inside {
+	top: 32px;
+	right: 18px;
+	max-height: calc(100% - 36px);
+}
+.textarea-container .autocomplete-container.outside {
+	top: 28px;
+	max-height: calc(100% - 28px);
+	left: calc(100% + 3px);
+	z-index: 10001;
+}
+
+head.content-width-normal + body .textarea-container .autocomplete-container.outside {
+	max-width: calc((100vw - (900px - 40px * 2)) / 2);
+}
+head.content-width-wide + body .textarea-container .autocomplete-container.outside {
+	max-width: calc((100vw - (1150px - 40px * 2)) / 2);
+}
+head.content-width-fluid + body .textarea-container .autocomplete-container.outside {
+	max-width: calc((300px + 40px * 2) / 2);
+}
 
 .textarea-container .autocomplete-container div {
 	padding: 2px 8px 0 8px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .textarea-container .autocomplete-container div.highlighted {

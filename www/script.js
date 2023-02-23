@@ -4280,7 +4280,10 @@ function beginAutocompletion(control, startIndex) {
 		     abortController: new AbortController(),
 		     container: document.createElement("div") };
 
-	complete.container.className = "autocomplete-container";
+	complete.container.className = "autocomplete-container "
+								 + (window.innerWidth > 1200
+								 	? "outside"
+								 	: "inside");
 	control.insertAdjacentElement("afterend", complete.container);
 
 	complete.doReplacement = (userSlug, displayName) => {
@@ -4315,7 +4318,10 @@ function beginAutocompletion(control, startIndex) {
 					elem.append(entry.displayName);
 					elem.onclick = () => { complete.doReplacement(entry.slug, entry.displayName) };
 					complete.container.append(elem);
-				})})
+				});
+				if (complete.container.children.length > 0)
+					complete.container.children[0].classList.add("highlighted");
+				})
 			.catch((e) => {});
 	});
 
