@@ -297,6 +297,10 @@ Element.prototype.addTextareaFeatures = function() {
 			hideMarkdownHintsBox();
 			query(".guiedit-mobile-help-button").removeClass("active");
 		}
+		// User mentions autocomplete
+		if(textarea.value.charAt(textarea.selectionStart - 1) === "@") {
+			beginAutocompletion(textarea, textarea.selectionStart);
+		}
 	}, false);
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
@@ -4254,7 +4258,72 @@ function hyperlink(text, startpos) {
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
 
+/******************/
+/* SERVICE WORKER */
+/******************/
+
 if(navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');
 	setCookie("push", "t");
+}
+
+/*********************/
+/* USER AUTOCOMPLETE */
+/*********************/
+
+var userAutocomplete = null;
+
+function beginAutocompletion(control, startIndex) {
+	if(userAutocomplete) abortAutocompletion(userAutocomplete);
+
+	complete = { control: control,
+		     abortController: new AbortController(),
+		     container: document.createElement("div") };
+
+	complete.container.className = "autocomplete-container";
+	control.insertAdjacentElement("afterend", complete.container);
+
+	complete.doReplacement = (userSlug, displayName) => {
+		let replacement = '[@' + displayName + '](/users/' + userSlug + '?mention=user)';
+		control.value = control.value.substring(0, startIndex - 1) +
+			replacement +
+			control.value.substring(control.selectionEnd);
+		abortAutocompletion(complete);
+		complete.control.selectionStart = complete.control.selectionEnd = startIndex + -1 + replacement.length;
+		complete.control.focus();
+	};
+	
+	control.addEventListener("keypress", complete.eventListener = (event) => {
+		if(event.key === " ") {
+			abortAutocompletion(complete);
+			return;
+		}
+
+		complete.abortController.abort();
+		complete.abortController = new AbortController();
+		
+		let fragment = control.value.substring(startIndex, control.selectionEnd) + event.key;
+
+		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
+		      {signal: complete.abortController.signal})
+			.then((res) => res.json())
+			.then((res) => {
+				if(!res || res.error) return;
+				complete.container.innerHTML = "";
+				res.forEach(entry => {
+					let elem = document.createElement("div");
+					elem.append(entry.displayName);
+					elem.onclick = () => { complete.doReplacement(entry.slug, entry.displayName) };
+					complete.container.append(elem);
+				})})
+			.catch((e) => {});
+	});
+
+	userAutocomplete = complete;
+}
+
+function abortAutocompletion(complete) {
+	complete.control.removeEventListener("keypress", complete.eventListener);
+	complete.container.remove();
+	userAutocomplete = null;
 }
