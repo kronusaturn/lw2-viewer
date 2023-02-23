@@ -4334,6 +4334,32 @@ li {
 	margin-bottom: 1em;
 }
 
+/*****************/
+/* USER MENTIONS */
+/*****************/
+
+.textarea-container .autocomplete-container {
+	position: absolute;
+	top: 32px;
+	right: 18px;
+	background-color: rgba(0, 3, 64, 0.75);
+	border: 1px solid rgba(10, 200, 0, 0.75);
+	max-height: calc(100% - 36px);
+	overflow-y: auto;
+	font-size: 1.125rem;
+	cursor: default;
+	backdrop-filter: blur(2px);
+}
+
+.textarea-container .autocomplete-container div {
+	padding: 2px 8px 0 8px;
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(10, 200, 0, 0.75);
+	color: #000;
+}
+
 /*******************/
 /* ALIGNMENT FORUM */
 /*******************/
