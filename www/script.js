@@ -4281,6 +4281,7 @@ function beginAutocompletion(control, startIndex) {
 		     container: document.createElement("div") };
 
 	complete.container.className = "autocomplete-container "
+								 + "right "
 								 + (window.innerWidth > 1200
 								 	? "outside"
 								 	: "inside");

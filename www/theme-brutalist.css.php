@@ -1556,6 +1556,22 @@ select {
 	border: 1px solid #cce;
 }
 
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 255, 0.75);
+	border: 2px solid #000;
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: #000;
+	color: #fff;
+}
+
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/

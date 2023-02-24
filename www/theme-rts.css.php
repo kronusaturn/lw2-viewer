@@ -1908,6 +1908,23 @@ select {
 	border: 1px solid #cce;
 }
 
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 170, 0.75);
+	border: 1px solid rgba(136, 136, 136, 0.75);
+	font-weight: 300;
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(136, 136, 136, 0.75);
+	color: #fff;
+}
+
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/

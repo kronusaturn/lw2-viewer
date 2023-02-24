@@ -2568,6 +2568,24 @@ strong, b {
 	border: 1px solid #cce;
 }
 
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 255, 0.75);
+	border: 1px solid rgba(196, 219, 196, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(196, 219, 196, 0.75);
+	color: #fff;
+	padding: 4px 8px 0 8px;
+	line-height: 1.5;
+}
+
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/
