@@ -7767,6 +7767,10 @@ select {
 	color: #000;
 }
 
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(10, 200, 0, 0.25);
+}
+
 .textarea-container .autocomplete-container div span.age,
 .textarea-container .autocomplete-container div span.karma {
 	color: #666;

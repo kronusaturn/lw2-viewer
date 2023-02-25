@@ -1879,6 +1879,10 @@ input::selection {
 	color: #fff;
 }
 
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(204, 204, 204, 0.25);
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

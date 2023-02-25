@@ -1924,6 +1924,20 @@ select {
 	color: #fff;
 }
 
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(136, 136, 136, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #888;
+}
+
+.textarea-container .autocomplete-container div.highlighted span.age,
+.textarea-container .autocomplete-container div.highlighted span.karma {
+	color: #ddd;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

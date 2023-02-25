@@ -2585,6 +2585,15 @@ strong, b {
 	line-height: 1.5;
 }
 
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(196, 219, 196, 0.35);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #999;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */
