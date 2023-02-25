@@ -4312,39 +4312,54 @@ function beginAutocompletion(control, startIndex) {
 	};
 
 	let switchHighlight = (newHighlight) => {
-		if(newHighlight) {
-			complete.highlighted.removeClass("highlighted");
-			newHighlight.addClass("highlighted");
-			complete.highlighted=newHighlight;
+		if (!newHighlight)
+			return;
+
+		complete.highlighted.removeClass("highlighted");
+		newHighlight.addClass("highlighted");
+		complete.highlighted = newHighlight;
+
+		//	Scroll newly highlighted item into view, if need be.
+		if (  complete.highlighted.offsetTop + complete.highlighted.offsetHeight 
+			> complete.container.scrollTop + complete.container.clientHeight) {
+			complete.container.scrollTo(0, complete.highlighted.offsetTop + complete.highlighted.offsetHeight - complete.container.clientHeight);
+		} else if (complete.highlighted.offsetTop < complete.container.scrollTop) {
+			complete.container.scrollTo(0, complete.highlighted.offsetTop);
 		}
-	}
+	};
+	let highlightNext = () => {
+		switchHighlight(complete.highlighted.nextElementSibling ?? complete.container.firstElementChild);
+	};
+	let highlightPrev = () => {
+		switchHighlight(complete.highlighted.previousElementSibling ?? complete.container.lastElementChild);
+	};
 
 	document.body.addEventListener("click", complete.abortClickListener = (event) => {
-		if(!complete.container.contains(event.target)) {
+		if (!complete.container.contains(event.target)) {
 			abortAutocompletion(complete);
 			event.preventDefault();
 		}
 	}, {capture: true});
 	
 	control.addEventListener("keydown", complete.eventListener = (event) => {
-		switch(event.key) {
+		switch (event.key) {
 		case "Escape":
 			abortAutocompletion(complete);
 			event.preventDefault();
 			return;
 		case "ArrowUp":
-			switchHighlight(complete.highlighted.previousElementSibling);
+			highlightPrev();
 			event.preventDefault();
 			return;
 		case "ArrowDown":
-			switchHighlight(complete.highlighted.nextElementSibling);
+			highlightNext();
 			event.preventDefault();
 			return;
 		case "Tab":
-			if(event.shiftKey)
-				switchHighlight(complete.highlighted.previousElementSibling);
+			if (event.shiftKey)
+				highlightPrev();
 			else
-				switchHighlight(complete.highlighted.nextElementSibling);
+				highlightNext();
 			event.preventDefault();
 			return;
 		case "Enter":
@@ -4353,7 +4368,7 @@ function beginAutocompletion(control, startIndex) {
 			return;
 		}
 
-		if(event.key.length > 1) return;
+		if (event.key.length > 1) return;
 
 		complete.abortController.abort();
 		complete.abortController = new AbortController();
