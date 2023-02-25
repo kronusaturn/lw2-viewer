@@ -4329,7 +4329,7 @@ function beginAutocompletion(control, startIndex) {
 				res.forEach(entry => {
 					let entryContainer = document.createElement("div");
 					[entry.displayName,
-					 abbreviatedInterval(Date.parse(entry.createdAt)) + "/" + entry.karma + "pts"
+					 abbreviatedInterval(Date.parse(entry.createdAt)) + "/" + (entry.karma || 0) + "pts"
 					].forEach(x => {
 						let e = document.createElement("span");
 						e.append(x);
