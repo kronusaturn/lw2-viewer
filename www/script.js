@@ -4273,6 +4273,18 @@ if(navigator.serviceWorker) {
 
 var userAutocomplete = null;
 
+function abbreviatedInterval(date) {
+	let seconds = Math.floor((new Date() - date) / 1000);
+	let days = Math.floor(seconds / (60 * 60 * 24));
+	let years = Math.floor(days / 365);
+	if(years)
+		return years + "y";
+	else if(days)
+		return days + "d";
+	else
+		return "today";
+}
+
 function beginAutocompletion(control, startIndex) {
 	if(userAutocomplete) abortAutocompletion(userAutocomplete);
 
@@ -4315,10 +4327,16 @@ function beginAutocompletion(control, startIndex) {
 				if(!res || res.error) return;
 				complete.container.innerHTML = "";
 				res.forEach(entry => {
-					let elem = document.createElement("div");
-					elem.append(entry.displayName);
-					elem.onclick = () => { complete.doReplacement(entry.slug, entry.displayName) };
-					complete.container.append(elem);
+					let entryContainer = document.createElement("div");
+					[entry.displayName,
+					 abbreviatedInterval(Date.parse(entry.createdAt)) + "/" + entry.karma + "pts"
+					].forEach(x => {
+						let e = document.createElement("span");
+						e.append(x);
+						entryContainer.append(e)
+					});
+					entryContainer.onclick = () => { complete.doReplacement(entry.slug, entry.displayName) };
+					complete.container.append(entryContainer);
 				});
 				if (complete.container.children.length > 0)
 					complete.container.children[0].classList.add("highlighted");
