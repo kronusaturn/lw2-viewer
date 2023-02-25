@@ -4299,21 +4299,61 @@ function beginAutocompletion(control, startIndex) {
 								 	: "inside");
 	control.insertAdjacentElement("afterend", complete.container);
 
-	complete.doReplacement = (userSlug, displayName) => {
-		let replacement = '[@' + displayName + '](/users/' + userSlug + '?mention=user)';
-		control.value = control.value.substring(0, startIndex - 1) +
-			replacement +
-			control.value.substring(control.selectionEnd);
-		abortAutocompletion(complete);
-		complete.control.selectionStart = complete.control.selectionEnd = startIndex + -1 + replacement.length;
-		complete.control.focus();
-	};
-	
-	control.addEventListener("keypress", complete.eventListener = (event) => {
-		if(event.key === " ") {
+	let makeReplacer = (userSlug, displayName) => {
+		return () => {
+			let replacement = '[@' + displayName + '](/users/' + userSlug + '?mention=user)';
+			control.value = control.value.substring(0, startIndex - 1) +
+				replacement +
+				control.value.substring(control.selectionEnd);
 			abortAutocompletion(complete);
+			complete.control.selectionStart = complete.control.selectionEnd = startIndex + -1 + replacement.length;
+			complete.control.focus();
+		};
+	};
+
+	let switchHighlight = (newHighlight) => {
+		if(newHighlight) {
+			complete.highlighted.removeClass("highlighted");
+			newHighlight.addClass("highlighted");
+			complete.highlighted=newHighlight;
+		}
+	}
+
+	document.body.addEventListener("click", complete.abortClickListener = (event) => {
+		if(!complete.container.contains(event.target)) {
+			abortAutocompletion(complete);
+			event.preventDefault();
+		}
+	}, {capture: true});
+	
+	control.addEventListener("keydown", complete.eventListener = (event) => {
+		switch(event.key) {
+		case "Escape":
+			abortAutocompletion(complete);
+			event.preventDefault();
+			return;
+		case "ArrowUp":
+			switchHighlight(complete.highlighted.previousElementSibling);
+			event.preventDefault();
+			return;
+		case "ArrowDown":
+			switchHighlight(complete.highlighted.nextElementSibling);
+			event.preventDefault();
+			return;
+		case "Tab":
+			if(event.shiftKey)
+				switchHighlight(complete.highlighted.previousElementSibling);
+			else
+				switchHighlight(complete.highlighted.nextElementSibling);
+			event.preventDefault();
+			return;
+		case "Enter":
+			complete.highlighted.onclick();
+			event.preventDefault();
 			return;
 		}
+
+		if(event.key.length > 1) return;
 
 		complete.abortController.abort();
 		complete.abortController = new AbortController();
@@ -4324,7 +4364,9 @@ function beginAutocompletion(control, startIndex) {
 		      {signal: complete.abortController.signal})
 			.then((res) => res.json())
 			.then((res) => {
-				if(!res || res.error) return;
+				if(res.error) return;
+				if(res.length == 0) return abortAutocompletion(complete);
+				
 				complete.container.innerHTML = "";
 				res.forEach(entry => {
 					let entryContainer = document.createElement("div");
@@ -4335,11 +4377,11 @@ function beginAutocompletion(control, startIndex) {
 						e.append(x);
 						entryContainer.append(e)
 					});
-					entryContainer.onclick = () => { complete.doReplacement(entry.slug, entry.displayName) };
+					entryContainer.onclick = makeReplacer(entry.slug, entry.displayName);
 					complete.container.append(entryContainer);
 				});
-				if (complete.container.children.length > 0)
-					complete.container.children[0].classList.add("highlighted");
+				complete.highlighted = complete.container.children[0];
+				complete.highlighted.classList.add("highlighted");
 				})
 			.catch((e) => {});
 	});
@@ -4348,7 +4390,8 @@ function beginAutocompletion(control, startIndex) {
 }
 
 function abortAutocompletion(complete) {
-	complete.control.removeEventListener("keypress", complete.eventListener);
+	complete.control.removeEventListener("keydown", complete.eventListener);
+	document.body.removeEventListener("click", complete.abortClickListener);
 	complete.container.remove();
 	userAutocomplete = null;
 }
