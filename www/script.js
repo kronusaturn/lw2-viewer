@@ -4277,9 +4277,9 @@ function abbreviatedInterval(date) {
 	let seconds = Math.floor((new Date() - date) / 1000);
 	let days = Math.floor(seconds / (60 * 60 * 24));
 	let years = Math.floor(days / 365);
-	if(years)
+	if (years)
 		return years + "y";
-	else if(days)
+	else if (days)
 		return days + "d";
 	else
 		return "today";
@@ -4370,12 +4370,14 @@ function beginAutocompletion(control, startIndex) {
 				complete.container.innerHTML = "";
 				res.forEach(entry => {
 					let entryContainer = document.createElement("div");
-					[entry.displayName,
-					 abbreviatedInterval(Date.parse(entry.createdAt)) + "/" + (entry.karma || 0) + "pts"
+					[ [ entry.displayName, "name" ],
+					  [ abbreviatedInterval(Date.parse(entry.createdAt)), "age" ],
+					  [ (entry.karma || 0) + " karma", "karma" ]
 					].forEach(x => {
 						let e = document.createElement("span");
-						e.append(x);
-						entryContainer.append(e)
+						e.append(x[0]);
+						e.className = x[1];
+						entryContainer.append(e);
 					});
 					entryContainer.onclick = makeReplacer(entry.slug, entry.displayName);
 					complete.container.append(entryContainer);

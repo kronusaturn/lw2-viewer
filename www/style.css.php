@@ -4327,6 +4327,9 @@ li {
 	cursor: default;
 	backdrop-filter: blur(2px);
 }
+.textarea-container .autocomplete-container:empty {
+	display: none;
+}
 
 .textarea-container .autocomplete-container.inside {
 	max-height: calc(100% - 36px);
@@ -4366,6 +4369,23 @@ head.content-width-fluid + body .textarea-container .autocomplete-container.outs
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.textarea-container .autocomplete-container div span.name {
+	flex: 1 0 auto;
+}
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	font-size: 0.9em;
+	text-align: right;
+}
+.textarea-container .autocomplete-container div span.age {
+	width: 3em;
+}
+.textarea-container .autocomplete-container div span.karma {
+	width: 6em;
 }
 
 

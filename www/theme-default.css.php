@@ -1872,6 +1872,11 @@ EOT;
 	color: #fff;
 }
 
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #888;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */
