@@ -4351,37 +4351,39 @@ li {
 	display: none;
 }
 
-.textarea-container .autocomplete-container.inside {
-	max-height: calc(100% - 36px);
-	top: 32px;
-}
-.textarea-container .autocomplete-container.outside {
-	max-height: calc(100% - 28px);
-	top: 28px;
-	z-index: 10001;
-}
+@media only screen and (min-width: 521px) {
+	.textarea-container .autocomplete-container.inside {
+		max-height: calc(100% - 36px);
+		top: 32px;
+	}
+	.textarea-container .autocomplete-container.outside {
+		max-height: calc(100% - 28px);
+		top: 28px;
+		z-index: 10001;
+	}
 
-.textarea-container .autocomplete-container.inside.right {
-	right: 18px;
-}
-.textarea-container .autocomplete-container.inside.left {
-	left: 18px;
-}
-.textarea-container .autocomplete-container.outside.right {
-	left: calc(100% + 3px);
-}
-.textarea-container .autocomplete-container.outside.left {
-	right: calc(100% + 3px);
-}
+	.textarea-container .autocomplete-container.inside.right {
+		right: 18px;
+	}
+	.textarea-container .autocomplete-container.inside.left {
+		left: 18px;
+	}
+	.textarea-container .autocomplete-container.outside.right {
+		left: calc(100% + 3px);
+	}
+	.textarea-container .autocomplete-container.outside.left {
+		right: calc(100% + 3px);
+	}
 
-head.content-width-normal + body .textarea-container .autocomplete-container.outside {
-	max-width: calc((100vw - (900px - 40px * 2)) / 2);
-}
-head.content-width-wide + body .textarea-container .autocomplete-container.outside {
-	max-width: calc((100vw - (1150px - 40px * 2)) / 2);
-}
-head.content-width-fluid + body .textarea-container .autocomplete-container.outside {
-	max-width: calc((300px + 40px * 2) / 2);
+	head.content-width-normal + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (900px - 40px * 2)) / 2);
+	}
+	head.content-width-wide + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (1150px - 40px * 2)) / 2);
+	}
+	head.content-width-fluid + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((300px + 40px * 2) / 2);
+	}
 }
 
 .textarea-container .autocomplete-container div {
