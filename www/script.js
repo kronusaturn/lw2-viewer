@@ -4301,7 +4301,7 @@ function beginAutocompletion(control, startIndex) {
 
 	complete.container.className = "autocomplete-container "
 								 + "right "
-								 + (window.innerWidth > 1200
+								 + (window.innerWidth > 1280
 								 	? "outside"
 								 	: "inside");
 	control.insertAdjacentElement("afterend", complete.container);

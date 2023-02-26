@@ -4345,6 +4345,7 @@ li {
 	font-size: 1.125rem;
 	cursor: default;
 	backdrop-filter: blur(2px);
+	width: 360px;
 }
 .textarea-container .autocomplete-container:empty {
 	display: none;
@@ -4386,14 +4387,19 @@ head.content-width-fluid + body .textarea-container .autocomplete-container.outs
 .textarea-container .autocomplete-container div {
 	padding: 2px 8px 0 8px;
 	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	display: flex;
 	justify-content: flex-end;
 }
 
 .textarea-container .autocomplete-container div span.name {
-	flex: 1 0 auto;
+	flex: 1 1 auto;
+	width: calc(100% - 9em);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.textarea-container .autocomplete-container div span.name:hover {
+	overflow: visible;
+	z-index: 1;
 }
 .textarea-container .autocomplete-container div span.age,
 .textarea-container .autocomplete-container div span.karma {
@@ -4401,10 +4407,10 @@ head.content-width-fluid + body .textarea-container .autocomplete-container.outs
 	text-align: right;
 }
 .textarea-container .autocomplete-container div span.age {
-	width: 3em;
+	flex: 0 0 3em;
 }
 .textarea-container .autocomplete-container div span.karma {
-	width: 6em;
+	flex: 0 0 6em;
 }
 
 
