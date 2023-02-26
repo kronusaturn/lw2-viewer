@@ -298,7 +298,10 @@ Element.prototype.addTextareaFeatures = function() {
 			query(".guiedit-mobile-help-button").removeClass("active");
 		}
 		// User mentions autocomplete
-		if(textarea.value.charAt(textarea.selectionStart - 1) === "@") {
+		if(!userAutocomplete &&
+		   textarea.value.charAt(textarea.selectionStart - 1) === "@" &&
+		   (textarea.selectionStart === 1 ||
+		    !textarea.value.charAt(textarea.selectionStart - 2).match(/[a-zA-Z0-9]/))) {
 			beginAutocompletion(textarea, textarea.selectionStart);
 		}
 	}, false);
@@ -4288,10 +4291,13 @@ function abbreviatedInterval(date) {
 function beginAutocompletion(control, startIndex) {
 	if(userAutocomplete) abortAutocompletion(userAutocomplete);
 
-	complete = { control: control,
-		     abortController: new AbortController(),
-		     fetchAbortController: new AbortController(),
-		     container: document.createElement("div") };
+	let complete = { control: control,
+			 abortController: new AbortController(),
+			 fetchAbortController: new AbortController(),
+			 container: document.createElement("div") };
+
+	let endIndex = control.selectionEnd;
+	let valueLength = control.value.length;
 
 	complete.container.className = "autocomplete-container "
 								 + "right "
@@ -4305,7 +4311,7 @@ function beginAutocompletion(control, startIndex) {
 			let replacement = '[@' + displayName + '](/users/' + userSlug + '?mention=user)';
 			control.value = control.value.substring(0, startIndex - 1) +
 				replacement +
-				control.value.substring(control.selectionEnd);
+				control.value.substring(endIndex);
 			abortAutocompletion(complete);
 			complete.control.selectionStart = complete.control.selectionEnd = startIndex + -1 + replacement.length;
 			complete.control.focus();
@@ -4369,13 +4375,31 @@ function beginAutocompletion(control, startIndex) {
 			event.preventDefault();
 			return;
 		}
+	}, {signal: complete.abortController.signal});
 
-		if (event.key.length > 1) return;
-
+	control.addEventListener("selectionchange", (event) => {
+		console.log("selectionchange");
+		if (control.selectionStart < startIndex ||
+		    control.selectionEnd > endIndex) {
+			abortAutocompletion(complete);
+		}
+	}, {signal: complete.abortController.signal});
+	
+	control.addEventListener("input", (event) => {
+		console.log("input: " + event.data);
 		complete.fetchAbortController.abort();
 		complete.fetchAbortController = new AbortController();
+
+		endIndex += control.value.length - valueLength;
+		valueLength = control.value.length;
+
+		if (endIndex < startIndex) {
+			abortAutocompletion(complete);
+			return;
+		}
 		
-		let fragment = control.value.substring(startIndex, control.selectionEnd) + event.key;
+		let fragment = control.value.substring(startIndex, endIndex);
+		console.log("endIndex: "+endIndex+" fragment: "+fragment);
 
 		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
 		      {signal: complete.fetchAbortController.signal})
