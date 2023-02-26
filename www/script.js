@@ -4290,6 +4290,7 @@ function beginAutocompletion(control, startIndex) {
 
 	complete = { control: control,
 		     abortController: new AbortController(),
+		     fetchAbortController: new AbortController(),
 		     container: document.createElement("div") };
 
 	complete.container.className = "autocomplete-container "
@@ -4334,14 +4335,15 @@ function beginAutocompletion(control, startIndex) {
 		switchHighlight(complete.highlighted.previousElementSibling ?? complete.container.lastElementChild);
 	};
 
-	document.body.addEventListener("click", complete.abortClickListener = (event) => {
+	document.body.addEventListener("click", (event) => {
 		if (!complete.container.contains(event.target)) {
 			abortAutocompletion(complete);
 			event.preventDefault();
 		}
-	}, {capture: true});
+	}, {signal: complete.abortController.signal,
+	    capture: true});
 	
-	control.addEventListener("keydown", complete.eventListener = (event) => {
+	control.addEventListener("keydown", (event) => {
 		switch (event.key) {
 		case "Escape":
 			abortAutocompletion(complete);
@@ -4370,13 +4372,13 @@ function beginAutocompletion(control, startIndex) {
 
 		if (event.key.length > 1) return;
 
-		complete.abortController.abort();
-		complete.abortController = new AbortController();
+		complete.fetchAbortController.abort();
+		complete.fetchAbortController = new AbortController();
 		
 		let fragment = control.value.substring(startIndex, control.selectionEnd) + event.key;
 
 		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
-		      {signal: complete.abortController.signal})
+		      {signal: complete.fetchAbortController.signal})
 			.then((res) => res.json())
 			.then((res) => {
 				if(res.error) return;
@@ -4401,14 +4403,14 @@ function beginAutocompletion(control, startIndex) {
 				complete.highlighted.classList.add("highlighted");
 				})
 			.catch((e) => {});
-	});
+	}, {signal: complete.abortController.signal});
 
 	userAutocomplete = complete;
 }
 
 function abortAutocompletion(complete) {
-	complete.control.removeEventListener("keydown", complete.eventListener);
-	document.body.removeEventListener("click", complete.abortClickListener);
+	complete.fetchAbortController.abort();
+	complete.abortController.abort();
 	complete.container.remove();
 	userAutocomplete = null;
 }
