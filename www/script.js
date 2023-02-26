@@ -4274,6 +4274,18 @@ if(navigator.serviceWorker) {
 /* USER AUTOCOMPLETE */
 /*********************/
 
+function zLowerUIElements() {
+	let uiElementsContainer = query("#ui-elements-container");
+	if (uiElementsContainer)
+		uiElementsContainer.style.zIndex = "1";
+}
+
+function zRaiseUIElements() {
+	let uiElementsContainer = query("#ui-elements-container");
+	if (uiElementsContainer)
+		uiElementsContainer.style.zIndex = "";
+}
+
 var userAutocomplete = null;
 
 function abbreviatedInterval(date) {
@@ -4305,6 +4317,7 @@ function beginAutocompletion(control, startIndex) {
 								 	? "outside"
 								 	: "inside");
 	control.insertAdjacentElement("afterend", complete.container);
+	zLowerUIElements();
 
 	let makeReplacer = (userSlug, displayName) => {
 		return () => {
@@ -4434,4 +4447,5 @@ function abortAutocompletion(complete) {
 	complete.abortController.abort();
 	complete.container.remove();
 	userAutocomplete = null;
+	zRaiseUIElements();
 }
