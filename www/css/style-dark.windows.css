@@ -5862,7 +5862,8 @@ a.comment-parent-link::after {
 		padding: 6px 12px 8px 12px;
 	}
 
-	#edit-post-form .textarea-container .autocomplete-container {
+	#edit-post-form .textarea-container .autocomplete-container,
+	.comment-controls .textarea-container .autocomplete-container {
 		max-height: calc(50vh - 101px);
 		position: fixed;
 		top: 50vh;
