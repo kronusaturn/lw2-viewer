@@ -5861,6 +5861,16 @@ a.comment-parent-link::after {
 		margin: 1rem auto 1.5rem auto;
 		padding: 6px 12px 8px 12px;
 	}
+
+	#edit-post-form .textarea-container .autocomplete-container {
+		max-height: calc(50vh - 101px);
+		position: fixed;
+		top: 50vh;
+		left: 4px;
+		right: 4px;
+		width: unset;
+		z-index: 11002;
+	}
 }
 
 /*===================*/
