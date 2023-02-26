@@ -4378,7 +4378,6 @@ function beginAutocompletion(control, startIndex) {
 	}, {signal: complete.abortController.signal});
 
 	control.addEventListener("selectionchange", (event) => {
-		console.log("selectionchange");
 		if (control.selectionStart < startIndex ||
 		    control.selectionEnd > endIndex) {
 			abortAutocompletion(complete);
@@ -4386,7 +4385,6 @@ function beginAutocompletion(control, startIndex) {
 	}, {signal: complete.abortController.signal});
 	
 	control.addEventListener("input", (event) => {
-		console.log("input: " + event.data);
 		complete.fetchAbortController.abort();
 		complete.fetchAbortController = new AbortController();
 
@@ -4399,7 +4397,6 @@ function beginAutocompletion(control, startIndex) {
 		}
 		
 		let fragment = control.value.substring(startIndex, endIndex);
-		console.log("endIndex: "+endIndex+" fragment: "+fragment);
 
 		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
 		      {signal: complete.fetchAbortController.signal})
