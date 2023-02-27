@@ -7378,16 +7378,19 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #131313;
 	border-left: 1px solid #484848;
 	border-top: 1px solid #131313;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-track {
+.posting-controls textarea:focus::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	border-left: 1px solid #0cc800;
 	border-top: 1px solid #1d1f00;
 }
@@ -7396,7 +7399,8 @@ div.comment-child-links a {
 	box-shadow: 0 0 0 1px #131313 inset;
 	border-left: 1px solid #484848;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
 	border-left: 1px solid #0cc800;
 	background-color: #40a800;
 	box-shadow: 

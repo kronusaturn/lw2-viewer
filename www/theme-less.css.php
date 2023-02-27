@@ -2127,18 +2127,21 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #fff;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #eee;
 	box-shadow: 0 0 0 1px #fff inset;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
 	background-color: #c4dbc4;
 	box-shadow: 0 0 0 1px #fff inset;
 }
