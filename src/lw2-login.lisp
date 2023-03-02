@@ -289,7 +289,7 @@ fields - The return values we want to get from the server after it completes our
 									  :vote-type karma-vote
 									  :extended-vote extended-vote)
 								   :key #'cdr)
-							'(:--id :base-score :af :af-base-score :vote-count :extended-score (:all-votes :vote-type :extended-vote-type)
+							'(:--id :base-score :af :af-base-score :vote-count :extended-score
 							  :current-user-vote :current-user-extended-vote))
 		       "variables" nil
 		       "operationName" mutation)))

@@ -1387,15 +1387,14 @@ signaled condition to *HTML-OUTPUT*."
 	      (let ((vote (safe-decode-json vote-json)))
 		(multiple-value-bind (current-vote result)
 		    (do-lw2-vote auth-token target-type target vote)
-		  (alist-bind (vote-count base-score af af-base-score extended-score all-votes) result
+		  (alist-bind (vote-count base-score af af-base-score extended-score) result
 			      (let ((vote-buttons (vote-buttons base-score
 								:as-text t
 								:af-score (and af af-base-score)
 								:vote-count (+ vote-count (if (member (cdr (assoc :karma current-vote)) '(nil "neutral") :test #'equal)
 											      0
 											      1))
-								:extended-score extended-score
-								:all-votes all-votes))
+								:extended-score extended-score))
 				    (out (make-hash-table)))
 				(loop for (axis . axis-vote) in current-vote
 				   do (setf (gethash axis out) (list* axis-vote (gethash axis vote-buttons))))

@@ -59,7 +59,7 @@
               (typecase votes (integer votes) (list (length votes))))
       ""))
 
-(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score all-votes)
+(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score)
   (labels ((button (vote-type)
 	     (when with-buttons
 	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Post" "Comment") tabindex="-1" disabled autocomplete="off"></button>))
@@ -67,24 +67,10 @@
 	     (if (and af-score (/= af-score 0))
 		 (format nil "LW: ~A AF: ~A" base-score af-score)
 		 (pretty-number base-score "point")))
-	   (compute-score-counts ()
-	     (let ((score-counts (make-hash-table :test 'equal)))
-	       (loop for vote in all-votes
-		  for agreement = (cdr (assoc :agreement (cdr (assoc :extended-vote-type vote))))
-		  do (when agreement
-		       (incf (gethash agreement score-counts 0))))
-	       (values score-counts
-		       (+ (gethash "smallUpvote" score-counts 0) (gethash "bigUpvote" score-counts 0))
-		       (+ (gethash "smallDownvote" score-counts 0) (gethash "bigDownvote" score-counts 0)))))
-	   (extended-text (agree-count disagree-count)
-	     (format nil #.(uiop:strcat "~D" #\HAIR_SPACE #\RATIO #\HAIR_SPACE "~D") agree-count disagree-count))
-	   (extended-tooltip (score-counts agree-count disagree-count)
-	     (format nil "~D agree (~D strongly)~%~D disagree (~D strongly)~%Epistemic Status: ~D"
-		     agree-count
-		     (gethash "bigUpvote" score-counts 0)
-		     disagree-count
-		     (gethash "bigDownvote" score-counts 0)
-		     (cdr (assoc :agreement extended-score))))
+	   (extended-text ()
+	     (pretty-number (cdr (assoc :agreement extended-score))))
+	   (extended-tooltip ()
+	     (votes-to-tooltip (cdr (assoc :agreement-vote-count extended-score))))
 	   (voting (class tooltip text)
 	     <div class=(safe ("~A voting-controls" class))
 	          (with-html-stream-output (:stream stream)
@@ -95,17 +81,15 @@
 	       <span class="karma-value" title=tooltip>(safe text)</span>
 	       (button "downvote")
 	     </div>))
-    (multiple-value-bind (score-counts agree-count disagree-count)
-	(if extended-score (compute-score-counts))
-      (if as-text
-	  (hash-cond (make-hash-table)
-		     (base-score :karma (list (text) (votes-to-tooltip vote-count)))
-		     (extended-score :agreement (list (extended-text agree-count disagree-count)
-						      (extended-tooltip score-counts agree-count disagree-count))))
-	  (progn
-	    (when base-score
-	      (voting "karma" (votes-to-tooltip vote-count) (text)))
-	    (when extended-score
-	      (voting "agreement"
-		      (extended-tooltip score-counts agree-count disagree-count)
-		      (extended-text agree-count disagree-count))))))))
+    (if as-text
+	(hash-cond (make-hash-table)
+		   (base-score :karma (list (text) (votes-to-tooltip vote-count)))
+		   (extended-score :agreement (list (extended-text)
+						    (extended-tooltip))))
+	(progn
+	  (when base-score
+	    (voting "karma" (votes-to-tooltip vote-count) (text)))
+	  (when extended-score
+	    (voting "agreement"
+		    (extended-tooltip)
+		    (extended-text)))))))

@@ -20,7 +20,6 @@
    (af-base-score (or null fixnum))
    (vote-count (or null fixnum))
    (extended-score list)
-   (all-votes list :subfields (:vote-type :extended-vote-type))
    (page-url (or null string) :context-not :user-index) ; page-url sometimes causes "Cannot read property '_id' of undefined" error
    (parent-comment list :backend-type backend-lw2-tags-comments :context :index :subfields (:--id :user-id :post-id (:tag :--id :name :slug)))
    (parent-comment list :context :index :subfields (:--id :user-id :post-id))
@@ -71,7 +70,7 @@
 	          </a>)
 	      <a class="date" href=(comment-link post-id tag comment-id) data-js-date=js-time> (safe pretty-time) (safe (pretty-time-js))</a>
 	      (when replied <a class="replied" title="You have replied to this comment" href=(apply 'generate-item-link replied)></a>)
-	      (vote-buttons base-score :with-buttons *enable-voting* :vote-count vote-count :af-score (and af af-base-score) :extended-score extended-score :all-votes all-votes)
+	      (vote-buttons base-score :with-buttons *enable-voting* :vote-count vote-count :af-score (and af af-base-score) :extended-score extended-score)
 	      (when af <span class="alignment-forum">AF</span>)
 	      (when post-id
 	        <a class="permalink" href=("~A/~A/~A"
