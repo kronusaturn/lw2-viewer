@@ -11,6 +11,9 @@
 (defmacro run-program (program-args &rest lisp-args)
   `(uiop:run-program (append *wrapper-program* (list ,@program-args)) ,@lisp-args))
 
+(defun mime-type (image-filename)
+  (run-program ("file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream))))
+
 (defun image-statistics (image-filename)
   (let* ((result (with-semaphore (*image-convert-semaphore*)
 		   (run-program ("convert" image-filename "-format" "%w %h %[orientation]\\n" "info:")
@@ -25,7 +28,7 @@
 						     :height (parse-integer height)
 						     :orientation orientation
 						     :animation-frames animation-frames)))))))
-	 (mime-type (run-program ("file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream)))))
+	 (mime-type (mime-type image-filename)))
     (alist* :mime-type mime-type
 	    result)))
 
@@ -115,18 +118,27 @@
 	 (proxy-uri (filename-to-uri filename))
 	 (pathname (uri-to-pathname proxy-uri)))
     (download-file-with-wayback-fallback uri pathname)
-    (let* ((image-statistics (image-statistics pathname))
-	   (inverted-uri (and (eq 1 (cdr (assoc :animation-frames image-statistics)))
-			      (image-invertible pathname)
-			      (concatenate 'base-string proxy-uri "-inverted")))
-	   (inverted-pathname (and inverted-uri (uri-to-pathname inverted-uri))))
-      (when inverted-uri (invert-image pathname inverted-pathname))
-      (alist* :version *current-version*
-	      :uri uri
-	      :filename filename
-	      :proxy-uri proxy-uri
-	      :inverted-uri inverted-uri
-	      image-statistics))))
+    (if (with-open-file (stream pathname :element-type '(unsigned-byte 8))
+	  (< (file-length stream)
+	     (* 8 1024 1024)))
+	(let* ((image-statistics (image-statistics pathname))
+	       (inverted-uri (and (eq 1 (cdr (assoc :animation-frames image-statistics)))
+				  (image-invertible pathname)
+				  (concatenate 'base-string proxy-uri "-inverted")))
+	       (inverted-pathname (and inverted-uri (uri-to-pathname inverted-uri))))
+	  (when inverted-uri (invert-image pathname inverted-pathname))
+	  (alist* :version *current-version*
+		  :uri uri
+		  :filename filename
+		  :proxy-uri proxy-uri
+		  :inverted-uri inverted-uri
+		  image-statistics))
+	(alist :version *current-version*
+	       :uri uri
+	       :filename filename
+	       :proxy-uri proxy-uri
+	       :mime-type (mime-type pathname)
+	       :too-large t))))
 
 (defun image-uri-data (uri)
   (let ((key (hash-string uri)))
