@@ -4435,6 +4435,7 @@ function beginAutocompletion(control, startIndex) {
 				});
 				complete.highlighted = complete.container.children[0];
 				complete.highlighted.classList.add("highlighted");
+				complete.container.scrollTo(0, 0);
 				})
 			.catch((e) => {});
 	}, {signal: complete.abortController.signal});
