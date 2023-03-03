@@ -297,7 +297,28 @@ Element.prototype.addTextareaFeatures = function() {
 			hideMarkdownHintsBox();
 			query(".guiedit-mobile-help-button").removeClass("active");
 		}
+		// User mentions autocomplete
+		if(!userAutocomplete &&
+		   textarea.value.charAt(textarea.selectionStart - 1) === "@" &&
+		   (textarea.selectionStart === 1 ||
+		    !textarea.value.charAt(textarea.selectionStart - 2).match(/[a-zA-Z0-9]/))) {
+			beginAutocompletion(textarea, textarea.selectionStart);
+		}
 	}, false);
+	textarea.addEventListener("click", (event) => {
+		if(!userAutocomplete) {
+			let start = textarea.selectionStart, end = textarea.selectionEnd;
+			let value = textarea.value;
+			if (start <= 1) return;
+			for (; value.charAt(start - 1) != "@"; start--) {
+				if (start <= 1) return;
+				if (value.charAt(start - 1) == " ") return;
+			}
+			for(; end < value.length && value.charAt(end) != " "; end++) { true }
+			beginAutocompletion(textarea, start, end);
+		}
+	});
+			
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keydown", (event) => {
@@ -4260,7 +4281,199 @@ function hyperlink(text, startpos) {
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
 
+/******************/
+/* SERVICE WORKER */
+/******************/
+
 if(navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');
 	setCookie("push", "t");
+}
+
+/*********************/
+/* USER AUTOCOMPLETE */
+/*********************/
+
+function zLowerUIElements() {
+	let uiElementsContainer = query("#ui-elements-container");
+	if (uiElementsContainer)
+		uiElementsContainer.style.zIndex = "1";
+}
+
+function zRaiseUIElements() {
+	let uiElementsContainer = query("#ui-elements-container");
+	if (uiElementsContainer)
+		uiElementsContainer.style.zIndex = "";
+}
+
+var userAutocomplete = null;
+
+function abbreviatedInterval(date) {
+	let seconds = Math.floor((new Date() - date) / 1000);
+	let days = Math.floor(seconds / (60 * 60 * 24));
+	let years = Math.floor(days / 365);
+	if (years)
+		return years + "y";
+	else if (days)
+		return days + "d";
+	else
+		return "today";
+}
+
+function beginAutocompletion(control, startIndex, endIndex) {
+	if(userAutocomplete) abortAutocompletion(userAutocomplete);
+
+	let complete = { control: control,
+			 abortController: new AbortController(),
+			 fetchAbortController: new AbortController(),
+			 container: document.createElement("div") };
+
+	endIndex = endIndex || control.selectionEnd;
+	let valueLength = control.value.length;
+
+	complete.container.className = "autocomplete-container "
+								 + "right "
+								 + (window.innerWidth > 1280
+								 	? "outside"
+								 	: "inside");
+	control.insertAdjacentElement("afterend", complete.container);
+	zLowerUIElements();
+
+	let makeReplacer = (userSlug, displayName) => {
+		return () => {
+			let replacement = '[@' + displayName + '](/users/' + userSlug + '?mention=user)';
+			control.value = control.value.substring(0, startIndex - 1) +
+				replacement +
+				control.value.substring(endIndex);
+			abortAutocompletion(complete);
+			complete.control.selectionStart = complete.control.selectionEnd = startIndex + -1 + replacement.length;
+			complete.control.focus();
+		};
+	};
+
+	let switchHighlight = (newHighlight) => {
+		if (!newHighlight)
+			return;
+
+		complete.highlighted.removeClass("highlighted");
+		newHighlight.addClass("highlighted");
+		complete.highlighted = newHighlight;
+
+		//	Scroll newly highlighted item into view, if need be.
+		if (  complete.highlighted.offsetTop + complete.highlighted.offsetHeight 
+			> complete.container.scrollTop + complete.container.clientHeight) {
+			complete.container.scrollTo(0, complete.highlighted.offsetTop + complete.highlighted.offsetHeight - complete.container.clientHeight);
+		} else if (complete.highlighted.offsetTop < complete.container.scrollTop) {
+			complete.container.scrollTo(0, complete.highlighted.offsetTop);
+		}
+	};
+	let highlightNext = () => {
+		switchHighlight(complete.highlighted.nextElementSibling ?? complete.container.firstElementChild);
+	};
+	let highlightPrev = () => {
+		switchHighlight(complete.highlighted.previousElementSibling ?? complete.container.lastElementChild);
+	};
+
+	let updateCompletions = () => {
+		let fragment = control.value.substring(startIndex, endIndex);
+
+		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
+		      {signal: complete.fetchAbortController.signal})
+			.then((res) => res.json())
+			.then((res) => {
+				if(res.error) return;
+				if(res.length == 0) return abortAutocompletion(complete);
+
+				complete.container.innerHTML = "";
+				res.forEach(entry => {
+					let entryContainer = document.createElement("div");
+					[ [ entry.displayName, "name" ],
+					  [ abbreviatedInterval(Date.parse(entry.createdAt)), "age" ],
+					  [ (entry.karma || 0) + " karma", "karma" ]
+					].forEach(x => {
+						let e = document.createElement("span");
+						e.append(x[0]);
+						e.className = x[1];
+						entryContainer.append(e);
+					});
+					entryContainer.onclick = makeReplacer(entry.slug, entry.displayName);
+					complete.container.append(entryContainer);
+				});
+				complete.highlighted = complete.container.children[0];
+				complete.highlighted.classList.add("highlighted");
+				complete.container.scrollTo(0, 0);
+				})
+			.catch((e) => {});
+	};
+
+	document.body.addEventListener("click", (event) => {
+		if (!complete.container.contains(event.target)) {
+			abortAutocompletion(complete);
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}, {signal: complete.abortController.signal,
+	    capture: true});
+	
+	control.addEventListener("keydown", (event) => {
+		switch (event.key) {
+		case "Escape":
+			abortAutocompletion(complete);
+			event.preventDefault();
+			return;
+		case "ArrowUp":
+			highlightPrev();
+			event.preventDefault();
+			return;
+		case "ArrowDown":
+			highlightNext();
+			event.preventDefault();
+			return;
+		case "Tab":
+			if (event.shiftKey)
+				highlightPrev();
+			else
+				highlightNext();
+			event.preventDefault();
+			return;
+		case "Enter":
+			complete.highlighted.onclick();
+			event.preventDefault();
+			return;
+		}
+	}, {signal: complete.abortController.signal});
+
+	control.addEventListener("selectionchange", (event) => {
+		if (control.selectionStart < startIndex ||
+		    control.selectionEnd > endIndex) {
+			abortAutocompletion(complete);
+		}
+	}, {signal: complete.abortController.signal});
+	
+	control.addEventListener("input", (event) => {
+		complete.fetchAbortController.abort();
+		complete.fetchAbortController = new AbortController();
+
+		endIndex += control.value.length - valueLength;
+		valueLength = control.value.length;
+
+		if (endIndex < startIndex) {
+			abortAutocompletion(complete);
+			return;
+		}
+		
+		updateCompletions();
+	}, {signal: complete.abortController.signal});
+
+	userAutocomplete = complete;
+
+	if(startIndex != endIndex) updateCompletions();
+}
+
+function abortAutocompletion(complete) {
+	complete.fetchAbortController.abort();
+	complete.abortController.abort();
+	complete.container.remove();
+	userAutocomplete = null;
+	zRaiseUIElements();
 }

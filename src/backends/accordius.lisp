@@ -41,7 +41,7 @@
 (define-backend-operation get-post-body backend-accordius (post-id &key &allow-other-keys)
   (acons :tags (lw2-graphql-query (lambda () (values "tags/" `(("document_id" . ,post-id))))) (call-next-method)))
 
-(define-backend-operation lw2-search-query backend-accordius (query)
+(define-backend-operation lw2-search-query backend-accordius (query &key &allow-other-keys)
   (values
    (do-wl-rest-query "post_search/" `(("query" . ,query)))
    (do-wl-rest-query "comment_search/" `(("query" . ,query)))))

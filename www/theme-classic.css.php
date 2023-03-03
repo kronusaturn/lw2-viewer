@@ -1935,6 +1935,35 @@ select {
 	border: 1px solid #cce;
 }
 
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 170, 0.75);
+	border: 1px solid rgba(170, 170, 170, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(170, 170, 170, 0.75);
+	color: #fff;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(136, 136, 136, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #888;
+}
+
+.textarea-container .autocomplete-container div span.karma {
+	width: 6.75em;
+}
+
+
 /*=================*/
 /* ALIGNMENT FORUM */
 /*=================*/

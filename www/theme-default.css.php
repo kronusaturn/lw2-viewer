@@ -1460,16 +1460,19 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #eee;
 	border-left: 1px solid #aaa;
 	border-top: 1px solid #eee;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-track {
+.posting-controls textarea:focus::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	border-left: 1px solid #00e;
 	border-top: 1px solid #ddf;
 }
@@ -1478,7 +1481,8 @@ div.comment-child-links a {
 	box-shadow: 0 0 0 1px #eee inset;
 	border-left: 1px solid #aaa;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
 	border-left: 1px solid #00e;
 	background-color: #0040ff;
 	box-shadow: 
@@ -1856,6 +1860,31 @@ EOT;
 	border-radius: 4px;
 	border: 1px solid #cce;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 170, 0.75);
+	border: 1px solid rgba(7, 0, 238, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(7, 0, 238, 0.75);
+	color: #fff;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(7, 0, 238, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #888;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

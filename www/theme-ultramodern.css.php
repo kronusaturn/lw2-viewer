@@ -1485,23 +1485,26 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
 .posting-controls textarea::-webkit-scrollbar-track {
 	border-left: 1px solid #999;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-track {
-	border-left: 1px solid #999;
+.posting-controls textarea:focus::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
+	border-left: 1px solid #bbb;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #999;
 	box-shadow: 0 0 0 1px #888 inset;
 	border-left: 1px solid #999;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
-	border-left: 1px solid #999;
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
+	border-left: 1px solid #bbb;
 	background-color: #ccc;
 	box-shadow: 0 0 0 1px #888 inset;
 }
@@ -1863,6 +1866,26 @@ input::selection {
 	border-radius: 4px;
 	border: 1px solid #cce;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(136, 136, 136, 0.75);
+	border: 1px solid rgba(204, 204, 204, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(204, 204, 204, 0.75);
+	color: #fff;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(204, 204, 204, 0.25);
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

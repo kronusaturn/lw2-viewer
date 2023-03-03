@@ -1009,7 +1009,7 @@
      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
-(define-backend-function lw2-search-query (query)
+(define-backend-function lw2-search-query (query &key (indexes '("test_tags" "test_posts" "test_comments")))
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
@@ -1021,7 +1021,7 @@
 	       ("Referer" . "https://www.greaterwrong.com/")
 	       ("Content-Type" . "application/json"))
     :content (json:encode-json-alist-to-string
-	      (alist "requests" (loop for index in '("test_tags" "test_posts" "test_comments")
+	      (alist "requests" (loop for index in indexes
 				   collect (alist "indexName" index
 						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
 								   (url-rewrite:url-encode query))))))

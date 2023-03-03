@@ -4334,6 +4334,88 @@ li {
 	margin-bottom: 1em;
 }
 
+
+/*****************/
+/* USER MENTIONS */
+/*****************/
+
+.textarea-container .autocomplete-container {
+	position: absolute;
+	overflow-y: auto;
+	font-size: 1.125rem;
+	cursor: default;
+	backdrop-filter: blur(2px);
+	width: 360px;
+}
+.textarea-container .autocomplete-container:empty {
+	display: none;
+}
+
+@media only screen and (min-width: 521px) {
+	.textarea-container .autocomplete-container.inside {
+		max-height: calc(100% - 36px);
+		top: 32px;
+	}
+	.textarea-container .autocomplete-container.outside {
+		max-height: calc(100% - 28px);
+		top: 28px;
+		z-index: 10001;
+	}
+
+	.textarea-container .autocomplete-container.inside.right {
+		right: 18px;
+	}
+	.textarea-container .autocomplete-container.inside.left {
+		left: 18px;
+	}
+	.textarea-container .autocomplete-container.outside.right {
+		left: calc(100% + 3px);
+	}
+	.textarea-container .autocomplete-container.outside.left {
+		right: calc(100% + 3px);
+	}
+
+	head.content-width-normal + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (900px - 40px * 2)) / 2);
+	}
+	head.content-width-wide + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (1150px - 40px * 2)) / 2);
+	}
+	head.content-width-fluid + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((300px + 40px * 2) / 2);
+	}
+}
+
+.textarea-container .autocomplete-container div {
+	padding: 2px 8px 0 8px;
+	white-space: nowrap;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.textarea-container .autocomplete-container div span.name {
+	flex: 1 1 auto;
+	width: calc(100% - 9em);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.textarea-container .autocomplete-container div span.name:hover {
+	overflow: visible;
+	z-index: 1;
+}
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	font-size: 0.9em;
+	text-align: right;
+}
+.textarea-container .autocomplete-container div span.age {
+	flex: 0 0 3em;
+}
+.textarea-container .autocomplete-container div span.karma {
+	flex: 0 0 6em;
+}
+
+
 /*******************/
 /* ALIGNMENT FORUM */
 /*******************/
@@ -5780,6 +5862,17 @@ a.comment-parent-link::after {
 		font-size: 1.5rem;
 		margin: 1rem auto 1.5rem auto;
 		padding: 6px 12px 8px 12px;
+	}
+
+	#edit-post-form .textarea-container .autocomplete-container,
+	.comment-controls .textarea-container .autocomplete-container {
+		max-height: calc(50vh - 101px);
+		position: fixed;
+		top: 50vh;
+		left: 4px;
+		right: 4px;
+		width: unset;
+		z-index: 11002;
 	}
 }
 
@@ -7285,16 +7378,19 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #131313;
 	border-left: 1px solid #484848;
 	border-top: 1px solid #131313;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-track {
+.posting-controls textarea:focus::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	border-left: 1px solid #0cc800;
 	border-top: 1px solid #1d1f00;
 }
@@ -7303,7 +7399,8 @@ div.comment-child-links a {
 	box-shadow: 0 0 0 1px #131313 inset;
 	border-left: 1px solid #484848;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
 	border-left: 1px solid #0cc800;
 	background-color: #40a800;
 	box-shadow: 
@@ -7661,6 +7758,31 @@ select {
 	border-radius: 4px;
 	border: 1px solid #282c11;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(0, 3, 64, 0.75);
+	border: 1px solid rgba(10, 200, 0, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(10, 200, 0, 0.75);
+	color: #000;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(10, 200, 0, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #666;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

@@ -4315,6 +4315,88 @@ li {
 	margin-bottom: 1em;
 }
 
+
+/*****************/
+/* USER MENTIONS */
+/*****************/
+
+.textarea-container .autocomplete-container {
+	position: absolute;
+	overflow-y: auto;
+	font-size: 1.125rem;
+	cursor: default;
+	backdrop-filter: blur(2px);
+	width: 360px;
+}
+.textarea-container .autocomplete-container:empty {
+	display: none;
+}
+
+@media only screen and (min-width: 521px) {
+	.textarea-container .autocomplete-container.inside {
+		max-height: calc(100% - 36px);
+		top: 32px;
+	}
+	.textarea-container .autocomplete-container.outside {
+		max-height: calc(100% - 28px);
+		top: 28px;
+		z-index: 10001;
+	}
+
+	.textarea-container .autocomplete-container.inside.right {
+		right: 18px;
+	}
+	.textarea-container .autocomplete-container.inside.left {
+		left: 18px;
+	}
+	.textarea-container .autocomplete-container.outside.right {
+		left: calc(100% + 3px);
+	}
+	.textarea-container .autocomplete-container.outside.left {
+		right: calc(100% + 3px);
+	}
+
+	head.content-width-normal + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (900px - 40px * 2)) / 2);
+	}
+	head.content-width-wide + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (1150px - 40px * 2)) / 2);
+	}
+	head.content-width-fluid + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((300px + 40px * 2) / 2);
+	}
+}
+
+.textarea-container .autocomplete-container div {
+	padding: 2px 8px 0 8px;
+	white-space: nowrap;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.textarea-container .autocomplete-container div span.name {
+	flex: 1 1 auto;
+	width: calc(100% - 9em);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.textarea-container .autocomplete-container div span.name:hover {
+	overflow: visible;
+	z-index: 1;
+}
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	font-size: 0.9em;
+	text-align: right;
+}
+.textarea-container .autocomplete-container div span.age {
+	flex: 0 0 3em;
+}
+.textarea-container .autocomplete-container div span.karma {
+	flex: 0 0 6em;
+}
+
+
 /*******************/
 /* ALIGNMENT FORUM */
 /*******************/
