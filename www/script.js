@@ -305,6 +305,20 @@ Element.prototype.addTextareaFeatures = function() {
 			beginAutocompletion(textarea, textarea.selectionStart);
 		}
 	}, false);
+	textarea.addEventListener("click", (event) => {
+		if(!userAutocomplete) {
+			let start = textarea.selectionStart, end = textarea.selectionEnd;
+			let value = textarea.value;
+			if (start <= 1) return;
+			for (; value.charAt(start - 1) != "@"; start--) {
+				if (start <= 1) return;
+				if (value.charAt(start - 1) == " ") return;
+			}
+			for(; end < value.length && value.charAt(end) != " "; end++) { true }
+			beginAutocompletion(textarea, start, end);
+		}
+	});
+			
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keydown", (event) => {
@@ -4300,7 +4314,7 @@ function abbreviatedInterval(date) {
 		return "today";
 }
 
-function beginAutocompletion(control, startIndex) {
+function beginAutocompletion(control, startIndex, endIndex) {
 	if(userAutocomplete) abortAutocompletion(userAutocomplete);
 
 	let complete = { control: control,
@@ -4308,7 +4322,7 @@ function beginAutocompletion(control, startIndex) {
 			 fetchAbortController: new AbortController(),
 			 container: document.createElement("div") };
 
-	let endIndex = control.selectionEnd;
+	endIndex = endIndex || control.selectionEnd;
 	let valueLength = control.value.length;
 
 	complete.container.className = "autocomplete-container "
@@ -4354,10 +4368,43 @@ function beginAutocompletion(control, startIndex) {
 		switchHighlight(complete.highlighted.previousElementSibling ?? complete.container.lastElementChild);
 	};
 
+	let updateCompletions = () => {
+		let fragment = control.value.substring(startIndex, endIndex);
+
+		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
+		      {signal: complete.fetchAbortController.signal})
+			.then((res) => res.json())
+			.then((res) => {
+				if(res.error) return;
+				if(res.length == 0) return abortAutocompletion(complete);
+
+				complete.container.innerHTML = "";
+				res.forEach(entry => {
+					let entryContainer = document.createElement("div");
+					[ [ entry.displayName, "name" ],
+					  [ abbreviatedInterval(Date.parse(entry.createdAt)), "age" ],
+					  [ (entry.karma || 0) + " karma", "karma" ]
+					].forEach(x => {
+						let e = document.createElement("span");
+						e.append(x[0]);
+						e.className = x[1];
+						entryContainer.append(e);
+					});
+					entryContainer.onclick = makeReplacer(entry.slug, entry.displayName);
+					complete.container.append(entryContainer);
+				});
+				complete.highlighted = complete.container.children[0];
+				complete.highlighted.classList.add("highlighted");
+				complete.container.scrollTo(0, 0);
+				})
+			.catch((e) => {});
+	};
+
 	document.body.addEventListener("click", (event) => {
 		if (!complete.container.contains(event.target)) {
 			abortAutocompletion(complete);
 			event.preventDefault();
+			event.stopPropagation();
 		}
 	}, {signal: complete.abortController.signal,
 	    capture: true});
@@ -4409,38 +4456,12 @@ function beginAutocompletion(control, startIndex) {
 			return;
 		}
 		
-		let fragment = control.value.substring(startIndex, endIndex);
-
-		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
-		      {signal: complete.fetchAbortController.signal})
-			.then((res) => res.json())
-			.then((res) => {
-				if(res.error) return;
-				if(res.length == 0) return abortAutocompletion(complete);
-				
-				complete.container.innerHTML = "";
-				res.forEach(entry => {
-					let entryContainer = document.createElement("div");
-					[ [ entry.displayName, "name" ],
-					  [ abbreviatedInterval(Date.parse(entry.createdAt)), "age" ],
-					  [ (entry.karma || 0) + " karma", "karma" ]
-					].forEach(x => {
-						let e = document.createElement("span");
-						e.append(x[0]);
-						e.className = x[1];
-						entryContainer.append(e);
-					});
-					entryContainer.onclick = makeReplacer(entry.slug, entry.displayName);
-					complete.container.append(entryContainer);
-				});
-				complete.highlighted = complete.container.children[0];
-				complete.highlighted.classList.add("highlighted");
-				complete.container.scrollTo(0, 0);
-				})
-			.catch((e) => {});
+		updateCompletions();
 	}, {signal: complete.abortController.signal});
 
 	userAutocomplete = complete;
+
+	if(startIndex != endIndex) updateCompletions();
 }
 
 function abortAutocompletion(complete) {
