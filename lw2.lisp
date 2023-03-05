@@ -362,7 +362,7 @@ signaled condition to *HTML-OUTPUT*."
 	    (:conversation
 	     (conversation-index-to-html out-stream x))
 	    (:post
-	     (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
+	     (post-headline-to-html x :need-auth (or need-auth (cdr (assoc :draft x))) :skip-section skip-section))
 	    (:comment
 	     (comment-thread-to-html out-stream
 				     (lambda () (comment-item-to-html out-stream x :with-post-title t))))
