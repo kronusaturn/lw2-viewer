@@ -3245,16 +3245,20 @@ input[type='submit'] {
 .post-body h6 {
 	font-size: 1em;
 }
-.post-body h4 {
+.post-body h4,
+.body-text h4 {
 	font-size: 1.2em;
 }
-.post-body h3 {
+.post-body h3,
+.body-text h3 {
 	font-size: 1.4em;
 }
-.post-body h2 {
+.post-body h2,
+.body-text h2 {
 	font-size: 1.75em;
 }
-.post-body h1 {
+.post-body h1,
+.body-text h1 {
 	font-size: 2.1em;
 }
 
@@ -4414,6 +4418,35 @@ li {
 }
 .textarea-container .autocomplete-container div span.karma {
 	flex: 0 0 6em;
+}
+
+
+/***************/
+/* COLLECTIONS */
+/***************/
+
+h2.sequence-chapter,
+h3.sequence-chapter,
+h4.sequence-chapter {
+	text-align: center;
+}
+h2.sequence-chapter::before,
+h3.sequence-chapter::before,
+h4.sequence-chapter::before {
+	display: block;
+	margin: 1.5em 0 0.75em 0;
+	font-style: normal;
+	font-weight: normal;
+	font-family: 'Concourse', 'a_Avante', 'GW-Symbols';
+}
+h2.sequence-chapter::before {
+	content: '\25A3';
+}
+h3.sequence-chapter::before {
+	content: '\25AA\2004\25AA';
+}
+h4.sequence-chapter::before {
+	content: '\00B7\2004\00B7\2004\00B7';
 }
 
 
