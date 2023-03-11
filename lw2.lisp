@@ -155,6 +155,45 @@
               pretty-time
 	      (pretty-time-js)))))
 
+(defun collection-to-html (collection &optional (heading-level 1))
+  (alist-bind ((title (or string null))
+	       (subtitle (or string null))
+	       (number (or fixnum null))
+	       (contents list)
+	       (posts list))
+	      collection
+	      (let* ((subcollections (cdr
+				      (find-if (lambda (x) (member (car x) '(:books :sequences :chapters) :test #'eq))
+					       collection)))
+		     (html-body (cdr (assoc :html contents))))
+		(cond
+		  ((or html-body title posts)
+		   <section>
+		     (when (or html-body title)
+		       <div class="body-text sequence-text">
+		         (when title
+			   (with-html-stream-output (:stream stream)
+			     (format stream "<h~A class=\"sequence-chapter\">~@[~A. ~]~A</h~A>"
+				     heading-level
+				     number
+				     (clean-text-to-html title)
+				     heading-level)))
+			 (when subtitle
+			   <div class="sequence-subtitle">(safe (clean-text-to-html subtitle))</div>)
+			 (when html-body
+			   (with-html-stream-output (:stream stream)
+			     (let ((*memoized-output-stream* stream)) (clean-html* html-body))))
+			 </div>)
+		     (if posts
+			 (dolist (post posts)
+			   (post-headline-to-html post))
+			 (dolist (subcollection subcollections)
+			   (collection-to-html subcollection (1+ heading-level))))
+		   </section>)
+		  (:otherwise
+		   (dolist (subcollection subcollections)
+		     (collection-to-html subcollection heading-level)))))))
+
 (defun sequence-to-html (sequence)
   (labels ((contents-to-html (contents &key title subtitle number)
 	     (let ((html-body (cdr (assoc :html contents))))
@@ -1970,7 +2009,7 @@ signaled condition to *HTML-OUTPUT*."
       (t
        (emit-rpw-page)))))
 
-(define-page view-sequences "/library"
+(define-page view-library "/library"
                             ((view :member '(:featured :community) :default :featured))
   (let ((sequences
 	 (lw2-graphql-query
@@ -1999,6 +2038,19 @@ signaled condition to *HTML-OUTPUT*."
 		  :title title
 		  :content-class "sequence-page")
 		 (sequence-to-html sequence)))))
+
+(define-component view-collection (collection-id) ()
+		  (let ((collection (get-collection collection-id)))
+		    (renderer ()
+			      (emit-page (out-stream :title (cdr (assoc :title collection)))
+					 (collection-to-html collection)))))
+
+(define-component-routes lesswrong-viewer-site (view-sequences (standard-route :uri "/sequences") () (view-collection "oneQyj4pw77ynzwAF")))
+(define-component-routes lesswrong-viewer-site (view-codex (standard-route :uri "/codex") () (view-collection "2izXHCrmJ684AnZ5X")))
+(define-component-routes lesswrong-viewer-site (view-hpmor (standard-route :uri "/hpmor") () (view-collection "ywQvGBSojSQZTMpLh")))
+(define-component-routes ea-forum-viewer-site (view-handbook (standard-route :uri "/handbook") () (view-collection "MobebwWs2o86cS9Rd")))
+
+(define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
 
 (define-page view-archive (:regex "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
                            (year :type (mod 10000))

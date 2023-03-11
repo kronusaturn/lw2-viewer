@@ -24,6 +24,7 @@
 	   #:get-post-comments-votes
 	   #:get-tag-comments-votes
 	   #:get-recent-comments #:get-recent-comments-json
+	   #:get-collection
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
 	   #:markdown-source
@@ -806,6 +807,16 @@
 		  answers
 		  (get-post-answer-replies post-id answers)))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(define-backend-function get-collection (collection-id)
+  (backend-graphql
+   (lw2-graphql-query
+    (lw2-query-string :collection :single
+		      (alist :document-id collection-id)
+		      :fields `(:--id :title (:contents :html) :grid-image-id :----typename
+				      (:books :title :subtitle (:contents :html) :----typename
+					      (:sequences :title (:contents :html) :grid-image-id :----typename
+							  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil))))))))))
 
 (defun sequence-iterate (sequence fn)
   (dolist (chapter (cdr (assoc :chapters sequence)))

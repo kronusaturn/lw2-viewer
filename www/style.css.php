@@ -1355,6 +1355,7 @@ h1.listing + .post-meta .read-time {
 }
 
 section {
+	max-width: 100%;
 	margin-top: 2em;
 	margin-bottom: 4em;
 }
