@@ -192,7 +192,7 @@
 		   </section>)
 		  (:otherwise
 		   (dolist (subcollection subcollections)
-		     (collection-to-html subcollection)))))))
+		     (collection-to-html subcollection heading-level)))))))
 
 (defun sequence-to-html (sequence)
   (labels ((contents-to-html (contents &key title subtitle number)
