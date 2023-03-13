@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions #:lw2.colors)
-  (:export #:*before-clean-hook* #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
+  (:export #:*before-clean-hook* #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:contents-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -508,6 +508,19 @@
 		 (return nil)))))
 	 :test (lambda (node) (tag-is node "p")))))))
 
+(defun contents-to-html (contents min-header-level out-stream)
+  (declare (type cons contents))
+  (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
+  (loop for (elem-level text id) in contents do
+       (let* #.(loop for regex in '("^[0-9]+\\. "
+				    "^[0-9]+: "
+				    "(?i)^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\\. "
+				    "^[A-Z]\. ")
+		  collect `(text (ppcre:regex-replace ,regex text "")))
+	     (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
+		     (- elem-level (- min-header-level 1)) id (clean-text-to-html text))))
+  (format out-stream "</ul></nav>"))
+
 (define-lmdb-memoized clean-html 'lw2.backend-modules:backend-lmdb-cache
   (:sources ("src/clean-html.lisp" "src/links.lisp" "src/colors.lisp" "text-clean-regexps.js" "html-clean-regexps.js" "js-foreign-lib/mathjax.js")) (in-html &key with-toc post-id)
   (declare (ftype (function (plump:node) fixnum) plump:child-position)
@@ -720,18 +733,6 @@
 		      when (not (gethash anchor used-anchors))
 		      return (progn (setf (gethash anchor used-anchors) t)
 				    anchor))))
-	   (contents-to-html (contents min-header-level out-stream)
-	     (declare (type cons contents))
-	     (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
-	     (loop for (elem-level text id) in contents do
-		  (let* #.(loop for regex in '("^[0-9]+\\. "
-					       "^[0-9]+: "
-					       "(?i)^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\\. "
-					       "^[A-Z]\. ")
-			     collect `(text (ppcre:regex-replace ,regex text "")))
-		    (format out-stream "<li class=\"toc-item-~A\"><a href=\"#~A\">~A</a></li>"
-			    (- elem-level (- min-header-level 1)) id (clean-text-to-html text))))
-	     (format out-stream "</ul></nav>"))
 	   (style-hash-to-html (style-hash out-stream)
 	     (declare (type hash-table style-hash))
 	     (let ((style-list (alexandria:hash-table-keys style-hash)))
