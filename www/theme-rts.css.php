@@ -838,6 +838,13 @@ h1.listing.own-post-listing {
 	font-feature-settings: 'onum';
 }
 
+.contents .toc-collapse-toggle-button {
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/

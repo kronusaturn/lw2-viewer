@@ -731,6 +731,14 @@ h1.listing + .post-meta .link-post-domain {
 	font-feature-settings: "tnum";
 }
 
+.contents .toc-collapse-toggle-button {
+	color: #777;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+	text-shadow: <?php echo $white_glow; ?>;
+}
+
 /*=================*/
 /* POST NAVIGATION */
 /*=================*/
