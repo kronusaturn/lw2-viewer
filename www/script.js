@@ -2318,7 +2318,8 @@ function injectTOCCollapseToggleButton() {
 
 	TOC.insertAdjacentHTML("beforeend", "<button type='button' class='toc-collapse-toggle-button'></button>");
 
-	setTOCCollapseState((localStorage.getItem("toc-collapsed") ?? "false") == "true");
+	let defaultTOCCollapseState = (GW.isMobile && window.innerWidth <= 520) ? "true" : "false";
+	setTOCCollapseState((localStorage.getItem("toc-collapsed") ?? defaultTOCCollapseState) == "true");
 
 	TOC.query(".toc-collapse-toggle-button").addActivateEvent(GW.tocCollapseToggleButtonClicked = (event) => {
 		setTOCCollapseState(TOC.classList.contains("collapsed") == false);
