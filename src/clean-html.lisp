@@ -1,6 +1,6 @@
 (uiop:define-package #:lw2.clean-html
   (:use #:cl #:alexandria #:iterate #:split-sequence #:lw2.lmdb #:lw2.links #:lw2.utils #:lw2.context #:lw2.sites #:lw2.conditions #:lw2.colors)
-  (:export #:*before-clean-hook* #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:contents-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
+  (:export #:*before-clean-hook* #:*link-hook* #:url-scanner #:clean-text #:clean-text-to-html #:title-to-anchor #:contents-to-html #:clean-html #:clean-html* #:extract-excerpt #:extract-excerpt*)
   (:unintern #:*text-clean-regexps* #:*html-clean-regexps*))
 
 (in-package #:lw2.clean-html)
@@ -508,6 +508,18 @@
 		 (return nil)))))
 	 :test (lambda (node) (tag-is node "p")))))))
 
+(defun title-to-anchor (text used-anchors)
+  ;; This should match LW behavior in packages/lesswrong/lib/collections/posts/tableOfContents.js
+  (let* ((chars-to-use "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789")
+	 (base-anchor (with-output-to-string (stream)
+			(loop for c across text
+			   do (write-char (if (find c chars-to-use) c #\_) stream)))))
+    (loop for suffix from 0
+       for anchor = base-anchor then (format nil "~A~A" base-anchor suffix)
+       when (not (gethash anchor used-anchors))
+       return (progn (setf (gethash anchor used-anchors) t)
+		     anchor))))
+
 (defun contents-to-html (contents min-header-level out-stream)
   (declare (type cons contents))
   (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
@@ -722,17 +734,6 @@
 				     do (plump:append-child (plump:parent text-node) item))
 				  (when (= url-start 0)
 				    (plump:remove-child text-node)))))))
-	   (title-to-anchor (text used-anchors)
-	     ;; This should match LW behavior in packages/lesswrong/lib/collections/posts/tableOfContents.js
-	     (let* ((chars-to-use "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789")
-		    (base-anchor (with-output-to-string (stream)
-				   (loop for c across text
-				      do (write-char (if (find c chars-to-use) c #\_) stream)))))
-		   (loop for suffix from 0
-		      for anchor = base-anchor then (format nil "~A~A" base-anchor suffix)
-		      when (not (gethash anchor used-anchors))
-		      return (progn (setf (gethash anchor used-anchors) t)
-				    anchor))))
 	   (style-hash-to-html (style-hash out-stream)
 	     (declare (type hash-table style-hash))
 	     (let ((style-list (alexandria:hash-table-keys style-hash)))
