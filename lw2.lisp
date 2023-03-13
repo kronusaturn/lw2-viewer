@@ -2066,7 +2066,7 @@ signaled condition to *HTML-OUTPUT*."
 (define-component view-collection (collection-id) ()
 		  (let ((collection (get-collection collection-id)))
 		    (renderer ()
-			      (emit-page (out-stream :title (cdr (assoc :title collection)))
+			      (emit-page (out-stream :title (cdr (assoc :title collection)) :content-class "sequence-page collection-page")
 					 (contents-to-html (collection-to-contents collection) 1 out-stream)
 					 (collection-to-html collection)))))
 
