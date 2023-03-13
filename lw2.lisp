@@ -155,7 +155,30 @@
               pretty-time
 	      (pretty-time-js)))))
 
-(defun collection-to-html (collection &optional (heading-level 1))
+(defun collection-to-contents (collection &optional (heading-level 1) (used-anchors (make-hash-table :test 'equal)))
+  (alist-bind ((title (or string null)))
+	      collection
+	      (let ((subcollections (cdr
+				     (find-if (lambda (x) (member (car x) '(:books :sequences :chapters) :test #'eq))
+					      collection)))
+		    contents-head contents-tail)
+		(labels ((add-contents (c)
+			   (when c
+			     (if contents-head
+				 (setf (cdr contents-tail) c)
+				 (setf contents-head c))
+			     (setf contents-tail (last c)))))
+		  (cond
+		    ((and title (not (cdr (assoc :books collection))))
+		     (add-contents (list (list heading-level title (title-to-anchor title used-anchors))))
+		     (dolist (subcollection subcollections)
+		       (add-contents (collection-to-contents subcollection (1+ heading-level) used-anchors))))
+		    (:otherwise
+		     (dolist (subcollection subcollections)
+		       (add-contents (collection-to-contents subcollection heading-level used-anchors)))))
+		  contents-head))))
+
+(defun collection-to-html (collection &optional (heading-level 1) (used-anchors (make-hash-table :test 'equal)))
   (alist-bind ((title (or string null))
 	       (subtitle (or string null))
 	       (number (or fixnum null))
@@ -173,8 +196,9 @@
 		       <div class="body-text sequence-text">
 		         (when title
 			   (with-html-stream-output (:stream stream)
-			     (format stream "<h~A class=\"sequence-chapter\">~@[~A. ~]~A</h~A>"
+			     (format stream "<h~A id=\"~A\" class=\"sequence-chapter\">~@[~A. ~]~A</h~A>"
 				     heading-level
+				     (title-to-anchor title used-anchors)
 				     number
 				     (clean-text-to-html title)
 				     heading-level)))
@@ -188,11 +212,11 @@
 			 (dolist (post posts)
 			   (post-headline-to-html post))
 			 (dolist (subcollection subcollections)
-			   (collection-to-html subcollection (1+ heading-level))))
+			   (collection-to-html subcollection (1+ heading-level) used-anchors)))
 		   </section>)
 		  (:otherwise
 		   (dolist (subcollection subcollections)
-		     (collection-to-html subcollection heading-level)))))))
+		     (collection-to-html subcollection heading-level used-anchors)))))))
 
 (defun sequence-to-html (sequence)
   (labels ((contents-to-html (contents &key title subtitle number)
@@ -2043,6 +2067,7 @@ signaled condition to *HTML-OUTPUT*."
 		  (let ((collection (get-collection collection-id)))
 		    (renderer ()
 			      (emit-page (out-stream :title (cdr (assoc :title collection)))
+					 (contents-to-html (collection-to-contents collection) 1 out-stream)
 					 (collection-to-html collection)))))
 
 (define-component-routes lesswrong-viewer-site (view-sequences (standard-route :uri "/sequences") () (view-collection "oneQyj4pw77ynzwAF")))
