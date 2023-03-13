@@ -1687,21 +1687,21 @@ article {
 	margin-bottom: 0.25em;
 }
 
-.post-body .contents ul {
+.body-text .contents ul {
 	list-style-type: none;
 	margin: 0 0 0 0.5em;
 	counter-reset: toc-item-1 toc-item-2 toc-item-3;
 	padding-left: 1em;
 	font-size: 0.75em;
 }
-.post-body .contents li {
+.body-text .contents li {
 	margin: 0.15em 0 0.3em 1em;
 	text-align: left;
 	text-indent: -1em;
 	line-height: 1.2;
 	position: relative;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	position: absolute;
 	width: 3em;
 	display: block;
@@ -4415,6 +4415,7 @@ h2.sequence-chapter::before,
 h3.sequence-chapter::before,
 h4.sequence-chapter::before {
 	display: block;
+	clear: both;
 	margin: 1.5em 0 0.75em 0;
 	font-style: normal;
 	font-weight: normal;

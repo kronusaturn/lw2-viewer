@@ -723,10 +723,10 @@ h1.listing + .post-meta .link-post-domain {
 .contents-head {
 	font-weight: 300;
 }
-.post-body .contents ul {
+.body-text .contents ul {
 	font-size: 0.85em;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }

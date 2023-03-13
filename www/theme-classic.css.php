@@ -805,10 +805,10 @@ h1.listing.own-post-listing {
 	font-weight: bold;
 	font-size: 1.25em;
 }
-.post-body .contents ul {
+.body-text .contents ul {
 	font-size: 1em;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }
