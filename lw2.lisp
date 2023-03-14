@@ -1044,6 +1044,11 @@ signaled condition to *HTML-OUTPUT*."
 					:extra-class html-class))
 	(or sort-string (user-pref pref)))))
 
+(defun handle-last-modified (last-modified)
+  (when last-modified
+    (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified))
+    (hunchentoot:handle-if-modified-since last-modified)))
+
 (define-component view-index ()
   (:http-args ((view :member '(:all :new :frontpage :featured :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
 	       before after
@@ -1053,8 +1058,9 @@ signaled condition to *HTML-OUTPUT*."
 	       &without-csrf-check))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
-    (multiple-value-bind (posts total)
+    (multiple-value-bind (posts total last-modified)
 	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string :karma-threshold karma-threshold)
+      (handle-last-modified last-modified)
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
 		  (view-items-index (firstn posts limit)
@@ -1517,7 +1523,7 @@ signaled condition to *HTML-OUTPUT*."
 	   (cond
 	     (shortform (values "Shortform" "shortform" (if (logged-in-userid) (lambda () (comment-controls :standalone t)))))
 	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
-	 (multiple-value-bind (recent-comments total)
+	 (multiple-value-bind (recent-comments total last-modified)
 	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
 		 (let ((*use-alignment-forum* (eq view :alignment-forum)))
 		   (lw2-graphql-query (lw2-query-string :comment :list
@@ -1527,6 +1533,7 @@ signaled condition to *HTML-OUTPUT*."
 							:context (if shortform :shortform :index)
 							:with-total want-total)))
 		 (get-recent-comments :with-total want-total))
+	   (handle-last-modified last-modified)
 	   (renderer ()
 	     (view-items-index recent-comments
 			       :title title
@@ -1707,7 +1714,7 @@ signaled condition to *HTML-OUTPUT*."
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
                     (title (format nil "~A~@['s ~A~]" display-name show-text))
                     (sort-type (case sort (:top :score) (:new :date) (:old :date-reverse))))
-	       (multiple-value-bind (items total)
+	       (multiple-value-bind (items total last-modified)
                  (case show
                    (:posts
 		    (get-user-page-items user-id :posts :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
@@ -1778,6 +1785,7 @@ signaled condition to *HTML-OUTPUT*."
 		      <p>This may mean your login token has expired or become invalid. You can try <a href="/login">logging in again</a>.</p>)))
 		   (t
 		    (get-user-page-items user-id :both :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type)))
+		 (handle-last-modified last-modified)
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
                        (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
                    (view-items-index interleave :title title
