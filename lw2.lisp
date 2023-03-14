@@ -1046,8 +1046,9 @@ signaled condition to *HTML-OUTPUT*."
 
 (defun handle-last-modified (last-modified)
   (when last-modified
-    (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified))
-    (hunchentoot:handle-if-modified-since last-modified)))
+    (let ((last-modified (max last-modified (load-time-value (get-universal-time)))))
+      (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified))
+      (hunchentoot:handle-if-modified-since last-modified))))
 
 (define-component view-index ()
   (:http-args ((view :member '(:all :new :frontpage :featured :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
