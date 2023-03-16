@@ -9,6 +9,7 @@
 	   #:*revalidate-default* #:*force-revalidate-default*
            #:*messages-index-fields*
            #:*notifications-base-terms*
+	   #:*enable-rate-limit*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:call-with-http-response
 	   #:forwarded-header #:backend-request-headers
@@ -212,6 +213,8 @@
        do (setf res (+ n (ash res 8)))
        finally (return res))))
 
+(defvar *enable-rate-limit* t)
+
 (defparameter *rate-limit-cost-factor* 1)
 
 (sb-ext:defglobal *global-token-bucket* (make-token-bucket :rate 3 :burst 180))
@@ -221,7 +224,8 @@
       (error "Rate limit exceeded. Try again later.")))
 
 (defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
-  (check-rate-limit)
+  (when *enable-rate-limit*
+    (check-rate-limit))
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (stream (connection-pop uri-dest)))

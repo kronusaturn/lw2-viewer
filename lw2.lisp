@@ -812,7 +812,8 @@ signaled condition to *HTML-OUTPUT*."
 		 auth-token
 		 (cache-get "auth-token-to-userid" auth-token)
 		 (cache-get "auth-token-to-username" auth-token)))))
-      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
+      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
+	    (*enable-rate-limit* (if *current-userid* nil *enable-rate-limit*)))
 	(funcall fn)))))
 
 (defmethod call-with-site-context ((site ignore-list-site) (request (eql t)) fn)
