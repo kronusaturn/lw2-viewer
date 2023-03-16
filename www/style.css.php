@@ -1682,6 +1682,10 @@ article {
 	z-index: 1;
 }
 
+.collection-page .contents {
+	margin-top: 0;
+}
+
 .contents-head {
 	text-align: center;
 	margin-bottom: 0.25em;
