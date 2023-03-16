@@ -1381,6 +1381,10 @@ article {
 	margin-bottom: 0;
 }
 
+#content.sequence-page h1 {
+	margin-top: 0.1em;
+}
+
 /**************/
 /* USER PAGES */
 /**************/
