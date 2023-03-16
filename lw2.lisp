@@ -202,6 +202,8 @@
 				     number
 				     (clean-text-to-html title)
 				     heading-level)))
+			 (when (assoc :books collection)
+			   (contents-to-html (collection-to-contents collection) 1 *html-output*))
 			 (when subtitle
 			   <div class="sequence-subtitle">(safe (clean-text-to-html subtitle))</div>)
 			 (when html-body
@@ -2067,7 +2069,6 @@ signaled condition to *HTML-OUTPUT*."
 		  (let ((collection (get-collection collection-id)))
 		    (renderer ()
 			      (emit-page (out-stream :title (cdr (assoc :title collection)) :content-class "sequence-page collection-page")
-					 (contents-to-html (collection-to-contents collection) 1 out-stream)
 					 (collection-to-html collection)))))
 
 (define-component-routes lesswrong-viewer-site (view-sequences (standard-route :uri "/sequences") () (view-collection "oneQyj4pw77ynzwAF")))
