@@ -508,6 +508,7 @@
 			 (condition (error new-result))
 			 (t (multiple-value-bind (result count)
 				(funcall decoder new-result)
+			      (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
 			      (values result count last-modified))))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
