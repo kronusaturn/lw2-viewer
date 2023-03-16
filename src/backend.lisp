@@ -393,6 +393,10 @@
 							   :weakness :value
 							   :synchronized t)) 
 
+(defvar *parsed-results-cache* (make-hash-table :test 'equal
+						:weakness :value
+						:synchronized t))
+
 (defun cache-update (cache-db key data)
   (let ((meta-db (format nil "~A-meta" cache-db))
 	(new-hash (hash-string data))
@@ -405,6 +409,7 @@
 			   current-time)))
 	(cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
 	(unless same-data
+	  (remhash (list *current-backend* cache-db key) *parsed-results-cache*)
 	  (cache-put cache-db key data))
 	(values data (unix-to-universal-time last-mod))))))
 
@@ -476,9 +481,12 @@
    (multiple-value-bind (is-fresh cached-result last-modified)
        (cache-freshness-status cache-db cache-key)
      (labels ((get-cached-result ()
-		(multiple-value-bind (result count)
-		    (with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))
-		 (values result count last-modified))))
+		(if-let ((parsed-result (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*)))
+		    (multiple-value-call #'values (values-list parsed-result) last-modified)
+		  (multiple-value-bind (result count)
+		      (with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))
+		    (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
+		    (values result count last-modified)))))
        (if (and cached-result (or (not revalidate)
 				  (and (not force-revalidate) (eq is-fresh :skip))))
 	   (get-cached-result)

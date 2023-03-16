@@ -270,7 +270,7 @@ signaled condition to *HTML-OUTPUT*."
 					 (return-from with-error-html-block nil))))
        (log-conditions (progn ,@body)))))
 
-(defun make-comment-parent-hash (comments)
+(defun make-comment-parent-hash-real (comments)
   (let ((existing-comment-hash (make-hash-table :test 'equal))
         (hash (make-hash-table :test 'equal)))
     (dolist (c comments)
@@ -298,6 +298,14 @@ signaled condition to *HTML-OUTPUT*."
 	      collecting (cons (cons :child-count (count-children c)) c))))
       (setf (gethash nil hash) (add-child-counts (gethash nil hash)))) 
     hash)) 
+
+(defparameter *comment-parent-hash-cache* (make-hash-table :test 'eq
+							   :weakness :value
+							   :synchronized t))
+
+(defun make-comment-parent-hash (comments)
+  (or (gethash comments *comment-parent-hash-cache*)
+      (setf (gethash comments *comment-parent-hash-cache*) (make-comment-parent-hash-real comments))))
 
 (defun comment-thread-to-html (out-stream emit-comment-item-fn)
   (format out-stream "<ul class=\"comment-thread\">")
@@ -1354,6 +1362,8 @@ signaled condition to *HTML-OUTPUT*."
 					   else
 					   collect comment into normal-comments
 					   finally (return (values normal-comments nominations reviews)))
+				      (unless (or nominations reviews)
+					(setf normal-comments real-comments)) ;for caching
 				      (loop for (name comments open) in (list-cond ((or nominations nominations-open)
 										    (list "nomination" nominations nominations-open))
 										   ((or reviews reviews-open)
