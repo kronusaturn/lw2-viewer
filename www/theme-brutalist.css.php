@@ -652,13 +652,13 @@ h1.listing.own-post-listing {
 	font-weight: bold;
 	font-size: 1.125em;
 }
-.post-body .contents ul {
+.body-text .contents ul {
 	font-size: 0.9375em;
 }
 .contents ul a {
 	border-bottom: 2px dotted #999;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }

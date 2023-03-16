@@ -875,15 +875,15 @@ h1.listing.own-post-listing {
 .contents-head {
 	font-weight: bold;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }
-.post-body .contents a,
-.post-body .contents a:hover {
+.body-text .contents a,
+.body-text .contents a:hover {
 	border: none;
 }
-.post-body .contents a:hover {
+.body-text .contents a:hover {
 	text-decoration: underline;
 }
 
