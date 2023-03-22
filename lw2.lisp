@@ -1082,7 +1082,8 @@ signaled condition to *HTML-OUTPUT*."
 (defun handle-last-modified (last-modified)
   (when last-modified
     (let ((last-modified (max last-modified (load-time-value (get-universal-time)))))
-      (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified))
+      (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified)
+	    (hunchentoot:header-out :vary) "cookie")
       (hunchentoot:handle-if-modified-since last-modified))))
 
 (define-component view-index ()
