@@ -2069,41 +2069,49 @@ signaled condition to *HTML-OUTPUT*."
   (quri:render-uri
    (quri:merge-uris
     (quri:make-uri :path path :query query)
-    (oauth2.0-login-uri backend))))
+    (quri:uri (oauth2.0-login-uri backend)))))
 
 (defmethod view-login ((backend backend-oauth2.0-login))
   (with-http-args (return)
+    (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
     (redirect
      (oauth2.0-login-request-uri backend "authorize"
 				 (alist "response_type" "code"
 					"client_id" (oauth2.0-client-id backend)
-					"redirect_uri" (quri:render-uri (quri:merge-uris "/auth/callback" (site-uri *current-site*)))
-					"scope" "openid"
+					"redirect_uri" (quri:render-uri (quri:merge-uris (quri:uri "/auth/callback") (quri:uri (site-uri *current-site*))))
+					"scope" "openid profile email"
 					"state" return)))))
 
 (defmethod view-login-oauth2.0-callback ((backend backend-oauth2.0-login))
   (with-http-args (code state)
-    (alist-bind ((auth-token (or null simple-string) :access--token))
-		(call-with-http-response #'json:decode-json
-					    (oauth2.0-login-request-uri backend "oauth/token")
-					    :method :post
-					    :content (alist "grant_type" "authorization_code"
-							    "client_id" (oauth2.0-client-id backend)
-							    "client_secret" (oauth2.0-client-secret backend)
-							    "code" code
-							    "redirect_uri" (quri:render-uri (quri:merge-uris "/auth/callback" (site-uri *current-site*))))
-					    :want-stream t :force-string t)
-		(unless auth-token
-		  (error "Login error"))
-		(set-cookie "lw2-auth-token" auth-token :max-age (1- (expt 2 31)))
-		(alist-bind ((user-id simple-string :--id)
-			     (username simple-string :display-name))
-			    (do-lw2-post-query
-				auth-token (alist "query"
-						  (graphql-query-string :current-user nil '(:--id :display-name))))
-			    (cache-put "auth-token-to-userid" auth-token user-id)
-			    (cache-put "auth-token-to-username" auth-token username))
-		(redirect (if (and state (ppcre:scan "^/[^/]" state)) state "/")))))
+    (let ((auth-response
+	   (call-with-http-response #'json:decode-json
+				    (oauth2.0-login-request-uri backend "oauth/token")
+				    :method :post
+				    :content (alist "grant_type" "authorization_code"
+						    "client_id" (oauth2.0-client-id backend)
+						    "client_secret" (oauth2.0-client-secret backend)
+						    "code" code
+						    "redirect_uri" (quri:render-uri (quri:merge-uris (quri:uri "/auth/callback") (quri:uri (site-uri *current-site*)))))
+				    :want-stream t :force-string t)))
+      (alist-bind ((access-token (or null simple-string) :access--token)
+		   (error (or null simple-string))
+		   (error-description (or null simple-string) :error--description))
+		  auth-response
+		  (when error
+		    (error "Login error: ~A" (cdr (assoc :error--description auth-response))))
+		  (unless access-token
+		    (error "Login error: server did not provide an access token."))
+		  (let ((auth-token (do-login-with-oidc-access-token access-token)))
+		    (alist-bind ((user-id simple-string :--id)
+				 (username simple-string :display-name))
+				(do-lw2-post-query
+				    auth-token (alist "query"
+						      (graphql-query-string :current-user nil '(:--id :display-name))))
+				(cache-put "auth-token-to-userid" auth-token user-id)
+				(cache-put "auth-token-to-username" auth-token username))
+		    (set-cookie "lw2-auth-token" auth-token :max-age (1- (expt 2 31)))
+		    (redirect (if (and state (ppcre:scan "^/[^/]" state)) state "/")))))))
 
 (defmethod view-logout ((backend backend-oauth2.0-login))
   (request-method
