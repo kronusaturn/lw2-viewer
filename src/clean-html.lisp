@@ -522,7 +522,7 @@
 
 (defun contents-to-html (contents min-header-level out-stream)
   (declare (type cons contents))
-  (format out-stream "<nav class=\"contents\"><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
+  (format out-stream "<nav class=\"contents\"><script>injectTOCCollapseToggleButton()</script><div class=\"contents-head\">Contents</div><ul class=\"contents-list\">")
   (loop for (elem-level text id) in contents do
        (let* #.(loop for regex in '("^[0-9]+\\. "
 				    "^[0-9]+: "

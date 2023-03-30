@@ -2295,38 +2295,6 @@ function updateEditPostPageSubmitButtonText() {
 		submitButton.value = query(".question-checkbox").checked ? "Submit Question" : "Submit Post";
 }
 
-/*******/
-/* TOC */
-/*******/
-
-function setTOCCollapseState(collapsed = false) {
-	let TOC = query("nav.contents");
-	if (!TOC)
-		return;
-
-	TOC.classList.toggle("collapsed", collapsed);
-
-	let button = TOC.query(".toc-collapse-toggle-button");
-	button.innerHTML = collapsed ? "&#xf0fe;" : "&#xf146;";
-	button.title = collapsed ? "Expand table of contents" : "Collapse table of contents";
-}
-
-function injectTOCCollapseToggleButton() {
-	let TOC = query("nav.contents");
-	if (!TOC)
-		return;
-
-	TOC.insertAdjacentHTML("beforeend", "<button type='button' class='toc-collapse-toggle-button'></button>");
-
-	let defaultTOCCollapseState = (GW.isMobile && window.innerWidth <= 520) ? "true" : "false";
-	setTOCCollapseState((localStorage.getItem("toc-collapsed") ?? defaultTOCCollapseState) == "true");
-
-	TOC.query(".toc-collapse-toggle-button").addActivateEvent(GW.tocCollapseToggleButtonClicked = (event) => {
-		setTOCCollapseState(TOC.classList.contains("collapsed") == false);
-		localStorage.setItem("toc-collapsed", TOC.classList.contains("collapsed"));
-	});
-}
-
 /*****************/
 /* ANTI-KIBITZER */
 /*****************/
@@ -3831,9 +3799,6 @@ function mainInitializer() {
 	});
 	// Focus the textarea.
 	queryAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (GW.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
-
-	//	Inject TOC collapse toggle button and set state.
-	injectTOCCollapseToggleButton();
 
 	// If we're on a comment thread page...
 	if (query(".comments") != null) {
