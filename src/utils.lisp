@@ -5,7 +5,7 @@
 	   #:alist-without-null #:alist-without-null*
 	   #:dynamic-let #:dynamic-let* #:dynamic-flet #:dynamic-labels
 	   #:with-semaphore
-	   #:universal-time-to-unix #:get-unix-time #:as-timestamp #:timerange
+	   #:universal-time-to-unix #:unix-to-universal-time #:get-unix-time #:as-timestamp #:timerange
 	   #:substring #:nonempty-string
 	   #:with-delimited-writer
 	   #:regex-groups-min
@@ -119,6 +119,9 @@
 
 (defun universal-time-to-unix (time)
   (- time #.(encode-universal-time 0 0 0 1 1 1970 0)))
+
+(defun unix-to-universal-time (unix-time)
+  (+ unix-time #.(encode-universal-time 0 0 0 1 1 1970 0)))
 
 (defun get-unix-time ()
   (universal-time-to-unix (get-universal-time)))

@@ -106,12 +106,14 @@
 			 (read-unlock ,rwlock)
 			 (write-lock ,rwlock)
 			 (setf ,upgraded t)))))
-	     (read-lock ,rwlock)
-	     (unwind-protect
-		  (with-interrupts ,@body)
-	       (if (not ,upgraded)
-		   (read-unlock ,rwlock)
-		   (write-unlock ,rwlock))))))
+	     (without-interrupts
+		 (allow-with-interrupts
+		  (read-lock ,rwlock)
+		  (unwind-protect
+		       (with-interrupts ,@body)
+		    (if (not ,upgraded)
+			(read-unlock ,rwlock)
+			(write-unlock ,rwlock))))))))
       `(with-rwlock (,rwlock :read) ,@body)))
 
 (defmacro with-write-lock ((rwlock) &body body)

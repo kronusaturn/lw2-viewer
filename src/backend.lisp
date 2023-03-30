@@ -9,6 +9,7 @@
 	   #:*revalidate-default* #:*force-revalidate-default*
            #:*messages-index-fields*
            #:*notifications-base-terms*
+	   #:*enable-rate-limit*
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:call-with-http-response
 	   #:forwarded-header #:backend-request-headers
@@ -24,6 +25,7 @@
 	   #:get-post-comments-votes
 	   #:get-tag-comments-votes
 	   #:get-recent-comments #:get-recent-comments-json
+	   #:get-collection
 	   #:sequence-post-ids #:get-sequence #:get-post-sequence-ids #:get-sequence-post
 	   #:get-conversation-messages
 	   #:markdown-source
@@ -40,7 +42,8 @@
 	     #:define-index-fields #:decode-graphql-json
 	     #:lw2-graphql-query-noparse #:lw2-graphql-query-streamparse
 	     #:*cookie-jar*
-	     #:with-connection-pool #:call-with-connection-pool))
+	     #:with-connection-pool #:call-with-connection-pool
+	     #:cache-is-fresh))
 
 (in-package #:lw2.backend)
 
@@ -91,7 +94,7 @@
   (backend-alignment-forum (append (call-next-method) '(:af-karma :full-name))))
 
 (define-cache-database 'backend-lw2-legacy
-    "index-json"
+    "index-json" "index-json-meta"
     "post-comments-json" "post-comments-json-meta" "post-answers-json" "post-answers-json-meta"
     "post-body-json" "post-body-json-meta"
     "sequence-json" "sequence-json-meta" "post-sequence"
@@ -151,7 +154,78 @@
 		(when (> (fill-pointer vector) 0)
 		  (vector-pop vector))))))
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defstruct (token-bucket (:constructor %make-token-bucket))
+    (tokens internal-time-units-per-second :type fixnum)
+    (base-cost internal-time-units-per-second :type fixnum)
+    (last-update (get-internal-real-time) :type fixnum)
+    (tokens-per-unit 1 :type fixnum)
+    (token-limit internal-time-units-per-second :type fixnum))
+
+  (defun make-token-bucket (&key rate burst (fill-ratio 1.0))
+    (let* ((scaled-rate (rationalize (/ internal-time-units-per-second rate)))
+	   (base-cost (numerator scaled-rate))
+	   (tokens-per-unit (denominator scaled-rate))
+	   (token-limit (* base-cost burst)))
+      (%make-token-bucket
+       :base-cost base-cost
+       :tokens-per-unit tokens-per-unit
+       :token-limit token-limit
+       :tokens (round (* token-limit fill-ratio))))))
+
+(defun token-bucket-decrement (token-bucket n &optional with-punishment)
+  (let* ((time (get-internal-real-time))
+	 (tpu (token-bucket-tokens-per-unit token-bucket))
+	 (limit (token-bucket-token-limit token-bucket))
+	 (cost (round (* n (token-bucket-base-cost token-bucket))))
+	 (max-increment (+ limit cost))
+	 (max-timediff (ceiling max-increment tpu))
+	 (increment 0)
+	 (result nil))
+    (declare (type (and fixnum (integer 0)) time)
+	     (type (unsigned-byte 32) limit cost max-increment increment)
+	     (type (integer 1 10000000) tpu))
+    (sb-ext:atomic-update (token-bucket-last-update token-bucket)
+			  (lambda (previous)
+			    (declare (type (and fixnum (integer 0)) previous))
+			    (if (> (- time max-timediff) previous)
+				(setf increment max-increment)
+				(let ((timediff (- time (min previous time))))
+				  (declare (type (unsigned-byte 32) timediff))
+				  (setf increment (* timediff tpu))))
+			    (max previous time)))
+    (sb-ext:atomic-update (token-bucket-tokens token-bucket)
+			  (lambda (previous)
+			    (declare (type (signed-byte 32) previous))
+			    (let* ((new-refill (+ previous increment))
+				   (new (- new-refill cost)))
+			      (setf result (> new 0))
+			      (if (or result with-punishment)
+				  (min new limit)
+				  (max (- limit) (min new-refill limit))))))
+    result))
+
+(defun parse-ipv4 (string)
+  (let ((l (map 'list #'parse-integer
+		(split-sequence:split-sequence #\. string))))
+    (loop with res = 0
+       for n in l
+       do (setf res (+ n (ash res 8)))
+       finally (return res))))
+
+(defvar *enable-rate-limit* t)
+
+(defparameter *rate-limit-cost-factor* 1)
+
+(sb-ext:defglobal *global-token-bucket* (make-token-bucket :rate 3 :burst 180))
+
+(defun check-rate-limit ()
+  (or (token-bucket-decrement *global-token-bucket* *rate-limit-cost-factor*)
+      (error "Rate limit exceeded. Try again later.")))
+
 (defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
+  (when *enable-rate-limit*
+    (check-rate-limit))
   (let* ((uri (quri:uri uri-string))
 	 (uri-dest (concatenate 'string (quri:uri-host uri) ":" (format nil "~d" (quri:uri-port uri))))
 	 (stream (connection-pop uri-dest)))
@@ -161,9 +235,11 @@
 	(unwind-protect
 	     (handler-bind (((or dex:http-request-failed usocket:ns-condition usocket:socket-condition)
 			     (lambda (condition)
-			       (if-let ((r (find-restart 'dex:ignore-and-continue condition)))
+			       (if-let ((r (find-restart 'dex:ignore-and-continue condition))
+					(ct (gethash "content-type" (dex:response-headers condition))))
+				   (if (ppcre:scan "^application/json" ct)
 				       (invoke-restart r)
-				       (maybe-retry)))))
+				       (maybe-retry))))))
 	       (setf (values response status-code headers response-uri new-stream)
 		     (apply 'dex:request uri :use-connection-pool nil :keep-alive t :stream stream args))
 	       (unless (eq stream new-stream)
@@ -209,17 +285,18 @@
 
 (define-backend-function fixup-lw2-return-value (value)
   (backend-base
-   value)
+   (values value nil))
   (backend-lw2-modernized
-   (values-list
-    (map 'list
-         (lambda (x)
-           (if (member (car x) '(:result :results :total-count))
-               (cdr x)
-               x))
-         value)))
+   (values
+    (let ((x (first value)))
+      (if (member (car x) '(:result :results :total-count))
+	  (cdr x)
+	  x))
+    (let ((x (second value)))
+      (if (eq (car x) :total-count)
+	  (cdr x)))))
   (backend-accordius
-   value))
+   (values value nil)))
 
 (define-backend-function deserialize-query-result (result-source)
   (backend-base
@@ -316,17 +393,25 @@
 							   :weakness :value
 							   :synchronized t)) 
 
+(defvar *parsed-results-cache* (make-hash-table :test 'equal
+						:weakness :value
+						:synchronized t))
+
 (defun cache-update (cache-db key data)
   (let ((meta-db (format nil "~A-meta" cache-db))
-        (new-hash (hash-string data))
-        (current-time (get-unix-time)))
+	(new-hash (hash-string data))
+	(current-time (get-unix-time)))
     (with-cache-transaction
       (let* ((metadata (cache-get meta-db key :value-type :lisp))
-             (last-mod (if (equalp new-hash (cdr (assoc :city-128-hash metadata)))
-                           (or (cdr (assoc :last-modified metadata)) current-time)
-                           current-time)))
-        (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
-        (cache-put cache-db key data)))))
+	     (same-data (equalp new-hash (cdr (assoc :city-128-hash metadata))))
+	     (last-mod (if same-data
+			   (or (cdr (assoc :last-modified metadata)) current-time)
+			   current-time)))
+	(cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
+	(unless same-data
+	  (remhash (list *current-backend* cache-db key) *parsed-results-cache*)
+	  (cache-put cache-db key data))
+	(values data (unix-to-universal-time last-mod))))))
 
 (defun cache-mark-stale (cache-db key)
   (let ((meta-db (format nil "~A-meta" cache-db))
@@ -340,16 +425,21 @@
 (defparameter *cache-stale-factor* 100)
 (defparameter *cache-skip-factor* 5000)
 
-(defun cache-is-fresh (cache-db key)
-  (let ((metadata (cache-get (format nil "~A-meta" cache-db) key :value-type :lisp))
-        (current-time (get-unix-time)))
-    (if-let ((last-mod (cdr (assoc :last-modified metadata)))
-	     (last-checked (cdr (assoc :last-checked metadata))))
-	    (let ((unmodified-time (- last-checked last-mod))
-		  (last-checked-time (- current-time last-checked)))
-	      (if (> unmodified-time (* *cache-skip-factor* last-checked-time))
-		  :skip
-		  (> unmodified-time (* *cache-stale-factor* last-checked-time)))))))
+(defun cache-freshness-status (cache-db key)
+  (with-cache-readonly-transaction
+      (when (cache-exists cache-db key)
+	(let ((metadata (cache-get (format nil "~A-meta" cache-db) key :value-type :lisp))
+	      (current-time (get-unix-time)))
+	  (if-let ((last-mod (cdr (assoc :last-modified metadata)))
+		   (last-checked (cdr (assoc :last-checked metadata))))
+	      (values
+	       (let ((unmodified-time (- last-checked last-mod))
+		     (last-checked-time (- current-time last-checked)))
+		 (if (> unmodified-time (* *cache-skip-factor* last-checked-time))
+		     :skip
+		     (> unmodified-time (* *cache-stale-factor* last-checked-time))))
+	       t
+	       (unix-to-universal-time last-mod)))))))
 
 (defgeneric run-query (query)
   (:method ((query string))
@@ -371,12 +461,13 @@
   (let ((key (format nil "~A-~A" cache-db cache-key))) 
     (labels ((background-fn ()
 	       (unwind-protect
-		    (multiple-value-bind (value error)
-			(log-and-ignore-errors
-			 (sb-sys:with-deadline (:seconds 60)
-			   (nth-value 0
-				      (cache-update cache-db cache-key (run-query query)))))
-		      (or value error))
+		    (block nil
+		      (multiple-value-bind (value error)
+			  (log-and-ignore-errors
+			   (sb-sys:with-deadline (:seconds 60)
+			     (return (cache-update cache-db cache-key (run-query query)))))
+			(declare (ignore value))
+			(return error)))
 		 (remhash key *background-cache-update-threads*))))
       (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
 				     (let ((thread (gethash key *background-cache-update-threads*)))
@@ -387,11 +478,15 @@
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (decoder 'decode-query-result)
 								 (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-base
-   (multiple-value-bind (cached-result is-fresh) (with-cache-readonly-transaction
-						     (values (cache-exists cache-db cache-key)
-							     (cache-is-fresh cache-db cache-key)))
+   (multiple-value-bind (is-fresh cached-result last-modified)
+       (cache-freshness-status cache-db cache-key)
      (labels ((get-cached-result ()
-		(with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))))
+		(if-let ((parsed-result (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*)))
+		    (multiple-value-call #'values (values-list parsed-result) last-modified)
+		  (multiple-value-bind (result count)
+		      (with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))
+		    (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
+		    (values result count last-modified)))))
        (if (and cached-result (or (not revalidate)
 				  (and (not force-revalidate) (eq is-fresh :skip))))
 	   (get-cached-result)
@@ -407,10 +502,14 @@
 				       (declare (ignore c))
 				       (if cached-result
 					   (return-from retrieve-result (get-cached-result))))))
-		     (let ((new-result (sb-thread:join-thread thread :timeout timeout)))
+		     (multiple-value-bind (new-result last-modified)
+			 (sb-thread:join-thread thread :timeout timeout)
 		       (typecase new-result
 			 (condition (error new-result))
-			 (t (funcall decoder new-result)))))))))))))
+			 (t (multiple-value-bind (result count)
+				(funcall decoder new-result)
+			      (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
+			      (values result count last-modified))))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
@@ -464,14 +563,20 @@
    (lw2-graphql-query (apply 'lw2-query-string query-type :list terms (filter-plist rest :fields :context)) :auth-token auth-token)))
 
 (defun get-cached-index-query (cache-id query)
-  (labels ((query-and-put ()
-	     (let* ((result (lw2-graphql-query query :return-type :string))
-		    (decoded-result (multiple-value-list (decode-query-result result))))
-	       (cache-put "index-json" cache-id result)
-	       (values-list decoded-result)))
-	   (get-cached-result ()
-	     (with-cache-readonly-transaction (decode-query-result (cache-get "index-json" cache-id :return-type 'binary-stream)))))
-    (let ((cached-result (cache-get "index-json" cache-id :return-type 'existence)))
+  (multiple-value-bind (is-fresh cached-result last-modified)
+      (cache-freshness-status "index-json" cache-id)
+    (declare (ignore is-fresh))
+    (labels ((query-and-put ()
+	       (multiple-value-bind (encoded-result last-modified)
+		   (cache-update "index-json" cache-id (lw2-graphql-query query :return-type :string))
+		 (multiple-value-bind (result count)
+		     (decode-query-result encoded-result)
+		   (values result count last-modified))))
+	     (get-cached-result ()
+	       (with-cache-readonly-transaction
+		   (multiple-value-bind (result count)
+		       (decode-query-result (cache-get "index-json" cache-id :return-type 'binary-stream))
+		     (values result count last-modified)))))
       (if (and cached-result (background-loader-ready-p))
 	  (get-cached-result)
 	  (if cached-result
@@ -480,7 +585,7 @@
 		(t () (get-cached-result)))
 	      (query-and-put))))))
 
-(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 21) offset before after &allow-other-keys)
+(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 21) offset before after karma-threshold &allow-other-keys)
   (backend-lw2-legacy
    (let ((sort-key (alexandria:switch (sort :test #'string=)
 				      ("new" "new")
@@ -499,12 +604,13 @@
 			    ("reviews" (alist :view "reviews2019"))
 			    (t (values
 				(alist :sorted-by sort-key :filter "frontpage")
-				(if (not (or (string/= sort "new") (/= limit 21) offset before after)) "new-not-meta"))))
+				(if (not (or (string/= sort "new") (/= limit 21) offset before after karma-threshold)) "new-not-meta"))))
        (let ((terms
 	      (alist-without-null* :before before
 				   :after after
 				   :limit limit
 				   :offset offset
+				   :karma-threshold karma-threshold
 				   view-terms)))
 	 (values terms cache-key))))))
 
@@ -705,7 +811,7 @@
 
 (define-backend-function get-tag-comments-votes (tag-id auth-token)
   (backend-lw2-tags-comments
-   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "commentsOnTag") :fields '(:--id :current-user-vote :current-user-extended-vote))
+   (process-votes-result (lw2-graphql-query (lw2-query-string :comment :list (alist :tag-id tag-id :view "tagDiscussionComments") :fields '(:--id :current-user-vote :current-user-extended-vote))
 					    :auth-token auth-token))))
 
 (define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
@@ -733,6 +839,16 @@
 		  answers
 		  (get-post-answer-replies post-id answers)))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(define-backend-function get-collection (collection-id)
+  (backend-graphql
+   (lw2-graphql-query
+    (lw2-query-string :collection :single
+		      (alist :document-id collection-id)
+		      :fields `(:--id :title (:contents :html) :grid-image-id :----typename
+				      (:books :title :subtitle (:contents :html) :----typename
+					      (:sequences :title (:contents :html) :grid-image-id :----typename
+							  (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil))))))))))
 
 (defun sequence-iterate (sequence fn)
   (dolist (chapter (cdr (assoc :chapters sequence)))
@@ -936,7 +1052,7 @@
      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
-(define-backend-function lw2-search-query (query)
+(define-backend-function lw2-search-query (query &key (indexes '("test_tags" "test_posts" "test_comments")))
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
@@ -948,7 +1064,7 @@
 	       ("Referer" . "https://www.greaterwrong.com/")
 	       ("Content-Type" . "application/json"))
     :content (json:encode-json-alist-to-string
-	      (alist "requests" (loop for index in '("test_tags" "test_posts" "test_comments")
+	      (alist "requests" (loop for index in indexes
 				   collect (alist "indexName" index
 						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
 								   (url-rewrite:url-encode query))))))

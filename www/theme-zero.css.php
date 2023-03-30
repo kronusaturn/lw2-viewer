@@ -676,17 +676,26 @@ h1.listing.own-post-listing {
 .contents-head {
 	font-weight: bold;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #999;
 	font-feature-settings: "tnum";
 }
-.post-body .contents a,
-.post-body .contents a:hover {
+.body-text .contents a,
+.body-text .contents a:hover {
 	border: none;
 }
-.post-body .contents a:hover {
+.body-text .contents a:hover {
 	text-decoration: underline;
 }
+
+.contents .toc-collapse-toggle-button {
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+	text-shadow: <?php echo $white_glow; ?>;
+}
+
 
 /*==================*/
 /* POSTS & COMMENTS */
@@ -1252,11 +1261,13 @@ h1.listing .edit-post-link:hover,
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #fff;
 	border-left: 1px solid #0040ff;
 	border-top: 1px solid #eee;
@@ -1273,6 +1284,13 @@ h1.listing .edit-post-link:hover,
 .posting-controls textarea:focus::-webkit-scrollbar-thumb {
 	background-color: #0040ff;
 	border-left: 2px solid #0040ff;
+	box-shadow: 
+		0 1px 0 0 #ddf inset,
+		0 0 0 1px #eee inset;
+}
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
+	background-color: #0040ff;
+	border-left: 1px solid #0040ff;
 	box-shadow: 
 		0 1px 0 0 #ddf inset,
 		0 0 0 1px #eee inset;
@@ -1613,6 +1631,31 @@ select {
 	border-radius: 4px;
 	border: 1px solid #cce;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 170, 0.75);
+	border: 1px solid rgba(7, 0, 238, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(7, 0, 238, 0.75);
+	color: #fff;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(7, 0, 238, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #888;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

@@ -155,6 +155,71 @@
               pretty-time
 	      (pretty-time-js)))))
 
+(defun collection-to-contents (collection &optional (heading-level 1) (used-anchors (make-hash-table :test 'equal)))
+  (alist-bind ((title (or string null)))
+	      collection
+	      (let ((subcollections (cdr
+				     (find-if (lambda (x) (member (car x) '(:books :sequences :chapters) :test #'eq))
+					      collection)))
+		    contents-head contents-tail)
+		(labels ((add-contents (c)
+			   (when c
+			     (if contents-head
+				 (setf (cdr contents-tail) c)
+				 (setf contents-head c))
+			     (setf contents-tail (last c)))))
+		  (cond
+		    ((and title (not (cdr (assoc :books collection))))
+		     (add-contents (list (list heading-level title (title-to-anchor title used-anchors))))
+		     (dolist (subcollection subcollections)
+		       (add-contents (collection-to-contents subcollection (1+ heading-level) used-anchors))))
+		    (:otherwise
+		     (dolist (subcollection subcollections)
+		       (add-contents (collection-to-contents subcollection heading-level used-anchors)))))
+		  contents-head))))
+
+(defun collection-to-html (collection &optional (heading-level 1) (used-anchors (make-hash-table :test 'equal)))
+  (alist-bind ((title (or string null))
+	       (subtitle (or string null))
+	       (number (or fixnum null))
+	       (contents list)
+	       (posts list))
+	      collection
+	      (let* ((subcollections (cdr
+				      (find-if (lambda (x) (member (car x) '(:books :sequences :chapters) :test #'eq))
+					       collection)))
+		     (html-body (cdr (assoc :html contents))))
+		(cond
+		  ((or html-body title posts)
+		   <section>
+		     (when (or html-body title)
+		       <div class="body-text sequence-text">
+		         (when title
+			   (with-html-stream-output (:stream stream)
+			     (format stream "<h~A id=\"~A\" class=\"sequence-chapter\">~@[~A. ~]~A</h~A>"
+				     heading-level
+				     (title-to-anchor title used-anchors)
+				     number
+				     (clean-text-to-html title)
+				     heading-level)))
+			 (when (assoc :books collection)
+			   (contents-to-html (collection-to-contents collection) 1 *html-output*))
+			 (when subtitle
+			   <div class="sequence-subtitle">(safe (clean-text-to-html subtitle))</div>)
+			 (when html-body
+			   (with-html-stream-output (:stream stream)
+			     (let ((*memoized-output-stream* stream)) (clean-html* html-body))))
+			 </div>)
+		     (if posts
+			 (dolist (post posts)
+			   (post-headline-to-html post))
+			 (dolist (subcollection subcollections)
+			   (collection-to-html subcollection (1+ heading-level) used-anchors)))
+		   </section>)
+		  (:otherwise
+		   (dolist (subcollection subcollections)
+		     (collection-to-html subcollection heading-level used-anchors)))))))
+
 (defun sequence-to-html (sequence)
   (labels ((contents-to-html (contents &key title subtitle number)
 	     (let ((html-body (cdr (assoc :html contents))))
@@ -231,7 +296,7 @@ signaled condition to *HTML-OUTPUT*."
 					 (return-from with-error-html-block nil))))
        (log-conditions (progn ,@body)))))
 
-(defun make-comment-parent-hash (comments)
+(defun make-comment-parent-hash-real (comments)
   (let ((existing-comment-hash (make-hash-table :test 'equal))
         (hash (make-hash-table :test 'equal)))
     (dolist (c comments)
@@ -259,6 +324,14 @@ signaled condition to *HTML-OUTPUT*."
 	      collecting (cons (cons :child-count (count-children c)) c))))
       (setf (gethash nil hash) (add-child-counts (gethash nil hash)))) 
     hash)) 
+
+(defparameter *comment-parent-hash-cache* (make-hash-table :test 'eq
+							   :weakness :value
+							   :synchronized t))
+
+(defun make-comment-parent-hash (comments)
+  (or (gethash comments *comment-parent-hash-cache*)
+      (setf (gethash comments *comment-parent-hash-cache*) (make-comment-parent-hash-real comments))))
 
 (defun comment-thread-to-html (out-stream emit-comment-item-fn)
   (format out-stream "<ul class=\"comment-thread\">")
@@ -362,7 +435,7 @@ signaled condition to *HTML-OUTPUT*."
 	    (:conversation
 	     (conversation-index-to-html out-stream x))
 	    (:post
-	     (post-headline-to-html x :need-auth need-auth :skip-section skip-section))
+	     (post-headline-to-html x :need-auth (or need-auth (cdr (assoc :draft x))) :skip-section skip-section))
 	    (:comment
 	     (comment-thread-to-html out-stream
 				     (lambda () (comment-item-to-html out-stream x :with-post-title t))))
@@ -773,7 +846,8 @@ signaled condition to *HTML-OUTPUT*."
 		 auth-token
 		 (cache-get "auth-token-to-userid" auth-token)
 		 (cache-get "auth-token-to-username" auth-token)))))
-      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*))))
+      (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
+	    (*enable-rate-limit* (if *current-userid* nil *enable-rate-limit*)))
 	(funcall fn)))))
 
 (defmethod call-with-site-context ((site ignore-list-site) (request (eql t)) fn)
@@ -861,7 +935,7 @@ signaled condition to *HTML-OUTPUT*."
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
-(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications hide-cov)
+(defun page-toolbar-to-html (&key title new-post new-conversation logout (rss t) ignore enable-push-notifications)
   (unless *preview*
     (let ((out-stream *html-output*)
 	  (liu (logged-in-userid)))
@@ -879,11 +953,6 @@ signaled condition to *HTML-OUTPUT*."
 	    (typecase new-conversation (string (values "Send private message" new-conversation)) (t "New conversation"))
 	  (format out-stream "<a class=\"new-private-message button\" href=\"/conversation~@[?to=~A~]\">~A</a>"
 		  to text)))
-      (when hide-cov
-	(let ((cov-pref (user-pref :hide-cov)))
-	  <form method="post">
-	  <button name="set-cov-pref" value=(if cov-pref 0 1)>("~:[Hide~;Show~] coronavirus posts" cov-pref)</button>
-	  </form>))
       (when (and new-post liu)
 	(format out-stream "<a class=\"new-post button\" href=\"/edit-post~@[?section=~A~]\" accesskey=\"n\" title=\"Create new post [n]\">New post</a>"
 		(typecase new-post (string new-post) (t nil))))
@@ -1010,20 +1079,25 @@ signaled condition to *HTML-OUTPUT*."
 					:extra-class html-class))
 	(or sort-string (user-pref pref)))))
 
+(defun handle-last-modified (last-modified)
+  (when last-modified
+    (let ((last-modified (max last-modified (load-time-value (get-universal-time)))))
+      (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified)
+	    (hunchentoot:header-out :vary) "cookie")
+      (hunchentoot:handle-if-modified-since last-modified))))
+
 (define-component view-index ()
   (:http-args ((view :member '(:all :new :frontpage :featured :alignment-forum :questions :nominations :reviews :events) :default :frontpage)
 	       before after
 	       (offset :type fixnum)
 	       (limit :type fixnum :default (user-pref :items-per-page))
-	       (set-cov-pref :request-type :post)
+	       (karma-threshold :type fixnum)
 	       &without-csrf-check))
-  (when set-cov-pref
-    (set-user-pref :hide-cov (string= set-cov-pref "1")))
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
-    (multiple-value-bind (posts total)
-	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string
-			 :hide-tags (if (user-pref :hide-cov) (list (get-slug-tagid "coronavirus"))))
+    (multiple-value-bind (posts total last-modified)
+	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string :karma-threshold karma-threshold)
+      (handle-last-modified last-modified)
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
 		  (view-items-index (firstn posts limit)
@@ -1032,8 +1106,7 @@ signaled condition to *HTML-OUTPUT*."
 				    :content-class (format nil "index-page ~(~A~)-index-page" view)
 				    :top-nav (lambda ()
 					       (page-toolbar-to-html :title page-title
-								     :new-post (if (eq view :meta) "meta" t)
-								     :hide-cov (typep *current-site* 'lesswrong-viewer-site))
+								     :new-post (if (eq view :meta) "meta" t))
 					       (funcall sort-widget))))))))
 
 (defmacro route-component (name lambda-list &rest args)
@@ -1316,6 +1389,8 @@ signaled condition to *HTML-OUTPUT*."
 					   else
 					   collect comment into normal-comments
 					   finally (return (values normal-comments nominations reviews)))
+				      (unless (or nominations reviews)
+					(setf normal-comments real-comments)) ;for caching
 				      (loop for (name comments open) in (list-cond ((or nominations nominations-open)
 										    (list "nomination" nominations nominations-open))
 										   ((or reviews reviews-open)
@@ -1396,15 +1471,14 @@ signaled condition to *HTML-OUTPUT*."
 	      (let ((vote (safe-decode-json vote-json)))
 		(multiple-value-bind (current-vote result)
 		    (do-lw2-vote auth-token target-type target vote)
-		  (alist-bind (vote-count base-score af af-base-score extended-score all-votes) result
+		  (alist-bind (vote-count base-score af af-base-score extended-score) result
 			      (let ((vote-buttons (vote-buttons base-score
 								:as-text t
 								:af-score (and af af-base-score)
 								:vote-count (+ vote-count (if (member (cdr (assoc :karma current-vote)) '(nil "neutral") :test #'equal)
 											      0
 											      1))
-								:extended-score extended-score
-								:all-votes all-votes))
+								:extended-score extended-score))
 				    (out (make-hash-table)))
 				(loop for (axis . axis-vote) in current-vote
 				   do (setf (gethash axis out) (list* axis-vote (gethash axis vote-buttons))))
@@ -1488,7 +1562,7 @@ signaled condition to *HTML-OUTPUT*."
 	   (cond
 	     (shortform (values "Shortform" "shortform" (if (logged-in-userid) (lambda () (comment-controls :standalone t)))))
 	     (t (values (case view (:alignment-forum "Alignment Forum recent comments") (t "Recent comments")) "allRecentComments" nil)))
-	 (multiple-value-bind (recent-comments total)
+	 (multiple-value-bind (recent-comments total last-modified)
 	     (if (or (not (eq index-type :recent-comments)) offset limit view (/= (user-pref :items-per-page) 20))
 		 (let ((*use-alignment-forum* (eq view :alignment-forum)))
 		   (lw2-graphql-query (lw2-query-string :comment :list
@@ -1498,6 +1572,7 @@ signaled condition to *HTML-OUTPUT*."
 							:context (if shortform :shortform :index)
 							:with-total want-total)))
 		 (get-recent-comments :with-total want-total))
+	   (handle-last-modified last-modified)
 	   (renderer ()
 	     (view-items-index recent-comments
 			       :title title
@@ -1547,6 +1622,11 @@ signaled condition to *HTML-OUTPUT*."
 														(if post-count (format nil " (~A)" post-count)))</a></li>))
   </ul>)
 
+(define-json-endpoint (view-user-autocomplete forum-site "/-user-autocomplete")
+    (request-method
+     (:get (q)
+	  (lw2-search-query q :indexes '("test_users"))))) 
+
 (define-json-endpoint (view-karma-vote-tag forum-site "/karma-vote/tag")
   (let ((auth-token *current-auth-token*))
     (request-method
@@ -1594,7 +1674,7 @@ signaled condition to *HTML-OUTPUT*."
 						 (when (typep *current-backend* 'backend-lw2-tags-comments)
 						   (finish-output *html-output*)
 						   (let ((*enable-voting* (not (null (logged-in-userid))))
-							 (comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "commentsOnTag" :tag-id tag-id)))))
+							 (comments (lw2-graphql-query (lw2-query-string :comment :list (alist :view "tagDiscussionComments" :tag-id tag-id)))))
 						     (output-comments *html-output* "comment" comments nil :replies-open t)))))))))
      (:post ()
        (schema-bind (:tag tag (tag-id))
@@ -1673,7 +1753,7 @@ signaled condition to *HTML-OUTPUT*."
                     (show-text (if (not (eq show :all)) (string-capitalize show)))
                     (title (format nil "~A~@['s ~A~]" display-name show-text))
                     (sort-type (case sort (:top :score) (:new :date) (:old :date-reverse))))
-	       (multiple-value-bind (items total)
+	       (multiple-value-bind (items total last-modified)
                  (case show
                    (:posts
 		    (get-user-page-items user-id :posts :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
@@ -1744,6 +1824,7 @@ signaled condition to *HTML-OUTPUT*."
 		      <p>This may mean your login token has expired or become invalid. You can try <a href="/login">logging in again</a>.</p>)))
 		   (t
 		    (get-user-page-items user-id :both :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type)))
+		 (handle-last-modified last-modified)
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
                        (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
                    (view-items-index interleave :title title
@@ -1975,7 +2056,7 @@ signaled condition to *HTML-OUTPUT*."
       (t
        (emit-rpw-page)))))
 
-(define-page view-sequences "/library"
+(define-page view-library "/library"
                             ((view :member '(:featured :community) :default :featured))
   (let ((sequences
 	 (lw2-graphql-query
@@ -2004,6 +2085,19 @@ signaled condition to *HTML-OUTPUT*."
 		  :title title
 		  :content-class "sequence-page")
 		 (sequence-to-html sequence)))))
+
+(define-component view-collection (collection-id) ()
+		  (let ((collection (get-collection collection-id)))
+		    (renderer ()
+			      (emit-page (out-stream :title (cdr (assoc :title collection)) :content-class "sequence-page collection-page")
+					 (collection-to-html collection)))))
+
+(define-component-routes lesswrong-viewer-site (view-sequences (standard-route :uri "/sequences") () (view-collection "oneQyj4pw77ynzwAF")))
+(define-component-routes lesswrong-viewer-site (view-codex (standard-route :uri "/codex") () (view-collection "2izXHCrmJ684AnZ5X")))
+(define-component-routes lesswrong-viewer-site (view-hpmor (standard-route :uri "/hpmor") () (view-collection "ywQvGBSojSQZTMpLh")))
+(define-component-routes ea-forum-viewer-site (view-handbook (standard-route :uri "/handbook") () (view-collection "MobebwWs2o86cS9Rd")))
+
+(define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
 
 (define-page view-archive (:regex "^/archive(?:/(\\d{4})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))(?:/(\\d{1,2})|/?(?:$|\\?.*$))"
                            (year :type (mod 10000))

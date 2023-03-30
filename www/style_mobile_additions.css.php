@@ -1255,6 +1255,17 @@ a.comment-parent-link::after {
 		margin: 1rem auto 1.5rem auto;
 		padding: 6px 12px 8px 12px;
 	}
+
+	#edit-post-form .textarea-container .autocomplete-container,
+	.comment-controls .textarea-container .autocomplete-container {
+		max-height: calc(50vh - 101px);
+		position: fixed;
+		top: 50vh;
+		left: 4px;
+		right: 4px;
+		width: unset;
+		z-index: 11002;
+	}
 }
 
 /*===================*/
@@ -1269,12 +1280,20 @@ a.comment-parent-link::after {
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.contents.collapsed {
+		overflow: hidden;
+		display: block;
+	}
 }
 @media only screen and (max-width: 520px) {
 	.contents {
 		max-width: 100%;
 		margin: 1em auto 0 auto;
 		display: table;
+	}
+	.contents.collapsed {
+		margin-bottom: 0;
+		display: block;
 	}
 	.contents-head {
 		font-size: 1.2em;

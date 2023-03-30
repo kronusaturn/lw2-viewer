@@ -509,6 +509,38 @@ Element.prototype.getCommentId = function() {
 	}
 }
 
+/*******/
+/* TOC */
+/*******/
+
+function setTOCCollapseState(collapsed = false) {
+	let TOC = query("nav.contents");
+	if (!TOC)
+		return;
+
+	TOC.classList.toggle("collapsed", collapsed);
+
+	let button = TOC.query(".toc-collapse-toggle-button");
+	button.innerHTML = collapsed ? "&#xf0fe;" : "&#xf146;";
+	button.title = collapsed ? "Expand table of contents" : "Collapse table of contents";
+}
+
+function injectTOCCollapseToggleButton() {
+	let TOC = document.currentScript.parentElement;
+	if (!TOC)
+		return;
+
+	TOC.insertAdjacentHTML("afterbegin", "<button type='button' class='toc-collapse-toggle-button'></button>");
+
+	let defaultTOCCollapseState = (window.innerWidth <= 520) ? "true" : "false";
+	setTOCCollapseState((localStorage.getItem("toc-collapsed") ?? defaultTOCCollapseState) == "true");
+
+	TOC.query(".toc-collapse-toggle-button").addActivateEvent(GW.tocCollapseToggleButtonClicked = (event) => {
+		setTOCCollapseState(TOC.classList.contains("collapsed") == false);
+		localStorage.setItem("toc-collapsed", TOC.classList.contains("collapsed"));
+	});
+}
+
 /***********************************/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /***********************************/

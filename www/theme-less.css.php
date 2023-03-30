@@ -1340,11 +1340,21 @@ h1.listing.own-post-listing {
 	margin-top: 1em;
 	background-color: #fff;
 }
-.post-body .contents ul {
+.body-text .contents ul {
 	font-size: 0.8125em;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #bbb;
+}
+
+.contents .toc-collapse-toggle-button {
+	color: #ddd;
+	font-weight: 300;
+	box-shadow: 0 0 0 1px transparent;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #bbb;
+	text-shadow: <?php echo $white_glow; ?>;
 }
 
 /*==================*/
@@ -2180,18 +2190,21 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #fff;
 }
 .posting-controls textarea::-webkit-scrollbar-thumb {
 	background-color: #eee;
 	box-shadow: 0 0 0 1px #fff inset;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
 	background-color: #c4dbc4;
 	box-shadow: 0 0 0 1px #fff inset;
 }
@@ -2620,6 +2633,33 @@ strong, b {
 	border-radius: 4px;
 	border: 1px solid #cce;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 255, 0.75);
+	border: 1px solid rgba(196, 219, 196, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(196, 219, 196, 0.75);
+	color: #fff;
+	padding: 4px 8px 0 8px;
+	line-height: 1.5;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(196, 219, 196, 0.35);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #999;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

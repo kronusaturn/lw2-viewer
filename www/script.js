@@ -108,8 +108,8 @@ function urlEncodeQuery(params) {
 }
 
 function handleAjaxError(event) {
-	if(event.target.getResponseHeader("Content-Type") === "application/json") alert("Error: " + JSON.parse(event.target.responseText)["error"]);
-	else alert("Error: Something bad happened :(");
+	if(event.target.getResponseHeader("Content-Type") === "application/json") console.log("doAjax error: " + JSON.parse(event.target.responseText)["error"]);
+	else console.log("doAjax error: Something bad happened :(");
 }
 
 function doAjax(params) {
@@ -300,9 +300,39 @@ Element.prototype.addTextareaFeatures = function() {
 			hideMarkdownHintsBox();
 			query(".guiedit-mobile-help-button").removeClass("active");
 		}
+		// User mentions autocomplete
+		if(!userAutocomplete &&
+		   textarea.value.charAt(textarea.selectionStart - 1) === "@" &&
+		   (textarea.selectionStart === 1 ||
+		    !textarea.value.charAt(textarea.selectionStart - 2).match(/[a-zA-Z0-9]/))) {
+			beginAutocompletion(textarea, textarea.selectionStart);
+		}
 	}, false);
+	textarea.addEventListener("click", (event) => {
+		if(!userAutocomplete) {
+			let start = textarea.selectionStart, end = textarea.selectionEnd;
+			let value = textarea.value;
+			if (start <= 1) return;
+			for (; value.charAt(start - 1) != "@"; start--) {
+				if (start <= 1) return;
+				if (value.charAt(start - 1) == " ") return;
+			}
+			for(; end < value.length && value.charAt(end) != " "; end++) { true }
+			beginAutocompletion(textarea, start, end);
+		}
+	});
+			
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
+	textarea.addEventListener("keydown", (event) => {
+		// Special case for alt+4
+		// Generalize this before adding more.
+		if(event.altKey && event.key === '4') {
+			insertMarkup(event, "$", "$", "LaTeX formula");
+			event.stopPropagation();
+			event.preventDefault();
+		}
+	});
 
 	let form = textarea.closest("form");
 	if(form) form.addEventListener("submit", event => { textarea.value = MarkdownFromHTML(textarea.value)});
@@ -3168,15 +3198,21 @@ function sortComments(mode) {
 }
 function commentKarmaValue(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = query(commentOrSelector);
-	return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").firstChild.textContent));
+	try {
+		return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").firstChild.textContent));
+	} catch(e) {return null};
 }
 function commentDate(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = query(commentOrSelector);
-	return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".date").dataset.jsDate));
+	try {
+		return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".date").dataset.jsDate));
+	} catch(e) {return null};
 }
 function commentVoteCount(commentOrSelector) {
 	if (typeof commentOrSelector == "string") commentOrSelector = query(commentOrSelector);
-	return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").title.split(" ")[0]));
+	try {
+		return GW.commentValues[commentOrSelector.id] || (GW.commentValues[commentOrSelector.id] = parseInt(commentOrSelector.query(".karma-value").title.split(" ")[0]));
+	} catch(e) {return null};
 }
 
 function injectCommentsSortModeSelector() {
@@ -4437,14 +4473,6 @@ function mainInitializer() {
 	// Focus the textarea.
 	queryAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (GW.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
 
-	// Clean up ToC
-	queryAll(".contents-list li a").forEach(tocLink => {
-		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+\. /, '');
-		tocLink.innerText = tocLink.innerText.replace(/^[0-9]+: /, '');
-		tocLink.innerText = tocLink.innerText.replace(/^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})\. /i, '');
-		tocLink.innerText = tocLink.innerText.replace(/^[A-Z]\. /, '');
-	});
-
 	// If we're on a comment thread page...
 	if (query(".comments") != null) {
 		// Add comment-minimize buttons to every comment.
@@ -4848,14 +4876,8 @@ function insertMarkup(event) {
 	}
 
 	// Update textarea contents.
-	// The document.execCommand API is broken in Firefox 
-	// ( https://bugzilla.mozilla.org/show_bug.cgi?id=1220696 ), but using it
-	// allows native undo/redo to work; so we enable it in other browsers.
-	if (GW.isFirefox) {
-		textarea.value = textarea.value.substring(0, p0) + str + textarea.value.substring(p1);
-	} else {
-		document.execCommand("insertText", false, str);
-	}
+	document.execCommand("insertText", false, str);
+
 	// Expand textarea, if needed.
 	expandTextarea(textarea);
 
@@ -4880,7 +4902,7 @@ GW.guiEditButtons = [
 	[ 'horizontal-rule', 'Horizontal rule', '', '\\n\\n---\\n\\n', '', '', '&#xf068;' ],
 	[ 'inline-code', 'Inline code', '', '`', '`', 'Code', '&#xf121;' ],
 	[ 'code-block', 'Code block', '', '```\\n', '\\n```', 'Code', '&#xf1c9;' ],
-	[ 'formula', 'LaTeX', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
+	[ 'formula', 'LaTeX [alt+4]', '', '$', '$', 'LaTeX formula', '&#xf155;' ],
 	[ 'spoiler', 'Spoiler block', '', '::: spoiler\\n', '\\n:::', 'Spoiler text', '&#xf2fc;' ]
 ];
 
@@ -4914,7 +4936,199 @@ function hyperlink(text, startpos) {
 	return [ "[" + link_text + "](" + url + ")", startpos, endpos ];
 }
 
+/******************/
+/* SERVICE WORKER */
+/******************/
+
 if(navigator.serviceWorker) {
 	navigator.serviceWorker.register('/service-worker.js');
 	setCookie("push", "t");
+}
+
+/*********************/
+/* USER AUTOCOMPLETE */
+/*********************/
+
+function zLowerUIElements() {
+	let uiElementsContainer = query("#ui-elements-container");
+	if (uiElementsContainer)
+		uiElementsContainer.style.zIndex = "1";
+}
+
+function zRaiseUIElements() {
+	let uiElementsContainer = query("#ui-elements-container");
+	if (uiElementsContainer)
+		uiElementsContainer.style.zIndex = "";
+}
+
+var userAutocomplete = null;
+
+function abbreviatedInterval(date) {
+	let seconds = Math.floor((new Date() - date) / 1000);
+	let days = Math.floor(seconds / (60 * 60 * 24));
+	let years = Math.floor(days / 365);
+	if (years)
+		return years + "y";
+	else if (days)
+		return days + "d";
+	else
+		return "today";
+}
+
+function beginAutocompletion(control, startIndex, endIndex) {
+	if(userAutocomplete) abortAutocompletion(userAutocomplete);
+
+	let complete = { control: control,
+			 abortController: new AbortController(),
+			 fetchAbortController: new AbortController(),
+			 container: document.createElement("div") };
+
+	endIndex = endIndex || control.selectionEnd;
+	let valueLength = control.value.length;
+
+	complete.container.className = "autocomplete-container "
+								 + "right "
+								 + (window.innerWidth > 1280
+								 	? "outside"
+								 	: "inside");
+	control.insertAdjacentElement("afterend", complete.container);
+	zLowerUIElements();
+
+	let makeReplacer = (userSlug, displayName) => {
+		return () => {
+			let replacement = '[@' + displayName + '](/users/' + userSlug + '?mention=user)';
+			control.value = control.value.substring(0, startIndex - 1) +
+				replacement +
+				control.value.substring(endIndex);
+			abortAutocompletion(complete);
+			complete.control.selectionStart = complete.control.selectionEnd = startIndex + -1 + replacement.length;
+			complete.control.focus();
+		};
+	};
+
+	let switchHighlight = (newHighlight) => {
+		if (!newHighlight)
+			return;
+
+		complete.highlighted.removeClass("highlighted");
+		newHighlight.addClass("highlighted");
+		complete.highlighted = newHighlight;
+
+		//	Scroll newly highlighted item into view, if need be.
+		if (  complete.highlighted.offsetTop + complete.highlighted.offsetHeight 
+			> complete.container.scrollTop + complete.container.clientHeight) {
+			complete.container.scrollTo(0, complete.highlighted.offsetTop + complete.highlighted.offsetHeight - complete.container.clientHeight);
+		} else if (complete.highlighted.offsetTop < complete.container.scrollTop) {
+			complete.container.scrollTo(0, complete.highlighted.offsetTop);
+		}
+	};
+	let highlightNext = () => {
+		switchHighlight(complete.highlighted.nextElementSibling ?? complete.container.firstElementChild);
+	};
+	let highlightPrev = () => {
+		switchHighlight(complete.highlighted.previousElementSibling ?? complete.container.lastElementChild);
+	};
+
+	let updateCompletions = () => {
+		let fragment = control.value.substring(startIndex, endIndex);
+
+		fetch("/-user-autocomplete?" + urlEncodeQuery({q: fragment}),
+		      {signal: complete.fetchAbortController.signal})
+			.then((res) => res.json())
+			.then((res) => {
+				if(res.error) return;
+				if(res.length == 0) return abortAutocompletion(complete);
+
+				complete.container.innerHTML = "";
+				res.forEach(entry => {
+					let entryContainer = document.createElement("div");
+					[ [ entry.displayName, "name" ],
+					  [ abbreviatedInterval(Date.parse(entry.createdAt)), "age" ],
+					  [ (entry.karma || 0) + " karma", "karma" ]
+					].forEach(x => {
+						let e = document.createElement("span");
+						e.append(x[0]);
+						e.className = x[1];
+						entryContainer.append(e);
+					});
+					entryContainer.onclick = makeReplacer(entry.slug, entry.displayName);
+					complete.container.append(entryContainer);
+				});
+				complete.highlighted = complete.container.children[0];
+				complete.highlighted.classList.add("highlighted");
+				complete.container.scrollTo(0, 0);
+				})
+			.catch((e) => {});
+	};
+
+	document.body.addEventListener("click", (event) => {
+		if (!complete.container.contains(event.target)) {
+			abortAutocompletion(complete);
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}, {signal: complete.abortController.signal,
+	    capture: true});
+	
+	control.addEventListener("keydown", (event) => {
+		switch (event.key) {
+		case "Escape":
+			abortAutocompletion(complete);
+			event.preventDefault();
+			return;
+		case "ArrowUp":
+			highlightPrev();
+			event.preventDefault();
+			return;
+		case "ArrowDown":
+			highlightNext();
+			event.preventDefault();
+			return;
+		case "Tab":
+			if (event.shiftKey)
+				highlightPrev();
+			else
+				highlightNext();
+			event.preventDefault();
+			return;
+		case "Enter":
+			complete.highlighted.onclick();
+			event.preventDefault();
+			return;
+		}
+	}, {signal: complete.abortController.signal});
+
+	control.addEventListener("selectionchange", (event) => {
+		if (control.selectionStart < startIndex ||
+		    control.selectionEnd > endIndex) {
+			abortAutocompletion(complete);
+		}
+	}, {signal: complete.abortController.signal});
+	
+	control.addEventListener("input", (event) => {
+		complete.fetchAbortController.abort();
+		complete.fetchAbortController = new AbortController();
+
+		endIndex += control.value.length - valueLength;
+		valueLength = control.value.length;
+
+		if (endIndex < startIndex) {
+			abortAutocompletion(complete);
+			return;
+		}
+		
+		updateCompletions();
+	}, {signal: complete.abortController.signal});
+
+	userAutocomplete = complete;
+
+	if(startIndex != endIndex) updateCompletions();
+}
+
+function abortAutocompletion(complete) {
+	complete.fetchAbortController.abort();
+	complete.abortController.abort();
+	complete.container.remove();
+	userAutocomplete = null;
+	zRaiseUIElements();
 }

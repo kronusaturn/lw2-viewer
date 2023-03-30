@@ -1438,6 +1438,7 @@ h1.listing + .post-meta .read-time {
 }
 
 section {
+	max-width: 100%;
 	margin-top: 2em;
 	margin-bottom: 4em;
 }
@@ -1461,6 +1462,10 @@ article {
 	border-bottom: 1px solid #575756;
 	padding-bottom: 1em;
 	margin-bottom: 0;
+}
+
+#content.sequence-page h1 {
+	margin-top: 0.1em;
 }
 
 /**************/
@@ -1750,6 +1755,7 @@ article {
 	margin: unset;
 }
 
+
 /*********************/
 /* TABLE OF CONTENTS */
 /*********************/
@@ -1764,26 +1770,30 @@ article {
 	z-index: 1;
 }
 
+.collection-page .contents {
+	margin-top: 0;
+}
+
 .contents-head {
 	text-align: center;
 	margin-bottom: 0.25em;
 }
 
-.post-body .contents ul {
+.body-text .contents ul {
 	list-style-type: none;
 	margin: 0 0 0 0.5em;
 	counter-reset: toc-item-1 toc-item-2 toc-item-3;
 	padding-left: 1em;
 	font-size: 0.75em;
 }
-.post-body .contents li {
+.body-text .contents li {
 	margin: 0.15em 0 0.3em 1em;
 	text-align: left;
 	text-indent: -1em;
 	line-height: 1.2;
 	position: relative;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	position: absolute;
 	width: 3em;
 	display: block;
@@ -1843,6 +1853,42 @@ article {
 .contents .toc-item-6 {
 	display: none;
 }
+
+.contents.collapsed {
+	margin-bottom: 0.25em;
+	padding-left: 1em;
+	padding-right: 1.75em;
+	
+}
+.contents.collapsed .contents-head {
+	margin: 0;
+}
+.contents.collapsed .contents-list {
+	display: none;
+}
+
+.contents .toc-collapse-toggle-button {
+	position: absolute;
+	top: 1px;
+	right: 1.5px;
+	font-family: "Font Awesome", "Font Awesome 5 Free";
+	font-weight: 900;
+	font-size: 1.5rem;
+	padding: 0;
+}
+.contents .toc-collapse-toggle-button:active {
+	transform: translateX(1px) translateY(1px);
+}
+
+.contents.collapsed .toc-collapse-toggle-button {
+	width: calc(100% - 3px);
+	height: calc(100% - 2px);
+	background-color: transparent;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
 
 /********************/
 /* POSTS & COMMENTS */
@@ -3335,16 +3381,20 @@ input[type='submit'] {
 .post-body h6 {
 	font-size: 1em;
 }
-.post-body h4 {
+.post-body h4,
+.body-text h4 {
 	font-size: 1.2em;
 }
-.post-body h3 {
+.post-body h3,
+.body-text h3 {
 	font-size: 1.4em;
 }
-.post-body h2 {
+.post-body h2,
+.body-text h2 {
 	font-size: 1.75em;
 }
-.post-body h1 {
+.post-body h1,
+.body-text h1 {
 	font-size: 2.1em;
 }
 
@@ -4424,6 +4474,118 @@ li {
 .page-list-index li > a:last-child {
 	margin-bottom: 1em;
 }
+
+
+/*****************/
+/* USER MENTIONS */
+/*****************/
+
+.textarea-container .autocomplete-container {
+	position: absolute;
+	overflow-y: auto;
+	font-size: 1.125rem;
+	cursor: default;
+	backdrop-filter: blur(2px);
+	width: 360px;
+}
+.textarea-container .autocomplete-container:empty {
+	display: none;
+}
+
+@media only screen and (min-width: 521px) {
+	.textarea-container .autocomplete-container.inside {
+		max-height: calc(100% - 36px);
+		top: 32px;
+	}
+	.textarea-container .autocomplete-container.outside {
+		max-height: calc(100% - 28px);
+		top: 28px;
+		z-index: 10001;
+	}
+
+	.textarea-container .autocomplete-container.inside.right {
+		right: 18px;
+	}
+	.textarea-container .autocomplete-container.inside.left {
+		left: 18px;
+	}
+	.textarea-container .autocomplete-container.outside.right {
+		left: calc(100% + 3px);
+	}
+	.textarea-container .autocomplete-container.outside.left {
+		right: calc(100% + 3px);
+	}
+
+	head.content-width-normal + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (900px - 40px * 2)) / 2);
+	}
+	head.content-width-wide + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((100vw - (1150px - 40px * 2)) / 2);
+	}
+	head.content-width-fluid + body .textarea-container .autocomplete-container.outside {
+		max-width: calc((300px + 40px * 2) / 2);
+	}
+}
+
+.textarea-container .autocomplete-container div {
+	padding: 2px 8px 0 8px;
+	white-space: nowrap;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.textarea-container .autocomplete-container div span.name {
+	flex: 1 1 auto;
+	width: calc(100% - 9em);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.textarea-container .autocomplete-container div span.name:hover {
+	overflow: visible;
+	z-index: 1;
+}
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	font-size: 0.9em;
+	text-align: right;
+}
+.textarea-container .autocomplete-container div span.age {
+	flex: 0 0 3em;
+}
+.textarea-container .autocomplete-container div span.karma {
+	flex: 0 0 6em;
+}
+
+
+/***************/
+/* COLLECTIONS */
+/***************/
+
+h2.sequence-chapter,
+h3.sequence-chapter,
+h4.sequence-chapter {
+	text-align: center;
+}
+h2.sequence-chapter::before,
+h3.sequence-chapter::before,
+h4.sequence-chapter::before {
+	display: block;
+	clear: both;
+	margin: 1.5em 0 0.75em 0;
+	font-style: normal;
+	font-weight: normal;
+	font-family: 'Concourse', 'a_Avante', 'GW-Symbols';
+}
+h2.sequence-chapter::before {
+	content: '\25A3';
+}
+h3.sequence-chapter::before {
+	content: '\25AA\2004\25AA';
+}
+h4.sequence-chapter::before {
+	content: '\00B7\2004\00B7\2004\00B7';
+}
+
 
 /*******************/
 /* ALIGNMENT FORUM */
@@ -5936,6 +6098,17 @@ a.comment-parent-link::after {
 		margin: 1rem auto 1.5rem auto;
 		padding: 6px 12px 8px 12px;
 	}
+
+	#edit-post-form .textarea-container .autocomplete-container,
+	.comment-controls .textarea-container .autocomplete-container {
+		max-height: calc(50vh - 101px);
+		position: fixed;
+		top: 50vh;
+		left: 4px;
+		right: 4px;
+		width: unset;
+		z-index: 11002;
+	}
 }
 
 /*===================*/
@@ -5950,12 +6123,20 @@ a.comment-parent-link::after {
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.contents.collapsed {
+		overflow: hidden;
+		display: block;
+	}
 }
 @media only screen and (max-width: 520px) {
 	.contents {
 		max-width: 100%;
 		margin: 1em auto 0 auto;
 		display: table;
+	}
+	.contents.collapsed {
+		margin-bottom: 0;
+		display: block;
 	}
 	.contents-head {
 		font-size: 1.2em;
@@ -6861,16 +7042,24 @@ h1.listing.own-post-listing {
 .contents-head {
 	font-weight: bold;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #575756;
 	font-feature-settings: "tnum";
 }
-.post-body .contents a,
-.post-body .contents a:hover {
+.body-text .contents a,
+.body-text .contents a:hover {
 	border: none;
 }
-.post-body .contents a:hover {
+.body-text .contents a:hover {
 	text-decoration: underline;
+}
+
+.contents .toc-collapse-toggle-button {
+	color: #2c2c2c;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #484848;
+	text-shadow: 0 0 1px #000, 0 0 3px #000, 0 0 5px #000;
 }
 
 /*==================*/
@@ -7446,16 +7635,19 @@ div.comment-child-links a {
 
 /*= Scroll bars =*/
 
-.posting-controls textarea::-webkit-scrollbar {
+.posting-controls textarea::-webkit-scrollbar,
+.textarea-container .autocomplete-container::-webkit-scrollbar {
 	width: 16px;
 	background-color: transparent;
 }
-.posting-controls textarea::-webkit-scrollbar-track {
+.posting-controls textarea::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	background-color: #131313;
 	border-left: 1px solid #484848;
 	border-top: 1px solid #131313;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-track {
+.posting-controls textarea:focus::-webkit-scrollbar-track,
+.textarea-container .autocomplete-container::-webkit-scrollbar-track {
 	border-left: 1px solid #0cc800;
 	border-top: 1px solid #1d1f00;
 }
@@ -7464,7 +7656,8 @@ div.comment-child-links a {
 	box-shadow: 0 0 0 1px #131313 inset;
 	border-left: 1px solid #484848;
 }
-.posting-controls textarea:focus::-webkit-scrollbar-thumb {
+.posting-controls textarea:focus::-webkit-scrollbar-thumb,
+.textarea-container .autocomplete-container::-webkit-scrollbar-thumb {
 	border-left: 1px solid #0cc800;
 	background-color: #40a800;
 	box-shadow: 
@@ -7838,6 +8031,31 @@ select {
 	border-radius: 4px;
 	border: 1px solid #282c11;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(0, 3, 64, 0.75);
+	border: 1px solid rgba(10, 200, 0, 0.75);
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(10, 200, 0, 0.75);
+	color: #000;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(10, 200, 0, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #666;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */

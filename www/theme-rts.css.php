@@ -827,25 +827,32 @@ h1.listing.own-post-listing {
 .contents a::after {
 	display: none;
 }
-.post-body .contents ul {
+.body-text .contents ul {
 	margin: 0 0.5em;
 	padding: 0 1em;
 }
-.post-body .contents a,
-.post-body .contents a:visited {
+.body-text .contents a,
+.body-text .contents a:visited {
 	color: #690010;
 	font-weight: 600;
 }
-.post-body .contents a:hover {
+.body-text .contents a:hover {
 	color: #690010;
 	text-shadow: 
 		0px 0px 0.5px #ff987b, 
 		0px 0px 1px #c05651;
 	border: none;
 }
-.post-body .contents li::before {
+.body-text .contents li::before {
 	color: #999;
 	font-feature-settings: 'onum';
+}
+
+.contents .toc-collapse-toggle-button {
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
 }
 
 /*==================*/
@@ -1745,9 +1752,9 @@ input[type='submit']:active {
 	font-style: normal;
 }
 .post-body h1:first-child::before,
-.post-body .contents + h1::before,
+.body-text .contents + h1::before,
 .post-body h2:first-child::before,
-.post-body .contents + h2::before {
+.body-text .contents + h2::before {
 	content: "";
 }
 
@@ -1917,6 +1924,37 @@ select {
 	border-radius: 4px;
 	border: 1px solid #cce;
 }
+
+
+/*===============*/
+/* USER MENTIONS */
+/*===============*/
+
+.textarea-container .autocomplete-container {
+	background-color: rgba(255, 255, 170, 0.75);
+	border: 1px solid rgba(136, 136, 136, 0.75);
+	font-weight: 300;
+}
+
+.textarea-container .autocomplete-container div.highlighted {
+	background-color: rgba(136, 136, 136, 0.75);
+	color: #fff;
+}
+
+.textarea-container .autocomplete-container div:not(.highlighted):hover {
+	background-color: rgba(136, 136, 136, 0.25);
+}
+
+.textarea-container .autocomplete-container div span.age,
+.textarea-container .autocomplete-container div span.karma {
+	color: #888;
+}
+
+.textarea-container .autocomplete-container div.highlighted span.age,
+.textarea-container .autocomplete-container div.highlighted span.karma {
+	color: #ddd;
+}
+
 
 /*=================*/
 /* ALIGNMENT FORUM */
