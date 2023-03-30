@@ -289,7 +289,7 @@
   (backend-lw2-modernized
    (values
     (let ((x (first value)))
-      (if (member (car x) '(:result :results))
+      (if (member (car x) '(:result :results :total-count))
 	  (cdr x)
 	  x))
     (let ((x (second value)))
