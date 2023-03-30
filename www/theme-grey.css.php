@@ -804,6 +804,14 @@ h1.listing.own-post-listing {
 	font-feature-settings: "tnum";
 }
 
+.contents .toc-collapse-toggle-button {
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+	text-shadow: <?php echo $white_glow; ?>;
+}
+
 /*=================*/
 /* POST NAVIGATION */
 /*=================*/

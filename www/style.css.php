@@ -1672,6 +1672,7 @@ article {
 	margin: unset;
 }
 
+
 /*********************/
 /* TABLE OF CONTENTS */
 /*********************/
@@ -1769,6 +1770,42 @@ article {
 .contents .toc-item-6 {
 	display: none;
 }
+
+.contents.collapsed {
+	margin-bottom: 0.25em;
+	padding-left: 1em;
+	padding-right: 1.75em;
+	
+}
+.contents.collapsed .contents-head {
+	margin: 0;
+}
+.contents.collapsed .contents-list {
+	display: none;
+}
+
+.contents .toc-collapse-toggle-button {
+	position: absolute;
+	top: 1px;
+	right: 1.5px;
+	font-family: "Font Awesome", "Font Awesome 5 Free";
+	font-weight: 900;
+	font-size: 1.5rem;
+	padding: 0;
+}
+.contents .toc-collapse-toggle-button:active {
+	transform: translateX(1px) translateY(1px);
+}
+
+.contents.collapsed .toc-collapse-toggle-button {
+	width: calc(100% - 3px);
+	height: calc(100% - 2px);
+	background-color: transparent;
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
 
 /********************/
 /* POSTS & COMMENTS */

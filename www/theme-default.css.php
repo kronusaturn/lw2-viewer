@@ -887,6 +887,14 @@ h1.listing.own-post-listing {
 	text-decoration: underline;
 }
 
+.contents .toc-collapse-toggle-button {
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+	text-shadow: <?php echo $white_glow; ?>;
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/

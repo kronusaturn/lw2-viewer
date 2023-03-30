@@ -1207,12 +1207,20 @@ a.comment-parent-link::after {
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.contents.collapsed {
+		overflow: hidden;
+		display: block;
+	}
 }
 @media only screen and (max-width: 520px) {
 	.contents {
 		max-width: 100%;
 		margin: 1em auto 0 auto;
 		display: table;
+	}
+	.contents.collapsed {
+		margin-bottom: 0;
+		display: block;
 	}
 	.contents-head {
 		font-size: 1.2em;

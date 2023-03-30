@@ -813,6 +813,14 @@ h1.listing.own-post-listing {
 	font-feature-settings: "tnum";
 }
 
+.contents .toc-collapse-toggle-button {
+	font-size: 1.25em;
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/

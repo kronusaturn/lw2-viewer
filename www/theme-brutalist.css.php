@@ -663,6 +663,14 @@ h1.listing.own-post-listing {
 	font-feature-settings: "tnum";
 }
 
+.contents .toc-collapse-toggle-button {
+	border: none;
+	color: #ccc;
+}
+.contents .toc-collapse-toggle-button:hover {
+	color: #aaa;
+}
+
 /*==================*/
 /* POSTS & COMMENTS */
 /*==================*/
