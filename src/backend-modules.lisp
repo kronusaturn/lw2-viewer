@@ -7,9 +7,12 @@
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
     #:backend-token-login
+    #:backend-password-login
     #:backend-websocket-login
     #:backend-passport-js-login
+    #:backend-oauth2.0-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
+    #:oauth2.0-login-uri #:oauth2.0-client-id #:oauth2.0-client-secret
     #:backend-feed-crossposts
     #:backend-q-and-a #:backend-related-questions
     #:backend-alignment-forum
@@ -54,11 +57,20 @@
 (defclass backend-token-login (backend-base) ()
   (:metaclass backend-class))
 
-(defclass backend-websocket-login (backend-token-login)
+(defclass backend-password-login (backend-base) ()
+  (:metaclass backend-class))
+
+(defclass backend-websocket-login (backend-token-login backend-password-login)
   ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string))
   (:metaclass backend-class))
 
-(defclass backend-passport-js-login (backend-token-login) ()
+(defclass backend-passport-js-login (backend-token-login backend-password-login) ()
+  (:metaclass backend-class))
+
+(defclass backend-oauth2.0-login (backend-token-login)
+  ((oauth2.0-login-uri :accessor oauth2.0-login-uri :initarg :oauth2.0-login-uri :type simple-string)
+   (oauth2.0-client-id :accessor oauth2.0-client-id :initarg :oauth2.0-client-id :type simple-string)
+   (oauth2.0-client-secret :accessor oauth2.0-client-secret :initarg :oauth2.0-client-secret :type simple-string))
   (:metaclass backend-class))
 
 (defclass backend-algolia-search (backend-base)
@@ -133,7 +145,7 @@
 		       backend-magnum-crossposts) ()
   (:metaclass backend-class))
 
-(defclass backend-ea-forum (backend-passport-js-login
+(defclass backend-ea-forum (backend-oauth2.0-login
 			    backend-lw2-modernized
 			    backend-lw2-legacy
 			    backend-lw2-misc-features

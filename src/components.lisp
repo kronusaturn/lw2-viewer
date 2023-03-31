@@ -3,6 +3,7 @@
   (:export
    #:standard-component #:prepare-function
    #:make-binding-form
+   #:with-http-args
    #:&without-csrf-check
    #:wrap-prepare-code
    #:find-component #:delete-component #:define-component #:renderer
@@ -68,6 +69,9 @@
        (declare ,.(nreverse additional-declarations))
        ,.(nreverse additional-preamble)
        (block nil ,@body))))
+
+(defmacro with-http-args (http-args &body body)
+  (make-binding-form http-args body))
 
 (defun wrap-prepare-code (http-args lambda-list body)
   (with-gensyms (renderer-callback)

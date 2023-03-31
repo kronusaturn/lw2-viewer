@@ -4,7 +4,8 @@
   (:export
     #:*sites*
     #:site #:forum-site #:wiki-site
-    #:login-site #:shortform-site #:ignore-list-site
+    #:login-site #:basic-login-site #:oidc-login-site
+    #:shortform-site #:ignore-list-site
     #:alternate-frontend-site #:lw2-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
