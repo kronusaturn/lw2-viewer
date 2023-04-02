@@ -1370,6 +1370,8 @@ signaled condition to *HTML-OUTPUT*."
 				(let* ((real-comments (get-post-comments post-id))
 				       (answers (when (cdr (assoc :question post))
 						  (get-post-answers post-id)))
+				       (debate-responses (when (cdr (assoc :debate post))
+							   (get-post-debate-responses post-id)))
 				       (posted-at (and (typep *current-backend* 'backend-lw2)
 						       (cdr (assoc :posted-at post))))
 				       (posted-timestamp (and posted-at (local-time:parse-timestring posted-at)))
@@ -1395,6 +1397,8 @@ signaled condition to *HTML-OUTPUT*."
 										    (list "nomination" nominations nominations-open))
 										   ((or reviews reviews-open)
 										    (list "review" reviews reviews-open))
+										   ((cdr (assoc :debate post))
+										    (list "debate-responses" debate-responses nil))
 										   ((cdr (assoc :question post))
 										    (list "answer" answers t))
 										   (t

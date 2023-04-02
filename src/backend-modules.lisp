@@ -15,6 +15,7 @@
     #:oauth2.0-login-uri #:oauth2.0-client-id #:oauth2.0-client-secret
     #:backend-feed-crossposts
     #:backend-q-and-a #:backend-related-questions
+    #:backend-debates
     #:backend-alignment-forum
     #:backend-events
     #:backend-shortform
@@ -86,6 +87,9 @@
 (defclass backend-related-questions (backend-graphql) ()
   (:metaclass backend-class))
 
+(defclass backend-debates (backend-graphql) ()
+  (:metaclass backend-class))
+
 (defclass backend-backlinks (backend-lmdb-cache) ()
   (:metaclass backend-class))
 
@@ -134,6 +138,7 @@
 		       backend-algolia-search
 		       backend-q-and-a
 		       backend-related-questions
+		       backend-debates
 		       backend-alignment-forum
 		       backend-events
 		       backend-feed-crossposts

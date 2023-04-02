@@ -21,7 +21,7 @@
 	   #:get-tag-posts
 	   #:get-post-tag-votes #:get-tag-post-votes
 	   #:get-slug-tagid
-	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers
+	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-debate-responses
 	   #:get-post-comments-votes
 	   #:get-tag-comments-votes
 	   #:get-recent-comments #:get-recent-comments-json
@@ -842,6 +842,19 @@
 		  answers
 		  (get-post-answer-replies post-id answers)))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
+
+(define-cache-database 'backend-debates
+    "post-debate-responses-json" "post-debate-responses-json-meta")
+
+(define-backend-function get-post-debate-responses (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
+  (backend-base
+   (declare (ignore post-id revalidate force-revalidate))
+   nil)
+  (backend-debates
+   (let ((fn (lambda ()
+	       (comments-list-to-graphql-json
+		(get-post-comments-list post-id "debateResponses")))))
+     (lw2-graphql-query-timeout-cached fn "post-debate-responses-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
 (define-backend-function get-collection (collection-id)
   (backend-graphql
