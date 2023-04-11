@@ -233,6 +233,189 @@ function doIfAllowed(f, passHolder, passName, releaseImmediately = false) {
 }
 
 
+/*******************************************************************************/
+/*  Create and return a DocumentFragment containing the given content.
+
+    The content can be any of the following (yielding the listed return value):
+
+    null
+        an empty DocumentFragment
+
+    a DocumentFragment
+        a DocumentFragment containing the given DocumentFragment’s children
+
+    a string
+        a DocumentFragment containing the HTML content that results from parsing
+        the string
+
+    a Node
+        a DocumentFragment containing the Node
+
+    a NodeList
+        a DocumentFragment containing the nodes
+ */
+function newDocument(content) {
+    let docFrag = new DocumentFragment();
+
+    if (content == null)
+        return docFrag;
+
+    if (content instanceof DocumentFragment) {
+        content = content.childNodes;
+    } else if (typeof content == "string") {
+        let wrapper = newElement("DIV");
+        wrapper.innerHTML = content;
+        content = wrapper.childNodes;
+    }
+
+    if (content instanceof Node) {
+        docFrag.append(document.importNode(content, true));
+    } else if (   content instanceof NodeList
+    		   || content instanceof Array) {
+        docFrag.append(...(Array.from(content).map(node => document.importNode(node, true))));
+    }
+
+    return docFrag;
+}
+
+/**************************************************/
+/*	The obvious equivalent of Element’s .innerHTML.
+ */
+Object.defineProperty(DocumentFragment.prototype, "innerHTML", {
+    get() {
+        return Array.from(this.childNodes).map(node => (node.nodeValue || node.outerHTML)).join("");
+    }
+});
+
+/*********************************************************************/
+/*	Workaround for Firefox weirdness, based on more Firefox weirdness.
+ */
+DocumentFragment.prototype.getSelection = function () {
+	return document.getSelection();
+}
+
+/******************************************************************************/
+/*  Returns true if the node contains only whitespace and/or other empty nodes.
+ */
+function isNodeEmpty(node) {
+    if (node.nodeType == Node.TEXT_NODE)
+        return (node.textContent.match(/\S/) == null);
+
+    if (   node.nodeType == Node.ELEMENT_NODE
+        && [ "IMG", "VIDEO", "AUDIO", "IFRAME", "OBJECT" ].includes(node.tagName))
+        return false;
+
+    if (node.childNodes.length == 0)
+        return true;
+
+    for (childNode of node.childNodes)
+        if (isNodeEmpty(childNode) == false)
+            return false;
+
+    return true;
+}
+
+/***************************************************************/
+/*  Returns a DocumentFragment containing the current selection.
+ */
+function getSelectionAsDocument(doc = document) {
+    let docFrag = new DocumentFragment();
+    docFrag.append(doc.getSelection().getRangeAt(0).cloneContents());
+
+	//	Strip whitespace (remove top-level empty nodes).
+	let nodesToRemove = [ ];
+	docFrag.childNodes.forEach(node => {
+		if (isNodeEmpty(node))
+			nodesToRemove.push(node);
+	});
+	nodesToRemove.forEach(node => {
+		docFrag.removeChild(node);
+	});
+
+    return docFrag;
+}
+
+/*****************************************************************************/
+/*  Adds the given copy processor, appending it to the existing array thereof.
+
+    Each copy processor should take two arguments: the copy event, and the
+    DocumentFragment which holds the selection as it is being processed by each
+    successive copy processor.
+
+    A copy processor should return true if processing should continue after it’s
+    done, false otherwise (e.g. if it has entirely replaced the contents of the
+    selection object with what the final clipboard contents should be).
+ */
+function addCopyProcessor(processor) {
+    if (GW.copyProcessors == null)
+        GW.copyProcessors = [ ];
+
+    GW.copyProcessors.push(processor);
+}
+
+/******************************************************************************/
+/*  Set up the copy processor system by registering a ‘copy’ event handler to
+    call copy processors. (Must be set up for the main document, and separately
+    for any shadow roots.)
+ */
+function registerCopyProcessorsForDocument(doc) {
+    GWLog("registerCopyProcessorsForDocument", "rewrite.js", 1);
+
+    doc.addEventListener("copy", (event) => {
+		if (   GW.copyProcessors == null
+			|| GW.copyProcessors.length == 0)
+			return;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        let selection = getSelectionAsDocument(doc);
+
+        let i = 0;
+        while (   i < GW.copyProcessors.length
+               && GW.copyProcessors[i++](event, selection));
+
+        event.clipboardData.setData("text/plain", selection.textContent);
+        event.clipboardData.setData("text/html", selection.innerHTML);
+    });
+}
+
+/*******************************************/
+/*  Set up copy processors in main document.
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    registerCopyProcessorsForDocument(document);
+});
+
+/*****************************************************************************/
+/*  Makes it so that copying a rendered equation or other math element copies
+    the LaTeX source, instead of the useless gibberish that is the contents of
+    the text nodes of the HTML representation of the equation.
+ */
+addCopyProcessor((event, selection) => {
+    if (event.target.closest(".mjx-math")) {
+        selection.replaceChildren(event.target.closest(".mjx-math").getAttribute("aria-label"));
+
+        return false;
+    }
+
+    selection.querySelectorAll(".mjx-chtml").forEach(mathBlock => {
+        mathBlock.innerHTML = " " + mathBlock.querySelector(".mjx-math").getAttribute("aria-label") + " ";
+    });
+
+    return true;
+});
+
+/************************************************************************/
+/*  Remove soft hyphens and other extraneous characters from copied text.
+ */
+addCopyProcessor((event, selection) => {
+	selection.replaceChildren(newDocument(selection.innerHTML.replace(/\u00AD|\u200b/g, "")));
+
+    return true;
+});
+
+
 /********************/
 /* DEBUGGING OUTPUT */
 /********************/
@@ -4699,16 +4882,6 @@ function mainInitializer() {
 			if (displayWordCount) localStorage.removeItem("display-word-count");
 			else localStorage.setItem("display-word-count", true);
 		});
-	});
-
-	// Add copy listener to strip soft hyphens (inserted by server-side hyphenator).
-	query("#content").addEventListener("copy", GW.textCopied = (event) => {
-		if(event.target.matches("input, textarea")) return;
-		event.preventDefault();
-		const selectedHTML = getSelectionHTML();
-		const selectedText = getSelection().toString();
-		event.clipboardData.setData("text/plain", selectedText.replace(/\u00AD|\u200b/g, ""));
-		event.clipboardData.setData("text/html", selectedHTML.replace(/\u00AD|\u200b/g, ""));
 	});
 
 	// Set up Image Focus feature.
