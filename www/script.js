@@ -4873,6 +4873,22 @@ function mainInitializer() {
 		insertHeadHTML(`<style id="mathjax-styles"> ${aggregatedStyles} </style>`);
 	}
 
+	/*  Makes double-clicking on a math element select the entire math element.
+		(This actually makes no difference to the behavior of the copy listener
+		 which copies the entire LaTeX source of the full equation no matter how 
+		 much of said equation is selected when the copy command is sent; 
+		 however, it ensures that the UI communicates the actual behavior in a 
+		 more accurate and understandable way.)
+	 */
+	query("#content").querySelectorAll(".mjpage").forEach(mathBlock => {
+		mathBlock.addEventListener("dblclick", (event) => {
+			document.getSelection().selectAllChildren(mathBlock.querySelector(".mjx-chtml"));
+		});
+		mathBlock.title = mathBlock.classList.contains("mjpage__block")
+						  ? "Double-click to select equation, then copy, to get LaTeX source"
+						  : "Double-click to select equation; copy to get LaTeX source";
+	});
+
 	// Add listeners to switch between word count and read time.
 	if (localStorage.getItem("display-word-count")) toggleReadTimeOrWordCount(true);
 	queryAll(".post-meta .read-time").forEach(element => {
