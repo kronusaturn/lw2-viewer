@@ -4425,120 +4425,149 @@ function pushNotificationsButtonClicked(event) {
 /* HTML TO MARKDOWN CONVERSION */
 /*******************************/
 
-function MarkdownFromHTML(text) {
+function MarkdownFromHTML(text, linePrefix) {
 	GWLog("MarkdownFromHTML");
-	// Wrapper tags, paragraphs, bold, italic, code blocks.
-	text = text.replace(/<(.+?)(?:\s(.+?))?>/g, (match, tag, attributes, offset, string) => {
-		switch(tag) {
-		case "html":
-		case "/html":
-		case "head":
-		case "/head":
-		case "body":
-		case "/body":
-		case "p":
-			return "";
-		case "/p":
-			return "\n";
-		case "strong":
-		case "/strong":
-			return "**";
-		case "em":
-		case "/em":
-			return "*";
-		default:
-			return match;
+	console.log(text);
+
+	let docFrag = document.createRange().createContextualFragment(text);
+	let output = "";
+	let owedLines = -1;
+	linePrefix = linePrefix || "";
+
+	let out = text => {
+		if(owedLines > 0) {
+			output += ("\n" + linePrefix).repeat(owedLines);
 		}
-	});
+		output += text;
+		owedLines = 0;
+	}
+	let forceLine = n => {
+		n = n || 1;
+		out(("\n" + linePrefix).repeat(n));
+	}
+	let newLine = (n) => {
+		n = n || 1;
+		if(owedLines >= 0 && owedLines < n) {
+			owedLines = n;
+		}
+	};
+	let newParagraph = () => {
+		newLine(2);
+	};
+	let withPrefix = (prefix, fn) => {
+		let oldPrefix = linePrefix;
+		linePrefix += prefix;
+		owedLines = -1;
+		fn();
+		owedLines = 0;
+		linePrefix = oldPrefix;
+	};
 
-	// <div> and <span>.
-	text = text.replace(/<div.+?>(.+?)<\/div>/g, (match, text, offset, string) => {
-		return `${text}\n`;
-	}).replace(/<span.+?>(.+?)<\/span>/g, (match, text, offset, string) => {
-		return `${text}\n`;
-	});
-
-	// Unordered lists.
-	text = text.replace(/<ul>\s+?((?:.|\n)+?)\s+?<\/ul>/g, (match, listItems, offset, string) => {
-		return listItems.replace(/<li>((?:.|\n)+?)<\/li>/g, (match, listItem, offset, string) => {
-			return `* ${listItem}\n`;
-		});
-	});
-
-	// Ordered lists.
-	text = text.replace(/<ol.+?(?:\sstart=["']([0-9]+)["'])?.+?>\s+?((?:.|\n)+?)\s+?<\/ol>/g, (match, start, listItems, offset, string) => {
-		var countedItemValue = 0;
-		return listItems.replace(/<li(?:\svalue=["']([0-9]+)["'])?>((?:.|\n)+?)<\/li>/g, (match, specifiedItemValue, listItem, offset, string) => {
-			var itemValue;
-			if (typeof specifiedItemValue != "undefined") {
-				specifiedItemValue = parseInt(specifiedItemValue);
-				countedItemValue = itemValue = specifiedItemValue;
-			} else {
-				itemValue = (start ? parseInt(start) - 1 : 0) + ++countedItemValue;
+	let doConversion = (node) => {
+		if(node.nodeType == Node.TEXT_NODE) {
+			let lines = node.nodeValue.split(/\r|\n/m);
+			for(text of lines.slice(0, -1)) {
+				out(text);
+				newLine();
 			}
-			return `${itemValue}. ${listItem.trim()}\n`;
-		});
-	});
-
-	// Headings.
-	text = text.replace(/<h([1-9]).+?>(.+?)<\/h[1-9]>/g, (match, level, headingText, offset, string) => {
-		return { "1":"#", "2":"##", "3":"###" }[level] + " " + headingText + "\n";
-	});
-
-	// Blockquotes.
-	text = text.replace(/<blockquote>((?:.|\n)+?)<\/blockquote>/g, (match, quotedText, offset, string) => {
-		return `> ${quotedText.trim().split("\n").join("\n> ")}\n`;
-	});
-
-	// Links.
-	text = text.replace(/<a.+?href="(.+?)">(.+?)<\/a>/g, (match, href, text, offset, string) => {
-		return `[${text}](${href})`;
-	}).trim();
-
-	// Images.
-	text = text.replace(/<img.+?src="(.+?)".+?\/>/g, (match, src, offset, string) => {
-		return `![](${src})`;
-	});
-
-	// Horizontal rules.
-	text = text.replace(/<hr(.+?)\/?>/g, (match, offset, string) => {
-		return "\n---\n";
-	});
-
-	// Line breaks.
-	text = text.replace(/<br\s?\/?>/g, (match, offset, string) => {
-		return "\\\n";
-	});
-
-	// Preformatted text (possibly with a code block inside).
-	text = text.replace(/<pre>(?:\s*<code>)?((?:.|\n)+?)(?:<\/code>\s*)?<\/pre>/g, (match, text, offset, string) => {
-		return "```\n" + text + "\n```";
-	});
-
-	// Code blocks.
-	text = text.replace(/<code>(.+?)<\/code>/g, (match, text, offset, string) => {
-		return "`" + text + "`";
-	});
-
-	// HTML entities.
-	text = text.replace(/&(.+?);/g, (match, entity, offset, string) => {
-		switch(entity) {
-		case "gt":
-			return ">";
-		case "lt":
-			return "<";
-		case "amp":
-			return "&";
-		case "apos":
-			return "'";
-		case "quot":
-			return "\"";
-		default:
-			return match;
+			out(lines.at(-1));
+		} else if(node.nodeType == Node.ELEMENT_NODE) {
+			switch(node.tagName) {
+			case "P":
+			case "DIV":
+			case "UL":
+			case "OL":
+				newParagraph();
+				node.childNodes.forEach(doConversion);
+				newParagraph();
+				break;
+			case "BR":
+				forceLine();
+				break;
+			case "HR":
+				newLine();
+				out("---");
+				newLine();
+				break;
+			case "B":
+			case "STRONG":
+				out("**");
+				node.childNodes.forEach(doConversion);
+				out("**");
+				break;
+			case "I":
+			case "EM":
+				out("*");
+				node.childNodes.forEach(doConversion);
+				out("*");
+				break;
+			case "LI":
+				newLine();
+				let listPrefix;
+				if(node.parentElement.tagName == "OL") {
+					let i = 1;
+					for(let e = node; e = e.previousElementSibling;) { i++ }
+					listPrefix = "" + i + ". ";
+				} else {
+					listPrefix = "* ";
+				}
+				out(listPrefix);
+				owedLines = -1;
+				withPrefix(" ".repeat(listPrefix.length), () => node.childNodes.forEach(doConversion));
+				newLine();
+				break;
+			case "H1":
+			case "H2":
+			case "H3":
+			case "H4":
+			case "H5":
+			case "H6":
+				newParagraph();
+				out("#".repeat(node.tagName.charAt(1)) + " ");
+				node.childNodes.forEach(doConversion);
+				newParagraph();
+				break;
+			case "A":
+				let href = node.href;
+				out('[');
+				node.childNodes.forEach(doConversion);
+				out(`](${href})`);
+				break;
+			case "IMG":
+				let src = node.src;
+				let alt = node.alt || "";
+				out(`![${alt}](${src})`);
+				break;
+			case "BLOCKQUOTE":
+				newParagraph();
+				out("> ");
+				withPrefix("> ", () => node.childNodes.forEach(doConversion));
+				newParagraph();
+				break;
+			case "PRE":
+				newParagraph();
+				out('```');
+				forceLine();
+				out(node.innerText);
+				forceLine();
+				out('```');
+				newParagraph();
+				break;
+			case "CODE":
+				out('`');
+				node.childNodes.forEach(doConversion);
+				out('`');
+				break;
+			default:
+				node.childNodes.forEach(doConversion);
+			}
+		} else {
+			node.childNodes.forEach(doConversion);
 		}
-	});
+	}
+	doConversion(docFrag);
 
-	return text;
+	return output;
 }
 
 /************************************/
