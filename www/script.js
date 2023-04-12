@@ -232,60 +232,9 @@ function doIfAllowed(f, passHolder, passName, releaseImmediately = false) {
 	}
 }
 
-
-/*******************************************************************************/
-/*  Create and return a DocumentFragment containing the given content.
-
-    The content can be any of the following (yielding the listed return value):
-
-    null
-        an empty DocumentFragment
-
-    a DocumentFragment
-        a DocumentFragment containing the given DocumentFragment’s children
-
-    a string
-        a DocumentFragment containing the HTML content that results from parsing
-        the string
-
-    a Node
-        a DocumentFragment containing the Node
-
-    a NodeList
-        a DocumentFragment containing the nodes
- */
-function newDocument(content) {
-	let docFrag = new DocumentFragment();
-
-	if (content == null)
-		return docFrag;
-
-	if (content instanceof DocumentFragment) {
-		content = content.childNodes;
-	} else if (typeof content == "string") {
-		let wrapper = newElement("DIV");
-		wrapper.innerHTML = content;
-		content = wrapper.childNodes;
-	}
-
-	if (content instanceof Node) {
-		docFrag.append(document.importNode(content, true));
-	} else if (	  content instanceof NodeList
-			   || content instanceof Array) {
-		docFrag.append(...(Array.from(content).map(node => document.importNode(node, true))));
-	}
-
-	return docFrag;
-}
-
-/**************************************************/
-/*  The obvious equivalent of Element’s .innerHTML.
- */
-Object.defineProperty(DocumentFragment.prototype, "innerHTML", {
-	get() {
-		return Array.from(this.childNodes).map(node => (node.nodeValue || node.outerHTML)).join("");
-	}
-});
+/*******************/
+/* COPY PROCESSORS */
+/*******************/
 
 /*********************************************************************/
 /*  Workaround for Firefox weirdness, based on more Firefox weirdness.
@@ -319,8 +268,7 @@ function isNodeEmpty(node) {
 /*  Returns a DocumentFragment containing the current selection.
  */
 function getSelectionAsDocument(doc = document) {
-	let docFrag = new DocumentFragment();
-	docFrag.append(doc.getSelection().getRangeAt(0).cloneContents());
+	let docFrag = doc.getSelection().getRangeAt(0).cloneContents();
 
 	//	Strip whitespace (remove top-level empty nodes).
 	let nodesToRemove = [ ];
@@ -373,19 +321,35 @@ function registerCopyProcessorsForDocument(doc) {
 
 		let i = 0;
 		while (	  i < GW.copyProcessors.length
-			   && GW.copyProcessors[i++](event, selection));
+			  && GW.copyProcessors[i++](event, selection));
 
-		event.clipboardData.setData("text/plain", selection.textContent);
-		event.clipboardData.setData("text/html", selection.innerHTML);
+		// This is necessary for .innerText to work properly.
+		let wrapper = newElement("DIV");
+		wrapper.appendChild(selection);
+		document.body.appendChild(wrapper);
+
+		let makeLinksAbsolute = (node) => {
+			if(node['attributes']) {
+				for(attr of ['src', 'href']) {
+					if(node[attr])
+						node[attr] = node[attr];
+				}
+			}
+			node.childNodes.forEach(makeLinksAbsolute);
+		}
+		makeLinksAbsolute(wrapper);
+
+		event.clipboardData.setData("text/plain", wrapper.innerText);
+		event.clipboardData.setData("text/html", wrapper.innerHTML);
+
+		document.body.removeChild(wrapper);
 	});
 }
 
 /*******************************************/
 /*  Set up copy processors in main document.
  */
-document.addEventListener("DOMContentLoaded", () => {
-	registerCopyProcessorsForDocument(document);
-});
+registerCopyProcessorsForDocument(document);
 
 /*****************************************************************************/
 /*  Makes it so that copying a rendered equation or other math element copies
@@ -410,7 +374,14 @@ addCopyProcessor((event, selection) => {
 /*  Remove soft hyphens and other extraneous characters from copied text.
  */
 addCopyProcessor((event, selection) => {
-	selection.replaceChildren(newDocument(selection.innerHTML.replace(/\u00AD|\u200b/g, "")));
+	let replaceText = (node) => {
+		if(node.nodeType == Node.TEXT_NODE) {
+			node.nodeValue = node.nodeValue.replace(/\u00AD|\u200b/g, "");
+		}
+
+		node.childNodes.forEach(replaceText);
+	}
+	replaceText(selection);
 
 	return true;
 });
