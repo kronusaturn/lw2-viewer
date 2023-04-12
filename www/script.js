@@ -475,7 +475,18 @@ Element.prototype.addTextareaFeatures = function() {
 			beginAutocompletion(textarea, start, end);
 		}
 	});
-			
+
+	textarea.addEventListener("paste", (event) => {
+		let html = event.clipboardData.getData("text/html");
+		if(html) {
+			html = html.replace(/\n|\r/gm, "");
+			let isQuoted = textarea.selectionStart >= 2 &&
+			    textarea.value.substring(textarea.selectionStart - 2, textarea.selectionStart) == "> ";
+			document.execCommand("insertText", false, MarkdownFromHTML(html, (isQuoted ? "> " : null)));
+			event.preventDefault();
+		}
+	});
+
 	textarea.addEventListener("keyup", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keypress", (event) => { event.stopPropagation(); });
 	textarea.addEventListener("keydown", (event) => {
@@ -489,7 +500,6 @@ Element.prototype.addTextareaFeatures = function() {
 	});
 
 	let form = textarea.closest("form");
-	if(form) form.addEventListener("submit", event => { textarea.value = MarkdownFromHTML(textarea.value)});
 
 	textarea.insertAdjacentHTML("beforebegin", "<div class='guiedit-buttons-container'></div>");
 	let textareaContainer = textarea.closest(".textarea-container");
@@ -617,7 +627,6 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		}
 	}
 	let textarea = commentControls.query("textarea");
-	textarea.value = MarkdownFromHTML(editMarkdownSource || "");
 	textarea.addTextareaFeatures();
 	textarea.focus();
 }
@@ -4646,12 +4655,10 @@ function mainInitializer() {
 	}
 
 	// On edit post pages and conversation pages, add GUIEdit buttons to the 
-	// textarea, expand it, and markdownify the existing text, if any (this is
-	// needed if a post was last edited on LW).
+	// textarea and expand it.
 	queryAll(".with-markdown-editor textarea").forEach(textarea => {
 		textarea.addTextareaFeatures();
 		expandTextarea(textarea);
-		textarea.value = MarkdownFromHTML(textarea.value);
 	});
 	// Focus the textarea.
 	queryAll(((getQueryVariable("post-id")) ? "#edit-post-form textarea" : "#edit-post-form input[name='title']") + (GW.isMobile ? "" : ", .conversation-page textarea")).forEach(field => { field.focus(); });
