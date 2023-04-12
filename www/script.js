@@ -3479,6 +3479,12 @@ function removePreviewPopup(previewPopup) {
 	currentPreviewPopup = { };
 }
 
+document.addEventListener("visibilitychange", () => {
+	if(document.visibilityState != "visible") {
+		removePreviewPopup(currentPreviewPopup);
+	}
+});
+
 function addCommentParentPopups() {
 	GWLog("addCommentParentPopups");
 	//if (!query("#content").hasClass("comment-thread-page")) return;
