@@ -255,40 +255,40 @@ function doIfAllowed(f, passHolder, passName, releaseImmediately = false) {
         a DocumentFragment containing the nodes
  */
 function newDocument(content) {
-    let docFrag = new DocumentFragment();
+	let docFrag = new DocumentFragment();
 
-    if (content == null)
-        return docFrag;
+	if (content == null)
+		return docFrag;
 
-    if (content instanceof DocumentFragment) {
-        content = content.childNodes;
-    } else if (typeof content == "string") {
-        let wrapper = newElement("DIV");
-        wrapper.innerHTML = content;
-        content = wrapper.childNodes;
-    }
+	if (content instanceof DocumentFragment) {
+		content = content.childNodes;
+	} else if (typeof content == "string") {
+		let wrapper = newElement("DIV");
+		wrapper.innerHTML = content;
+		content = wrapper.childNodes;
+	}
 
-    if (content instanceof Node) {
-        docFrag.append(document.importNode(content, true));
-    } else if (   content instanceof NodeList
-    		   || content instanceof Array) {
-        docFrag.append(...(Array.from(content).map(node => document.importNode(node, true))));
-    }
+	if (content instanceof Node) {
+		docFrag.append(document.importNode(content, true));
+	} else if (	  content instanceof NodeList
+			   || content instanceof Array) {
+		docFrag.append(...(Array.from(content).map(node => document.importNode(node, true))));
+	}
 
-    return docFrag;
+	return docFrag;
 }
 
 /**************************************************/
-/*	The obvious equivalent of Element’s .innerHTML.
+/*  The obvious equivalent of Element’s .innerHTML.
  */
 Object.defineProperty(DocumentFragment.prototype, "innerHTML", {
-    get() {
-        return Array.from(this.childNodes).map(node => (node.nodeValue || node.outerHTML)).join("");
-    }
+	get() {
+		return Array.from(this.childNodes).map(node => (node.nodeValue || node.outerHTML)).join("");
+	}
 });
 
 /*********************************************************************/
-/*	Workaround for Firefox weirdness, based on more Firefox weirdness.
+/*  Workaround for Firefox weirdness, based on more Firefox weirdness.
  */
 DocumentFragment.prototype.getSelection = function () {
 	return document.getSelection();
@@ -298,29 +298,29 @@ DocumentFragment.prototype.getSelection = function () {
 /*  Returns true if the node contains only whitespace and/or other empty nodes.
  */
 function isNodeEmpty(node) {
-    if (node.nodeType == Node.TEXT_NODE)
-        return (node.textContent.match(/\S/) == null);
+	if (node.nodeType == Node.TEXT_NODE)
+		return (node.textContent.match(/\S/) == null);
 
-    if (   node.nodeType == Node.ELEMENT_NODE
-        && [ "IMG", "VIDEO", "AUDIO", "IFRAME", "OBJECT" ].includes(node.tagName))
-        return false;
+	if (   node.nodeType == Node.ELEMENT_NODE
+		&& [ "IMG", "VIDEO", "AUDIO", "IFRAME", "OBJECT" ].includes(node.tagName))
+		return false;
 
-    if (node.childNodes.length == 0)
-        return true;
+	if (node.childNodes.length == 0)
+		return true;
 
-    for (childNode of node.childNodes)
-        if (isNodeEmpty(childNode) == false)
-            return false;
+	for (childNode of node.childNodes)
+		if (isNodeEmpty(childNode) == false)
+			return false;
 
-    return true;
+	return true;
 }
 
 /***************************************************************/
 /*  Returns a DocumentFragment containing the current selection.
  */
 function getSelectionAsDocument(doc = document) {
-    let docFrag = new DocumentFragment();
-    docFrag.append(doc.getSelection().getRangeAt(0).cloneContents());
+	let docFrag = new DocumentFragment();
+	docFrag.append(doc.getSelection().getRangeAt(0).cloneContents());
 
 	//	Strip whitespace (remove top-level empty nodes).
 	let nodesToRemove = [ ];
@@ -332,7 +332,7 @@ function getSelectionAsDocument(doc = document) {
 		docFrag.removeChild(node);
 	});
 
-    return docFrag;
+	return docFrag;
 }
 
 /*****************************************************************************/
@@ -347,10 +347,10 @@ function getSelectionAsDocument(doc = document) {
     selection object with what the final clipboard contents should be).
  */
 function addCopyProcessor(processor) {
-    if (GW.copyProcessors == null)
-        GW.copyProcessors = [ ];
+	if (GW.copyProcessors == null)
+		GW.copyProcessors = [ ];
 
-    GW.copyProcessors.push(processor);
+	GW.copyProcessors.push(processor);
 }
 
 /******************************************************************************/
@@ -359,32 +359,32 @@ function addCopyProcessor(processor) {
     for any shadow roots.)
  */
 function registerCopyProcessorsForDocument(doc) {
-    GWLog("registerCopyProcessorsForDocument", "rewrite.js", 1);
+	GWLog("registerCopyProcessorsForDocument", "rewrite.js", 1);
 
-    doc.addEventListener("copy", (event) => {
+	doc.addEventListener("copy", (event) => {
 		if (   GW.copyProcessors == null
 			|| GW.copyProcessors.length == 0)
 			return;
 
-        event.preventDefault();
-        event.stopPropagation();
+		event.preventDefault();
+		event.stopPropagation();
 
-        let selection = getSelectionAsDocument(doc);
+		let selection = getSelectionAsDocument(doc);
 
-        let i = 0;
-        while (   i < GW.copyProcessors.length
-               && GW.copyProcessors[i++](event, selection));
+		let i = 0;
+		while (	  i < GW.copyProcessors.length
+			   && GW.copyProcessors[i++](event, selection));
 
-        event.clipboardData.setData("text/plain", selection.textContent);
-        event.clipboardData.setData("text/html", selection.innerHTML);
-    });
+		event.clipboardData.setData("text/plain", selection.textContent);
+		event.clipboardData.setData("text/html", selection.innerHTML);
+	});
 }
 
 /*******************************************/
 /*  Set up copy processors in main document.
  */
 document.addEventListener("DOMContentLoaded", () => {
-    registerCopyProcessorsForDocument(document);
+	registerCopyProcessorsForDocument(document);
 });
 
 /*****************************************************************************/
@@ -393,17 +393,17 @@ document.addEventListener("DOMContentLoaded", () => {
     the text nodes of the HTML representation of the equation.
  */
 addCopyProcessor((event, selection) => {
-    if (event.target.closest(".mjx-math")) {
-        selection.replaceChildren(event.target.closest(".mjx-math").getAttribute("aria-label"));
+	if (event.target.closest(".mjx-math")) {
+		selection.replaceChildren(event.target.closest(".mjx-math").getAttribute("aria-label"));
 
-        return false;
-    }
+		return false;
+	}
 
-    selection.querySelectorAll(".mjx-chtml").forEach(mathBlock => {
-        mathBlock.innerHTML = " " + mathBlock.querySelector(".mjx-math").getAttribute("aria-label") + " ";
-    });
+	selection.querySelectorAll(".mjx-chtml").forEach(mathBlock => {
+		mathBlock.innerHTML = " " + mathBlock.querySelector(".mjx-math").getAttribute("aria-label") + " ";
+	});
 
-    return true;
+	return true;
 });
 
 /************************************************************************/
@@ -412,7 +412,7 @@ addCopyProcessor((event, selection) => {
 addCopyProcessor((event, selection) => {
 	selection.replaceChildren(newDocument(selection.innerHTML.replace(/\u00AD|\u200b/g, "")));
 
-    return true;
+	return true;
 });
 
 
