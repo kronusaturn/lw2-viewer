@@ -1107,6 +1107,7 @@
 	    (with-output-to-string (out-stream out-string)
 	      (style-hash-to-html style-hash out-stream)
 	      (when (> (hash-table-count used-colors) 0)
+		#.(warn "need to finish updating this for the new dark mode system")
 		(format out-stream "<style>~%:root {~%")
 		(maphash (lambda (name rgba-list)
 			   (declare (ignore rgba-list))

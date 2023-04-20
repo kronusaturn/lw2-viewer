@@ -1283,7 +1283,7 @@ DarkMode = {
     /*  Returns current (saved) mode (light, dark, or auto).
      */
     getSavedMode: () => {
-        return (localStorage.getItem("dark-mode-setting") || "auto");
+        return (readCookie("dark-mode") || "auto");
     },
 
 	/*	Saves specified mode (light, dark, or auto).
@@ -1292,9 +1292,19 @@ DarkMode = {
 		GWLog("DarkMode.setMode");
 
 		if (mode == "auto")
-			localStorage.removeItem("dark-mode-setting");
+			setCookie("dark-mode", "");
 		else
-			localStorage.setItem("dark-mode-setting", mode);
+			setCookie("dark-mode", mode);
+	},
+
+	getMediaQuery: (selectedMode = DarkMode.getSavedMode()) => {
+		if (selectedMode == "auto") {
+			return "all and (prefers-color-scheme: dark)";
+		} else if (selectedMode == "dark") {
+			return "all";
+		} else {
+			return "not all";
+		}
 	},
 
 	/*  Set specified color mode (light, dark, or auto).
@@ -1302,17 +1312,16 @@ DarkMode = {
 	setMode: (selectedMode = DarkMode.getSavedMode()) => {
 		GWLog("DarkMode.setMode");
 
-		//	The style block should be inlined (and already loaded).
-		let darkModeStyles = document.querySelector("#inlined-dark-mode-styles");
+		let media = DarkMode.getMediaQuery(selectedMode);
+		let darkModeStyles = document.querySelector("link.dark-mode");
 		if (darkModeStyles) {
 			//	Set `media` attribute of style block to match requested mode.
-			if (selectedMode == "auto") {
-				darkModeStyles.media = "all and (prefers-color-scheme: dark)";
-			} else if (selectedMode == "dark") {
-				darkModeStyles.media = "all";
-			} else {
-				darkModeStyles.media = "not all";
-			}
+			darkModeStyles.media = media;
+		}
+
+		for(elem of document.querySelectorAll("picture.invertible source")) {
+			// Update invertible images.
+			elem.media = media;
 		}
 
 		//	Update state.
@@ -1486,19 +1495,22 @@ Appearance = { ...Appearance,
 		given theme name and color scheme preference (i.e., value for the 
 		‘media’ attribute; may be “light”, “dark”, or “” [empty string]).
 	 */
-	makeNewStyle: (newThemeName, colorSchemePreference) => {
+	makeNewStyle: (newThemeName) => {
 		let styleSheetNameSuffix = newThemeName == Appearance.defaultTheme
 								   ? "" 
 								   : ("-" + newThemeName);
 		let currentStyleSheetNameComponents = /style[^\.]*(\..+)$/.exec(query("head link[href*='.css']").href);
 
-		let newStyle = newElement("LINK", {
-			"class": "theme",
-			"rel": "stylesheet",
-			"href": ("/css/style" + styleSheetNameSuffix + currentStyleSheetNameComponents[1]),
-			"media": (colorSchemePreference ? ("(prefers-color-scheme: " + colorSchemePreference + ")") : "")
+		return [["style", "theme"], ["colors", "theme light-mode"], ["inverted", "theme dark-mode", DarkMode.getMediaQuery()]].map(args => {
+			let [baseName, className, mediaQuery] = args;
+			return newElement("LINK", {
+				"class": className,
+				"rel": "stylesheet",
+				"href": ("/generated-css/" + baseName + styleSheetNameSuffix + currentStyleSheetNameComponents[1]),
+				"media": mediaQuery || null,
+				"blocking": "render"
+			});
 		});
-		return newStyle;
 	},
 
 	setTheme: (newThemeName, save = true) => {
@@ -1540,26 +1552,28 @@ Appearance = { ...Appearance,
 				Appearance.saveCurrentTheme();
 		}
 
-		let newMainStyle, newStyles;
-		if (newThemeName === Appearance.defaultTheme) {
-			newStyles = [ Appearance.makeNewStyle("dark", "dark"), Appearance.makeNewStyle(Appearance.defaultTheme, "light") ];
-			newMainStyle = (window.matchMedia("prefers-color-scheme: dark").matches ? newStyles[0] : newStyles[1]);
-		} else {
-			newStyles = [ Appearance.makeNewStyle(newThemeName) ];
-			newMainStyle = newStyles[0];
-		}
+		let newStyles = Appearance.makeNewStyle(newThemeName);
+		let loadingStyleCount = newStyles.length;
 
 		let oldStyles = queryAll("head link.theme");
-		newMainStyle.addEventListener("load", (event) => { oldStyles.forEach(x => removeElement(x)); });
-		newMainStyle.addEventListener("load", (event) => { Appearance.postSetThemeHousekeeping(oldThemeName, newThemeName); });
+
+		let onNewStylesLoaded = (event) => {
+			loadingStyleCount--;
+			if(loadingStyleCount === 0) {
+				for(oldStyle of oldStyles) removeElement(oldStyle);
+				Appearance.postSetThemeHousekeeping(oldThemeName, newThemeName);
+			}
+		};
+
+		for(newStyle of newStyles) newStyle.addEventListener("load", onNewStylesLoaded);
 
 		if (Appearance.adjustmentTransitions) {
 			pageFadeTransition(false);
 			setTimeout(() => {
-				newStyles.forEach(newStyle => document.head.insertBefore(newStyle, oldStyles[0].nextSibling));
+				document.head.prepend(...newStyles);
 			}, 500);
 		} else {
-			newStyles.forEach(newStyle => document.head.insertBefore(newStyle, oldStyles[0].nextSibling));
+			document.head.prepend(...newStyles);
 		}
 
 		//	Update UI state of all theme selectors.
@@ -2339,6 +2353,7 @@ Appearance = { ...Appearance,
 		// Here we find out what is the actual background color that will be visible behind
 		// the body text of posts, and set the sample text’s background to that.
 		let findStyleBackground = (selector) => {
+			return "#fff"; // FIXME
 			let x;
 			Array.from(query("link[rel=stylesheet]").sheet.cssRules).forEach(rule => {
 				if (rule.selectorText == selector)
@@ -3550,7 +3565,7 @@ function addCommentParentPopups() {
 						popupTarget = popupTarget.replace(/#comment-/, "/comment/");
 					}
 					// 'theme' attribute is required for proper caching
-					popup.setAttribute("src", popupTarget + (popupTarget.match(/\?/) ? '&' : '?') + "format=preview&theme=" + (readCookie('theme') || 'default'));
+					popup.setAttribute("src", popupTarget + (popupTarget.match(/\?/) ? '&' : '?') + "format=preview");
 					popup.addClass("preview-popup");
 					
 					let linkRect = linkTag.getBoundingClientRect();

@@ -208,14 +208,13 @@
 	      (predicate (lambda (attr) (string-equal attr "alt"))))
 	  (cond
 	    (inverted-uri
-	     (format stream "<picture style='display: var(--invertible-display)' data-original-src='~A'><source srcset='~A' media='(prefers-color-scheme: dark)'><img src='~A' loading='lazy'"
+	     (format stream "<picture class='invertible' data-original-src='~A'><source srcset='~A' media='~A'><img src='~A' loading='lazy'"
 		      encoded-uri
 		      inverted-uri
+		      (lw2.resources:inverted-media-query)
 		      (or proxy-uri encoded-uri))
 	     (finish-tag img-attributes predicate stream)
-	     (format stream "</picture><img style='display: var(--inverted-display)' loading='lazy' src='~A'"
-		     inverted-uri)
-	     (finish-tag img-attributes predicate stream))
+	     (format stream "</picture>"))
 	    (:otherwise
 	      (format stream "<img src='~A' data-original-src='~A' loading='lazy'"
 		      (or proxy-uri encoded-uri) encoded-uri)

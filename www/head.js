@@ -168,7 +168,7 @@ function readCookie(name) {
 function newElement(tagName, attributes = { }, properties = { }) {
 	let element = document.createElement(tagName);
 	for (const attrName in attributes)
-		if (attributes.hasOwnProperty(attrName))
+		if (attributes.hasOwnProperty(attrName) && attributes[attrName] !== null)
 			element.setAttribute(attrName, attributes[attrName]);
 	for (const propName in properties)
 		if (properties.hasOwnProperty(propName))

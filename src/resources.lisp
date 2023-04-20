@@ -1,7 +1,7 @@
 (uiop:define-package #:lw2.resources
   (:use #:cl #:iterate #:lw2-viewer.config #:lw2.utils #:lw2.sites #:lw2.context)
   (:import-from #:alexandria #:with-gensyms #:when-let #:appendf)
-  (:export #:*page-resources* #:with-page-resources #:require-resource #:generate-versioned-link #:with-resource-bindings #:call-with-fonts-source-resources #:site-resources)
+  (:export #:*page-resources* #:inverted-media-query #:with-page-resources #:require-resource #:generate-versioned-link #:with-resource-bindings #:call-with-fonts-source-resources #:site-resources)
   (:recycle #:lw2-viewer)
   (:unintern #:fonts-source-resources))
 
@@ -14,6 +14,12 @@
 (defparameter *async-script-tags* (constantly nil))
 
 (defparameter *push-option* nil)
+
+(defun inverted-media-query ()
+  (alexandria:switch ((hunchentoot:cookie-in "dark-mode") :test #'string-equal)
+		     ("dark" "all")
+		     ("light" "not all")
+		     (t "all and (prefers-color-scheme: dark)")))
 
 (defmacro with-page-resources (&body body)
   `(let* ((*link-header* *link-header*)
@@ -37,7 +43,8 @@
 
 (defun generate-versioned-link (file)
   (let* ((filename (format nil "www~A" file)))
-    (format nil "~A?v=~A" file (universal-time-to-unix (file-write-date filename)))))
+    (or (ignore-errors (format nil "~A?v=~A" file (universal-time-to-unix (file-write-date filename))))
+	file)))
 
 (defgeneric call-with-fonts-source-resources (site fn))
 
@@ -106,18 +113,18 @@
 (defgeneric site-resources (site)
   (:method-combination append :most-specific-first)
   (:method append ((s site))
-    (labels ((gen-inner (theme os &optional dark-preference)
-	       (with-resource-bindings ((:style (format nil "/css/style~@[-~A~].~A.css" theme os)
-						(if dark-preference "(prefers-color-scheme: dark)")
-						"theme"))))
-	     (gen-theme (theme os)
-	       (if theme
-		   (gen-inner theme os)
-		   (progn (gen-inner nil os)
-			  (gen-inner "dark" os t)))))
+    (labels ((gen-theme (theme os)
+	       (let* ((basename (format nil "~@[-~A~].~A.css" theme os))
+		      (filename (format nil "www/css/style~A" basename))
+		      (version (universal-time-to-unix (file-write-date filename)))
+		      (baseurl (format nil "~A?v=~A" basename version)))
+		 (with-resource-bindings ((:style (format nil "/generated-css/style~A" baseurl) nil "theme")
+					  (:style (format nil "/generated-css/colors~A" baseurl) nil "theme light-mode")
+					  (:style (format nil "/generated-css/inverted~A" baseurl) (inverted-media-query) "theme dark-mode"))))))
       (let* ((ua (hunchentoot:header-in* :user-agent))
 	     (theme (or (and *preview* (nonempty-string (hunchentoot:get-parameter "theme")))
 			(nonempty-string (hunchentoot:cookie-in "theme"))))
+	     (theme (if (string= theme "default") nil theme))
 	     (os (cond ((search "Windows" ua) "windows")
 		       ((search "Mac OS" ua) "mac")
 		       (t "linux"))))
@@ -155,4 +162,49 @@
 		  (setf (hunchentoot:header-out "Cache-Control") #.(format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
 		(hunchentoot:handle-static-file file content-type))
 	      t)))
+    nil)
+
+(defun output-tweakable-css (file out-stream)
+  (with-open-file (in-stream file)
+    (lw2.colors::rewrite-css-colors in-stream out-stream
+				    (lambda (color-string)
+				      (format nil "var(--theme-color-~A)"
+					      (multiple-value-call #'lw2.colors::safe-color-name (lw2.colors::decode-css-color color-string)))))))
+
+(defun output-css-colors (file out-stream invert)
+  (let ((used-colors (make-hash-table :test 'equal)))
+    (with-open-file (in-stream file)
+      (format out-stream ":root {~%")
+      (loop for in-line = (read-line in-stream nil)
+	 while in-line
+	 do (ppcre:do-matches-as-strings (color-string lw2.colors::-css-color-scanner- in-line)
+	      (multiple-value-bind (r g b a) (lw2.colors::decode-css-color color-string)
+		(let ((color-name (lw2.colors::safe-color-name r g b a)))
+		  (unless (gethash color-name used-colors)
+		    (setf (gethash color-name used-colors) t)
+		    (format out-stream "--theme-color-~A: ~A;~%"
+			    color-name
+			    (if invert
+				(multiple-value-call #'lw2.colors::encode-css-color (lw2.colors::perceptual-invert-rgba r g b a))
+				color-string)))))))
+      (format out-stream "}~%"))))
+
+(hunchentoot:define-easy-handler
+    (view-generated-css
+     :uri (lambda (r)
+	    (let ((regs (nth-value 1 (ppcre:scan-to-strings "^/generated-css/(style|colors|inverted)([-.][a-z.-]+)$" (hunchentoot:script-name r)))))
+	      (when (= (length regs) 2)
+		(setf (hunchentoot:header-out "Content-Type") "text/css")
+		(when (assoc "v" (hunchentoot:get-parameters r) :test #'string=)
+		  (setf (hunchentoot:header-out "Cache-Control") #.(format nil "public, max-age=~A, immutable" (- (expt 2 31) 1))))
+		(let ((file (format nil "www/css/style~A" (aref regs 1)))
+		      (out-stream (flex:make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+		(cond
+		  ((string= (aref regs 0) "style")
+		   (output-tweakable-css file out-stream))
+		  ((string= (aref regs 0) "colors")
+		   (output-css-colors file out-stream nil))
+		  ((string= (aref regs 0) "inverted")
+		   (output-css-colors file out-stream t))))
+		t))))
     nil)
