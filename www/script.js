@@ -1312,6 +1312,10 @@ DarkMode = {
 	setMode: (selectedMode = DarkMode.getSavedMode()) => {
 		GWLog("DarkMode.setMode");
 
+		document.body.removeClasses(["force-dark-mode", "force-light-mode"]);
+		if(selectedMode === "dark" || selectedMode === "light")
+			document.body.addClass("force-" + selectedMode + "-mode");
+
 		let media = DarkMode.getMediaQuery(selectedMode);
 		let darkModeStyles = document.querySelector("link.dark-mode");
 		if (darkModeStyles) {
