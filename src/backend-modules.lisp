@@ -28,6 +28,7 @@
     #:backend-lw2-misc-workarounds
     #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
+    #:backend-progress-forum
     #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend
     #:call-with-backend-context)
@@ -164,6 +165,19 @@
 			    backend-lw2-tags-comments
 			    backend-lw2-wiki-tags
 			    backend-magnum-crossposts) ()
+  (:metaclass backend-class))
+
+(defclass backend-progress-forum (backend-passport-js-login
+				  backend-lw2-modernized
+				  backend-lw2-legacy
+				  backend-algolia-search
+				  backend-q-and-a
+				  backend-events
+				  backend-backlinks
+				  backend-push-notifications
+				  backend-shortform
+				  backend-lw2-tags-comments
+				  backend-lw2-wiki-tags) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)

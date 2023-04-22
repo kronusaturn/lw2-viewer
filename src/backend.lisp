@@ -281,7 +281,8 @@
 
 (define-backend-function earliest-post-time ()
   (backend-lw2 (load-time-value (local-time:parse-timestring "2005-01-01")))
-  (backend-ea-forum (load-time-value (local-time:parse-timestring "2011-11-24"))))
+  (backend-ea-forum (load-time-value (local-time:parse-timestring "2011-11-24")))
+  (backend-progress-forum (load-time-value (local-time:parse-timestring "2022-03-26"))))
 
 (define-backend-function fixup-lw2-return-value (value)
   (backend-base
@@ -1068,7 +1069,15 @@
      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
-(define-backend-function lw2-search-query (query &key (indexes '("test_tags" "test_posts" "test_comments")))
+(define-backend-function algolia-search-index-name (index)
+  (backend-lw2
+   (format nil "test_~(~A~)" index))
+  (backend-ea-forum
+   (format nil "test_~(~A~)" index))
+  (backend-progress-forum
+   (format nil "pf-prod-~(~A~)" index)))
+
+(define-backend-function lw2-search-query (query &key (indexes '(:tags :posts :comments)))
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
@@ -1081,7 +1090,7 @@
 	       ("Content-Type" . "application/json"))
     :content (json:encode-json-alist-to-string
 	      (alist "requests" (loop for index in indexes
-				   collect (alist "indexName" index
+				   collect (alist "indexName" (algolia-search-index-name index)
 						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
 								   (url-rewrite:url-encode query))))))
     :want-stream t)))

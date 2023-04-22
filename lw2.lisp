@@ -524,6 +524,20 @@ signaled condition to *HTML-OUTPUT*."
 		   ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
+(defmethod site-nav-bars ((site lesswrong-viewer-site))
+  '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
+                     ("about" "/about" "About" :accesskey "t")
+                     ("search" "/search" "Search" :html search-bar-to-html)
+                     user-nav-item))
+    (:tertiary-bar (("questions" "/index?view=questions" "Questions")
+		    ("events" "/index?view=events" "Events")
+		    ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")))
+    (:primary-bar (("home" "/" "Home" :description "Latest frontpage posts" :accesskey "h")
+                   ("featured" "/index?view=featured" "Featured" :description "Latest featured posts" :accesskey "f")
+                   ("all" "/index?view=all" "All" :description "Latest posts from all sections" :accesskey "a")
+                   ("tags" "/tags" "Tags" :description "All tags" :accesskey "v")
+                   ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
+
 (defun prepare-nav-bar (nav-bar current-uri)
   (list (first nav-bar)
         (map 'list (lambda (item) (if (listp item) item (funcall item current-uri)))
@@ -1629,7 +1643,7 @@ signaled condition to *HTML-OUTPUT*."
 (define-json-endpoint (view-user-autocomplete forum-site "/-user-autocomplete")
     (request-method
      (:get (q)
-	  (lw2-search-query q :indexes '("test_users"))))) 
+	  (lw2-search-query q :indexes '(:users)))))
 
 (define-json-endpoint (view-karma-vote-tag forum-site "/karma-vote/tag")
   (let ((auth-token *current-auth-token*))
