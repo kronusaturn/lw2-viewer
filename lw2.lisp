@@ -524,7 +524,7 @@ signaled condition to *HTML-OUTPUT*."
 		   ("shortform" "/shortform" "Shortform" :description "Latest Shortform posts")
                    ("recent-comments" "/recentcomments" "<span>Recent </span>Comments" :description "Latest comments" :accesskey "c")))))
 
-(defmethod site-nav-bars ((site lesswrong-viewer-site))
+(defmethod site-nav-bars ((site progress-forum-viewer-site))
   '((:secondary-bar (("archive" "/archive" "Archive" :accesskey "r")
                      ("about" "/about" "About" :accesskey "t")
                      ("search" "/search" "Search" :html search-bar-to-html)
