@@ -185,7 +185,9 @@
 		    (format out-stream "--theme-color-~A: ~A;~%"
 			    color-name
 			    (if invert
-				(multiple-value-call #'lw2.colors::encode-css-color (lw2.colors::perceptual-invert-rgba r g b a))
+				(let* ((backgroundp (to-boolean (ppcre:scan "background" in-line)))
+				       (gamma (if backgroundp 1.8d0 2.2d0)))
+				  (multiple-value-call #'lw2.colors::encode-css-color (lw2.colors::perceptual-invert-rgba r g b a gamma)))
 				color-string)))))))
       (format out-stream "}~%"))))
 

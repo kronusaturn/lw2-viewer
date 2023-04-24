@@ -72,10 +72,11 @@
 (defun safe-color-name (r g b a)
   (format nil "~6,'0X~2,'0X" (dufy/core:rgb-to-rgbpack r g b) (round (* a 255))))
 
-(defun gamma-invert-lightness (l)
-  (if (>= l 1d0)
-      0d0
-      (expt (- 1d0 l) (/ 2.2d0))))
+(defun gamma-invert-lightness (l &optional gamma)
+  (let ((gamma (or gamma 2.2d0)))
+    (if (>= l 1d0)
+	0d0
+	(expt (- 1d0 l) (/ gamma)))))
 
 (defun linear-to-srgb (r g b)
   (declare (optimize (debug 0))
@@ -148,22 +149,22 @@
 		(b (aref array 2)))
 	    (multiple-value-call #'linear-to-srgb (oklab-to-linear-srgb l a b)))))))
 
-(defun perceptual-invert-rgba (r g b alpha)
+(defun perceptual-invert-rgba (r g b alpha &optional gamma)
   (multiple-value-bind (l a b)
       (multiple-value-call #'linear-srgb-to-oklab (srgb-to-linear r g b))
 	(multiple-value-call #'values
-	  (oklab-to-srgb (gamma-invert-lightness l) a b)
+	  (oklab-to-srgb (gamma-invert-lightness l gamma) a b)
 	  alpha)))
 
-(defun perceptual-invert-color-string (color-string)
-  (multiple-value-call #'encode-css-color (multiple-value-call #'perceptual-invert-rgba (decode-css-color color-string))))
+(defun perceptual-invert-color-string (color-string &optional gamma)
+  (multiple-value-call #'encode-css-color (multiple-value-call #'perceptual-invert-rgba (decode-css-color color-string) gamma)))
 
 (defun rewrite-css-colors (in-stream out-stream fn)
   (flet ((replacer (target-string start end match-start match-end reg-starts reg-ends)
 	   (declare (ignore start end reg-starts reg-ends))
 	   (funcall fn (substring target-string match-start match-end))))
     (declare (dynamic-extent #'replacer))
-  (loop for in-line = (read-line in-stream nil)
-     while in-line
-     do (let ((out-line (ppcre:regex-replace-all -css-color-scanner- in-line #'replacer)))
-	  (write-line out-line out-stream)))))
+    (loop for in-line = (read-line in-stream nil)
+       while in-line
+       do (let ((out-line (ppcre:regex-replace-all -css-color-scanner- in-line #'replacer)))
+	    (write-line out-line out-stream)))))
