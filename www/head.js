@@ -208,7 +208,6 @@ Appearance = {
 
 	themeOptions: [
 		[ "default",		"Default theme (dark text on light background)",	"A" ],
-		[ "dark",			"Dark theme (light text on dark background)",		"B" ],
 		[ "grey",			"Grey theme (more subdued than default theme)",		"C" ],
 		[ "ultramodern",	"Ultramodern theme (very hip)",						"D" ],
 		[ "zero",			"Theme zero (plain and simple)",					"E" ],
