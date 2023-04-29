@@ -43,6 +43,9 @@
 (defmethod link-for-site-p ((s ea-forum-viewer-site) link)
   (ppcre:scan "^https?://(?:www\\.)?(?:effective-altruism\\.com|forum\\.effectivealtruism\\.org)" link))
 
+(defmethod link-for-site-p ((s progress-forum-viewer-site) link)
+  (ppcre:scan "^https?://(?:www\\.)?progressforum\\.org" link))
+
 (defmethod link-for-site-p ((s arbital-site) link)
   (ppcre:scan "^https?://(?:www\\.)?(?:arbital\\.com)" link))
 

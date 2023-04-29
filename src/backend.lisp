@@ -21,7 +21,7 @@
 	   #:get-tag-posts
 	   #:get-post-tag-votes #:get-tag-post-votes
 	   #:get-slug-tagid
-	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers
+	   #:get-posts-index #:get-posts-json #:get-post-body #:get-post-vote #:get-post-comments #:get-post-answers #:get-post-debate-responses
 	   #:get-post-comments-votes
 	   #:get-tag-comments-votes
 	   #:get-recent-comments #:get-recent-comments-json
@@ -281,7 +281,8 @@
 
 (define-backend-function earliest-post-time ()
   (backend-lw2 (load-time-value (local-time:parse-timestring "2005-01-01")))
-  (backend-ea-forum (load-time-value (local-time:parse-timestring "2011-11-24"))))
+  (backend-ea-forum (load-time-value (local-time:parse-timestring "2011-11-24")))
+  (backend-progress-forum (load-time-value (local-time:parse-timestring "2022-03-26"))))
 
 (define-backend-function fixup-lw2-return-value (value)
   (backend-base
@@ -332,6 +333,9 @@
 	       (call-next-method)))
   (backend-passport-js-login
    (list-cond* (auth-token :cookie (concatenate 'string "loginToken=" auth-token))
+	       (call-next-method)))
+  (backend-oauth2.0-login
+   (list-cond* (auth-token :cookie (concatenate 'string "clientId=" (oauth2.0-client-id backend) "; loginToken=" auth-token))
 	       (call-next-method)))
   (backend-graphql
    (alist* :content-type "application/json"
@@ -840,6 +844,19 @@
 		  (get-post-answer-replies post-id answers)))))))
     (lw2-graphql-query-timeout-cached fn "post-answers-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
 
+(define-cache-database 'backend-debates
+    "post-debate-responses-json" "post-debate-responses-json-meta")
+
+(define-backend-function get-post-debate-responses (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
+  (backend-base
+   (declare (ignore post-id revalidate force-revalidate))
+   nil)
+  (backend-debates
+   (let ((fn (lambda ()
+	       (comments-list-to-graphql-json
+		(get-post-comments-list post-id "debateResponses")))))
+     (lw2-graphql-query-timeout-cached fn "post-debate-responses-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
+
 (define-backend-function get-collection (collection-id)
   (backend-graphql
    (lw2-graphql-query
@@ -1052,7 +1069,15 @@
      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
-(define-backend-function lw2-search-query (query &key (indexes '("test_tags" "test_posts" "test_comments")))
+(define-backend-function algolia-search-index-name (index)
+  (backend-lw2
+   (format nil "test_~(~A~)" index))
+  (backend-ea-forum
+   (format nil "test_~(~A~)" index))
+  (backend-progress-forum
+   (format nil "pf-prod-~(~A~)" index)))
+
+(define-backend-function lw2-search-query (query &key (indexes '(:tags :posts :comments)))
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
@@ -1065,7 +1090,7 @@
 	       ("Content-Type" . "application/json"))
     :content (json:encode-json-alist-to-string
 	      (alist "requests" (loop for index in indexes
-				   collect (alist "indexName" index
+				   collect (alist "indexName" (algolia-search-index-name index)
 						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
 								   (url-rewrite:url-encode query))))))
     :want-stream t)))

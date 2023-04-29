@@ -4,8 +4,10 @@
   (:export
     #:*sites*
     #:site #:forum-site #:wiki-site
-    #:login-site #:shortform-site #:ignore-list-site
+    #:login-site #:basic-login-site #:oidc-login-site
+    #:shortform-site #:ignore-list-site
     #:alternate-frontend-site #:lw2-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
+    #:progress-forum-viewer-site
     #:arbital-site
     #:site-class #:call-route-handler #:site-class-routes
     #:site-uri #:site-host #:site-domain #:site-link-base #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
@@ -92,6 +94,9 @@
   (:metaclass site-class))
 
 (defclass ea-forum-viewer-site (forum-site ignore-list-site login-site lw2-frontend-site shortform-site) ()
+  (:metaclass site-class))
+
+(defclass progress-forum-viewer-site (forum-site ignore-list-site login-site lw2-frontend-site shortform-site) ()
   (:metaclass site-class))
 
 (defclass arbital-site (wiki-site alternate-frontend-site) ()

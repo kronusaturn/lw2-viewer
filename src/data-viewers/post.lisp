@@ -29,6 +29,7 @@
    (af boolean :backend-type backend-alignment-forum)
    (draft boolean)
    (question boolean :backend-type backend-q-and-a)
+   (debate boolean :backend-type backend-debates)
    ;; todo: allow recursive schema types and clean this up
    (target-post-relations list
 			  :context :body

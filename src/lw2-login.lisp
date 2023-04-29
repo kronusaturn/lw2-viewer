@@ -3,6 +3,7 @@
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:import-from #:lw2.context #:*current-backend*)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password #:do-logout
+	   #:do-login-with-oidc-access-token
 	   #:do-lw2-post-query #:do-lw2-post-query*
            #:do-lw2-post #:do-lw2-post-edit #:do-lw2-post-remove #:do-lw2-comment #:do-lw2-comment-edit #:do-lw2-comment-remove
            #:do-lw2-vote #:do-user-edit #:do-create-conversation #:do-create-message)
@@ -108,6 +109,23 @@
 			(values nil nil "Incorrect password")))
 		   (_
 		    (parse-websocket-login-result result))))))
+
+(defun do-login-with-oidc-access-token (access-token)
+  (multiple-value-bind (body status response-headers)
+      (dex:get (quri:make-uri :defaults (quri:uri (graphql-uri *current-backend*))
+			      :path "/auth/useAccessToken"
+			      :query (alist "access_token" access-token))
+	       :max-redirects 0
+	       :keep-alive nil)
+    (unless (< status 400)
+      (error "Login failed: ~A" body))
+    (let ((cookies (gethash "set-cookie" response-headers)))
+      (or (some (lambda (cookie)
+		  (regex-case cookie
+			      ("\\bloginToken=([^;]+)"
+			       (reg 0))))
+		cookies)
+	  (error "Backend server did not send login token.")))))
 
 (define-backend-function do-lw2-create-user (username email password)
   (backend-websocket-login

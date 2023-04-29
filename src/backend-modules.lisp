@@ -7,11 +7,15 @@
     #:backend-lmdb-cache #:backend-lmdb-environment #:backend-cache-db-path
     #:backend-graphql
     #:backend-token-login
+    #:backend-password-login
     #:backend-websocket-login
     #:backend-passport-js-login
+    #:backend-oauth2.0-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
+    #:oauth2.0-login-uri #:oauth2.0-client-id #:oauth2.0-client-secret
     #:backend-feed-crossposts
     #:backend-q-and-a #:backend-related-questions
+    #:backend-debates
     #:backend-alignment-forum
     #:backend-events
     #:backend-shortform
@@ -24,6 +28,7 @@
     #:backend-lw2-misc-workarounds
     #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
+    #:backend-progress-forum
     #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend
     #:call-with-backend-context)
@@ -54,11 +59,20 @@
 (defclass backend-token-login (backend-base) ()
   (:metaclass backend-class))
 
-(defclass backend-websocket-login (backend-token-login)
+(defclass backend-password-login (backend-base) ()
+  (:metaclass backend-class))
+
+(defclass backend-websocket-login (backend-token-login backend-password-login)
   ((websocket-uri :accessor websocket-uri :initarg :websocket-uri :type simple-string))
   (:metaclass backend-class))
 
-(defclass backend-passport-js-login (backend-token-login) ()
+(defclass backend-passport-js-login (backend-token-login backend-password-login) ()
+  (:metaclass backend-class))
+
+(defclass backend-oauth2.0-login (backend-token-login)
+  ((oauth2.0-login-uri :accessor oauth2.0-login-uri :initarg :oauth2.0-login-uri :type simple-string)
+   (oauth2.0-client-id :accessor oauth2.0-client-id :initarg :oauth2.0-client-id :type simple-string)
+   (oauth2.0-client-secret :accessor oauth2.0-client-secret :initarg :oauth2.0-client-secret :type simple-string))
   (:metaclass backend-class))
 
 (defclass backend-algolia-search (backend-base)
@@ -72,6 +86,9 @@
   (:metaclass backend-class))
 
 (defclass backend-related-questions (backend-graphql) ()
+  (:metaclass backend-class))
+
+(defclass backend-debates (backend-graphql) ()
   (:metaclass backend-class))
 
 (defclass backend-backlinks (backend-lmdb-cache) ()
@@ -122,6 +139,7 @@
 		       backend-algolia-search
 		       backend-q-and-a
 		       backend-related-questions
+		       backend-debates
 		       backend-alignment-forum
 		       backend-events
 		       backend-feed-crossposts
@@ -133,7 +151,7 @@
 		       backend-magnum-crossposts) ()
   (:metaclass backend-class))
 
-(defclass backend-ea-forum (backend-passport-js-login
+(defclass backend-ea-forum (backend-oauth2.0-login
 			    backend-lw2-modernized
 			    backend-lw2-legacy
 			    backend-lw2-misc-features
@@ -147,6 +165,19 @@
 			    backend-lw2-tags-comments
 			    backend-lw2-wiki-tags
 			    backend-magnum-crossposts) ()
+  (:metaclass backend-class))
+
+(defclass backend-progress-forum (backend-passport-js-login
+				  backend-lw2-modernized
+				  backend-lw2-legacy
+				  backend-algolia-search
+				  backend-q-and-a
+				  backend-events
+				  backend-backlinks
+				  backend-push-notifications
+				  backend-shortform
+				  backend-lw2-tags-comments
+				  backend-lw2-wiki-tags) ()
   (:metaclass backend-class))
 
 (defclass backend-accordius (backend-lw2-legacy backend-lw2-modernized)
