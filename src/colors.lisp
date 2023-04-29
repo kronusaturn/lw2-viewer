@@ -163,9 +163,11 @@
     (multiple-value-bind (c h)
 	(ab-to-ch a b)
       (multiple-value-bind (a b)
-	  (ch-to-ab c (- (* (mod (+ h 1.5591128900152316d0) (* 2 pi))
-			    0.6678742951003147d0)
-			 1.5591128900152316d0))
+	  (ch-to-ab c (if (< -1.5591128900152316d0 h 2.372773855360125d0)
+			  h
+			  (+ (* (mod (- h 2.372773855360125d0) (* 2 pi))
+				0.11248729401633725d0)
+			     2.372773855360125d0)))
 	(multiple-value-call #'values
 	  (oklab-to-srgb (gamma-invert-lightness l gamma) a b)
 	  alpha)))))
