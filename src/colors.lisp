@@ -110,6 +110,14 @@
 	      (+ (* 1.9779984951 l) (* -2.4285922050 m) (* +0.4505937099 s))
 	      (+ (* 0.0259040371 l) (* +0.7827717662 m) (* -0.8086757660 s))))))
 
+(defun ab-to-ch (a b)
+  (values (sqrt (+ (expt a 2) (expt b 2)))
+	  (atan b a)))
+
+(defun ch-to-ab (c h)
+  (values (* c (cos h))
+	  (* c (sin h))))
+
 (defun oklab-to-linear-srgb (l a b)
   (declare (optimize (debug 0))
 	   (double-float l a b))
@@ -152,9 +160,15 @@
 (defun perceptual-invert-rgba (r g b alpha &optional gamma)
   (multiple-value-bind (l a b)
       (multiple-value-call #'linear-srgb-to-oklab (srgb-to-linear r g b))
+    (multiple-value-bind (c h)
+	(ab-to-ch a b)
+      (multiple-value-bind (a b)
+	  (ch-to-ab c (- (* (mod (+ h 1.5591128900152316d0) (* 2 pi))
+			    0.6678742951003147d0)
+			 1.5591128900152316d0))
 	(multiple-value-call #'values
 	  (oklab-to-srgb (gamma-invert-lightness l gamma) a b)
-	  alpha)))
+	  alpha)))))
 
 (defun perceptual-invert-color-string (color-string &optional gamma)
   (multiple-value-call #'encode-css-color (multiple-value-call #'perceptual-invert-rgba (decode-css-color color-string) gamma)))
