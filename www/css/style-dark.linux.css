@@ -4367,7 +4367,7 @@ li {
 /************/
 
 .spoiler {
-    color: #fff;
+    color: #fff; /* invert-override: #888 */
     background-color: currentColor;
     transition: none;
     text-shadow: none;
@@ -4394,7 +4394,7 @@ li {
 .spoiler::selection,
 .spoiler ::selection {
 	color: #000;
-	background-color: #fff;
+	background-color: #fff; /* invert-override: #888 */
 }
 .spoiler:not(:hover)::selection,
 .spoiler:not(:hover) ::selection {
@@ -4413,7 +4413,8 @@ li {
 	margin-bottom: 0;
 	padding-bottom: 0.25em;
 }
-.spoiler > p:hover ~ p {
+#content .spoiler > p:hover ~ p {
+	color: #fff; /* invert-override: #888 */
 	background-color: currentColor;
 }
 .spoiler > p + p {
