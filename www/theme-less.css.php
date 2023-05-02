@@ -10,6 +10,8 @@
 /* THEME LESS */
 /**************/
 
+/* default-background-gamma: 2.2 */
+
 /*===========*/
 /* VARIABLES */
 /*===========*/
