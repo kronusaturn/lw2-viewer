@@ -19,7 +19,9 @@
   (alexandria:switch ((hunchentoot:cookie-in "dark-mode") :test #'string-equal)
 		     ("dark" "all")
 		     ("light" "not all")
-		     (t "all and (prefers-color-scheme: dark)")))
+		     (t (if (string= (hunchentoot:cookie-in "theme") "dark")
+			    "all"
+			    "all and (prefers-color-scheme: dark)"))))
 
 (defmacro with-page-resources (&body body)
   `(let* ((*link-header* *link-header*)
@@ -128,7 +130,7 @@
       (let* ((ua (hunchentoot:header-in* :user-agent))
 	     (theme (or (and *preview* (nonempty-string (hunchentoot:get-parameter "theme")))
 			(nonempty-string (hunchentoot:cookie-in "theme"))))
-	     (theme (if (string= theme "default") nil theme))
+	     (theme (if (or (string= theme "default") (string= theme "dark")) nil theme))
 	     (os (cond ((search "Windows" ua) "windows")
 		       ((search "Mac OS" ua) "mac")
 		       (t "linux"))))

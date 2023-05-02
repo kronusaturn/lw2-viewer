@@ -1283,7 +1283,7 @@ DarkMode = {
     /*  Returns current (saved) mode (light, dark, or auto).
      */
     getSavedMode: () => {
-        return (readCookie("dark-mode") || "auto");
+            return (readCookie("dark-mode") || (readCookie("theme") === "dark" && "dark") || "auto");
     },
 
 	/*	Saves specified mode (light, dark, or auto).
