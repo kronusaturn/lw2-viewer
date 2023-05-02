@@ -189,43 +189,55 @@
        invert-override
        gamma))))
 
+(defmacro with-css-lines ((line-var stream) &body body)
+  (with-gensyms (part-line full-line)
+    `(loop for ,line-var = (loop with ,full-line = nil
+			      for ,part-line = (read-line ,stream nil)
+			      while ,part-line
+			      do (progn
+				   (when (not ,part-line)
+				     (return ,full-line))
+				   (setf ,full-line (concatenate 'string ,full-line (string #\Newline) ,part-line))
+				   (when (ppcre:scan "[;{}]\\s*$" ,part-line)
+				     (return ,full-line))))
+	while ,line-var
+	do (locally ,@body))))
+
 (defun output-tweakable-css (file out-stream)
   (with-open-file (in-stream file)
-    (loop for in-line = (read-line in-stream nil)
-       while in-line
-       do (let* ((variable-prefix (process-css-line in-line))
-		 (out-line (ppcre:regex-replace-all
-			    lw2.colors::-css-color-scanner-
-			    in-line
-			    (lambda (target-string start end match-start match-end reg-starts reg-ends)
-			      (declare (ignore start end reg-starts reg-ends))
-			      (let ((color-string (substring target-string match-start match-end)))
-				(format nil "var(~A-~A)"
-					variable-prefix
-					(multiple-value-call #'lw2.colors::safe-color-name (lw2.colors::decode-css-color color-string))))))))
-	    (write-line out-line out-stream)))))
+    (with-css-lines (in-line in-stream)
+      (let* ((variable-prefix (process-css-line in-line))
+	     (out-line (ppcre:regex-replace-all
+			lw2.colors::-css-color-scanner-
+			in-line
+			(lambda (target-string start end match-start match-end reg-starts reg-ends)
+			  (declare (ignore start end reg-starts reg-ends))
+			  (let ((color-string (substring target-string match-start match-end)))
+			    (format nil "var(~A-~A)"
+				    variable-prefix
+				    (multiple-value-call #'lw2.colors::safe-color-name (lw2.colors::decode-css-color color-string))))))))
+	(write-line out-line out-stream)))))
 
 (defun output-css-colors (file out-stream invert)
   (let ((used-colors (make-hash-table :test 'equal)))
     (with-open-file (in-stream file)
       (format out-stream ":root {~%")
-      (loop for in-line = (read-line in-stream nil)
-	 while in-line
-	 do (multiple-value-bind (variable-prefix invert-override gamma)
-		(process-css-line in-line)
-	      (ppcre:do-matches-as-strings (color-string lw2.colors::-css-color-scanner- in-line)
-		(multiple-value-bind (r g b a) (lw2.colors::decode-css-color color-string)
-		  (let ((color-name (format nil "~A-~A"
-					    variable-prefix
-					    (lw2.colors::safe-color-name r g b a))))
-		    (unless (gethash color-name used-colors)
-		      (setf (gethash color-name used-colors) t)
-		      (format out-stream "~A: ~A;~%"
-			      color-name
-			      (if invert
-				  (or invert-override
-				      (multiple-value-call #'lw2.colors::encode-css-color (lw2.colors::perceptual-invert-rgba r g b a gamma)))
-				  color-string))))))))))
+      (with-css-lines (in-line in-stream)
+	(multiple-value-bind (variable-prefix invert-override gamma)
+	    (process-css-line in-line)
+	  (ppcre:do-matches-as-strings (color-string lw2.colors::-css-color-scanner- in-line)
+	    (multiple-value-bind (r g b a) (lw2.colors::decode-css-color color-string)
+	      (let ((color-name (format nil "~A-~A"
+					variable-prefix
+					(lw2.colors::safe-color-name r g b a))))
+		(unless (gethash color-name used-colors)
+		  (setf (gethash color-name used-colors) t)
+		  (format out-stream "~A: ~A;~%"
+			  color-name
+			  (if invert
+			      (or invert-override
+				  (multiple-value-call #'lw2.colors::encode-css-color (lw2.colors::perceptual-invert-rgba r g b a gamma)))
+			      color-string))))))))))
   (format out-stream "}~%"))
 
 (sb-ext:defglobal *css-generator-lock* (sb-thread:make-mutex :name "CSS generator lock"))
