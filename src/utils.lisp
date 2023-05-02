@@ -440,6 +440,7 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 
 (defun call-with-atomic-file-replacement (fn filename open-fn)
   (let* ((normal-return nil)
+	 (filename (merge-pathnames filename))
 	 (temp-filename (make-pathname :name (concatenate 'string (pathname-name filename) ".new")
 				       :defaults filename))
 	 (stream (funcall open-fn temp-filename)))
