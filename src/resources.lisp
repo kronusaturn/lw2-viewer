@@ -170,7 +170,7 @@
 		  (if (>= (length reg-matches) 1) (aref reg-matches 0)))))
     (let* ((invert-override (override "invert-override"))
 	   (gamma-override (override "gamma-override"))
-	   (backgroundp (to-boolean (ppcre:scan "background" in-line)))
+	   (backgroundp (to-boolean (ppcre:scan "background|shadow" in-line)))
 	   (gamma (cond (gamma-override (parse-float:parse-float gamma-override :type 'double-float))
 			(backgroundp 1.6d0)
 			(t 2.2d0))))
