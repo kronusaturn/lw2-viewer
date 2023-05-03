@@ -194,8 +194,8 @@
 
 (defmacro with-css-lines ((line-var stream &rest vars) &body body)
   (with-gensyms (default-gamma default-background-gamma part-line full-line)
-    `(let ((,default-gamma 2.2d0)
-	   (,default-background-gamma 1.8d0))
+    `(let ((,default-gamma 1.8d0)
+	   (,default-background-gamma 1.5d0))
        (loop for ,line-var = (loop with ,full-line = nil
 				for ,part-line = (read-line ,stream nil)
 				while ,part-line
