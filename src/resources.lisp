@@ -238,8 +238,8 @@
 	    (let ((color-name (format nil "~A-~A"
 				      variable-prefix
 				      (lw2.colors::safe-color-name r g b a))))
-	      (unless (gethash color-name used-colors)
-		(setf (gethash color-name used-colors) t)
+	      (unless (equal (gethash color-name used-colors) gamma)
+		(setf (gethash color-name used-colors) gamma)
 		(format out-stream "~A: ~A;~%"
 			color-name
 			(if invert
