@@ -73,7 +73,7 @@
   (format nil "~6,'0X~2,'0X" (dufy/core:rgb-to-rgbpack r g b) (round (* a 255))))
 
 (defun gamma-invert-lightness (l &optional gamma)
-  (let ((gamma (or gamma 2.2d0)))
+  (let ((gamma (or gamma 1.7d0)))
     (if (>= l 1d0)
 	0d0
 	(expt (- 1d0 l) (/ gamma)))))
