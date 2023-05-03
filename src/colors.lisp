@@ -73,22 +73,26 @@
   (format nil "~6,'0X~2,'0X" (dufy/core:rgb-to-rgbpack r g b) (round (* a 255))))
 
 (defun gamma-invert-lightness (l &optional gamma)
+  (declare (double-float l)
+	   (type (or null (double-float 0d0)) gamma))
   (let ((gamma (or gamma 1.7d0)))
-    (if (>= l 1d0)
-	0d0
-	(expt (- 1d0 l) (/ gamma)))))
+    (cond ((>= l 1d0) 0d0)
+	  ((<= l 0d0) 1d0)
+	  (t (expt (the (double-float 0d0) (- 1d0 l)) (/ gamma))))))
 
 (defun linear-to-srgb (r g b)
   (declare (optimize (debug 0))
 	   (double-float r g b))
   (flet ((f (x)
-	   (if (>= x 0.0031308)
-	       (- (* 1.055 (expt x (/ 2.4d0))) 0.055)
-	       (* 12.92 x))))
+	   (declare (double-float x))
+	   (if (>= x 0.0031308d0)
+	       (- (* 1.055d0 (expt x (/ 2.4d0))) 0.055d0)
+	       (* 12.92d0 x))))
     (declare (inline f))
     (values (f r) (f g) (f b))))
 
 (defun linear-to-simple-srgb (r g b)
+  (declare (double-float r g b))
   (flet ((f (x) (if (plusp x) (expt x (/ 2.2d0)) 0d0)))
     (values (f r) (f g) (f b))))
 
@@ -96,16 +100,22 @@
   (declare (optimize (debug 0))
 	   (double-float r g b))
   (flet ((f (x)
-	   (if (>= x 0.04045)
-	       (expt (/ (+ x 0.055) 1.055) 2.4d0)
-	       (/ x 12.92))))
+	   (declare (double-float x))
+	   (if (>= x 0.04045d0)
+	       (expt (/ (+ x 0.055d0) 1.055d0) 2.4d0)
+	       (/ x 12.92d0))))
     (declare (inline f))
     (values (f r) (f g) (f b))))
 
 (defun simple-srgb-to-linear (r g b)
+  (declare (double-float r g b))
   (flet ((f (x)
 	   (if (plusp x) (expt x 2.2d0) 0d0)))
     (values (f r) (f g) (f b))))
+
+(declaim (ftype (function (double-float double-float double-float) (values double-float double-float double-float))
+		linear-srgb-to-oklab
+		oklab-to-linear-srgb))
 
 (defun linear-srgb-to-oklab (r g b)
   (declare (optimize (debug 0))
@@ -125,11 +135,16 @@
 	      (+ (* 1.9779984951 l) (* -2.4285922050 m) (* +0.4505937099 s))
 	      (+ (* 0.0259040371 l) (* +0.7827717662 m) (* -0.8086757660 s))))))
 
+(declaim (ftype (function (double-float double-float) (values double-float double-float))
+		ab-to-ch ch-to-ab))
+
 (defun ab-to-ch (a b)
+  (declare (type (double-float #.(- pi) #.pi) a b))
   (values (sqrt (+ (expt a 2) (expt b 2)))
 	  (atan b a)))
 
 (defun ch-to-ab (c h)
+  (declare (type (double-float #.(- pi) #.pi) c h))
   (values (* c (cos h))
 	  (* c (sin h))))
 
