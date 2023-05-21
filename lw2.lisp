@@ -1937,7 +1937,8 @@ signaled condition to *HTML-OUTPUT*."
        (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
        (redirect (format nil "/conversation?id=~A" id))))))
 
-(define-page view-search "/search" ((q :required t))
+(define-page view-search "/search" ((q :required t)
+				    (sort :default :relevant :member '(:relevant :new :old)))
   (let ((*current-search-query* q)
 	(link (presentable-link q :search))
 	(title (format nil "~@[~A - ~]Search" q)))
@@ -1945,14 +1946,28 @@ signaled condition to *HTML-OUTPUT*."
     (if link
 	(redirect link)
 	(multiple-value-bind (results tags) (lw2-search-query q)
-	  (view-items-index results
-			    :top-nav (lambda ()
-				       (page-toolbar-to-html :title title :rss t)
-				       (when tags
-					 <h1>Tags</h1>
-					 (tag-list-to-html (firstn tags 20))))
-			    :content-class "search-results-page" :current-uri "/search"
-			    :title title)))))
+	  (let* ((sort (if (string= (hunchentoot:get-parameter "format") "rss")
+			   :new
+			   sort))
+		 (results (if (eq sort :relevant)
+			      results
+			      (sort-items results sort)))
+		 (results (if (hunchentoot:get-parameter "format")
+			      (firstn results 20)
+			      results)))
+	    (view-items-index results
+			      :top-nav (lambda ()
+					 (page-toolbar-to-html :title title :rss t)
+					 (sublevel-nav-to-html '(:relevant :new :old)
+							       sort
+							       :default :relevant
+							       :param-name "sort"
+							       :extra-class "sort")
+					 (when tags
+					   <h1>Tags</h1>
+					   (tag-list-to-html (firstn tags 20))))
+			      :content-class "index-page search-results-page" :current-uri "/search"
+			      :title title))))))
 
 (defgeneric view-login (backend))
 
