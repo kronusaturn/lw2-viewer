@@ -1119,7 +1119,7 @@
     :content (json:encode-json-alist-to-string
 	      (alist "requests" (loop for index in indexes
 				   collect (alist "indexName" (algolia-search-index-name index)
-						  "params" (format nil "query=~A&hitsPerPage=500&page=0"
+						  "params" (format nil "query=~A&hitsPerPage=200&page=0"
 								   (url-rewrite:url-encode query))))))
     :want-stream t)))
 
