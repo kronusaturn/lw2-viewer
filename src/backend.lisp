@@ -1069,6 +1069,12 @@
      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
+(defun search-result-markdown-to-html (item)
+  (alist* :html-body
+	  (handler-case (nth-value 1 (cl-markdown:markdown (cdr (assoc :body item)) :stream nil))
+	    (serious-condition () "[Error while processing search result]"))
+	  item))
+
 (define-backend-function algolia-search-index-name (index)
   (backend-lw2
    (format nil "test_~(~A~)" index))
@@ -1081,8 +1087,30 @@
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
-      (values-list (loop for r in (cdr (assoc :results (json:decode-json req-stream)))
-		      collect (cdr (assoc :hits r)))))
+      (let* ((tags nil)
+	     (result-groups (loop
+			       for results in (cdr (assoc :results (json:decode-json req-stream)))
+			       for index in indexes
+			       for hits = (cdr (assoc :hits results))
+			       do (setf hits (case index
+					       (:posts (map 'list (lambda (post) (if (cdr (assoc :comment-count post)) post (alist* :comment-count 0 post))) hits))
+					       (:comments (map 'list #'search-result-markdown-to-html hits))
+					       (:tags (progn (setf tags (map 'list (lambda (tag) (alist* :----typename "Tag" tag)) hits))
+							     nil))
+					       (t hits)))
+			       collect hits)))
+	(values
+	 (with-collector (col)
+	   (let ((remaining-result-groups result-groups))
+	     (loop while (some #'identity result-groups)
+		do (multiple-value-bind (firstn rest)
+		       (firstn (car remaining-result-groups) 10)
+		     (map nil #'col firstn)
+		     (setf (car remaining-result-groups) rest
+			   remaining-result-groups (or (rest remaining-result-groups)
+						       result-groups)))))
+	   (col))
+	 tags)))
     (algolia-search-uri *current-backend*)
     :method :post
     :headers '(("Origin" . "https://www.greaterwrong.com")
@@ -1091,7 +1119,7 @@
     :content (json:encode-json-alist-to-string
 	      (alist "requests" (loop for index in indexes
 				   collect (alist "indexName" (algolia-search-index-name index)
-						  "params" (format nil "query=~A&hitsPerPage=20&page=0"
+						  "params" (format nil "query=~A&hitsPerPage=500&page=0"
 								   (url-rewrite:url-encode query))))))
     :want-stream t)))
 

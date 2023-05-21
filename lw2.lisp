@@ -1937,33 +1937,22 @@ signaled condition to *HTML-OUTPUT*."
        (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
        (redirect (format nil "/conversation?id=~A" id))))))
 
-(defun search-result-markdown-to-html (item)
-  (cons (cons :html-body
-              (handler-case (nth-value 1 (cl-markdown:markdown (cdr (assoc :body item)) :stream nil))
-                (serious-condition () "[Error while processing search result]")))
-        item))
-
 (define-page view-search "/search" ((q :required t))
   (let ((*current-search-query* q)
-        (link (presentable-link q :search))
+	(link (presentable-link q :search))
 	(title (format nil "~@[~A - ~]Search" q)))
     (declare (special *current-search-query*))
     (if link
-        (redirect link)
-        (multiple-value-bind (tags posts comments) (lw2-search-query q)
-	  (let ((tags (map 'list (lambda (tag)
-				   (alist* :----typename "Tag" tag))
-			   tags)))
-	    (view-items-index (nconc
-			       (map 'list (lambda (post) (if (cdr (assoc :comment-count post)) post (alist* :comment-count 0 post))) posts)
-			       (map 'list #'search-result-markdown-to-html comments))
-			      :top-nav (lambda ()
-					 (page-toolbar-to-html :title title :rss t)
-					 (when tags
-					   <h1>Tags</h1>
-					   (tag-list-to-html tags)))
-			      :content-class "search-results-page" :current-uri "/search"
-			      :title title))))))
+	(redirect link)
+	(multiple-value-bind (results tags) (lw2-search-query q)
+	  (view-items-index results
+			    :top-nav (lambda ()
+				       (page-toolbar-to-html :title title :rss t)
+				       (when tags
+					 <h1>Tags</h1>
+					 (tag-list-to-html (firstn tags 20))))
+			    :content-class "search-results-page" :current-uri "/search"
+			    :title title)))))
 
 (defgeneric view-login (backend))
 
