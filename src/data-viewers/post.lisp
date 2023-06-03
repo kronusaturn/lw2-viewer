@@ -11,7 +11,7 @@
   ((post-id string :alias :--id)
    (slug string)
    (title string)
-   (user-id string)
+   (user-id (or null string))
    (coauthors (or null list) :backend-type backend-lw2 :subfields (:--id))
    (url (or null string))
    (feed-link (or null string) :backend-type backend-feed-crossposts)

@@ -926,11 +926,12 @@
    (declare (ignore user-id status set))
    nil)
   (backend-lw2-modernized
-   (if set
-       (if status
-	   (cache-put "user-deleted" user-id "1")
-	   (cache-del "user-deleted" user-id))
-       (cache-get "user-deleted" user-id :return-type 'existence))))
+   (when user-id
+     (if set
+	 (if status
+	     (cache-put "user-deleted" user-id "1")
+	     (cache-del "user-deleted" user-id))
+	 (cache-get "user-deleted" user-id :return-type 'existence)))))
 
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
