@@ -2,6 +2,7 @@
   (:use #:cl #:iterate #:lw2-viewer.config #:lw2.utils #:lw2.sites #:lw2.context)
   (:import-from #:alexandria #:with-gensyms #:once-only #:when-let #:appendf)
   (:import-from #:parse-float #:parse-float)
+  (:import-from #:split-sequence #:split-sequence)
   (:export #:*page-resources* #:inverted-media-query #:with-page-resources #:require-resource #:generate-versioned-link #:with-resource-bindings #:call-with-fonts-source-resources #:site-resources)
   (:recycle #:lw2-viewer)
   (:unintern #:fonts-source-resources))
@@ -176,77 +177,97 @@
     `(let ((reg-matches (nth-value 1 (ppcre:scan-to-strings ,(format nil "~A:\\s*(.*?)\\s*(?:;|\\*/|$)" name) ,in-line))))
        (if (>= (length reg-matches) 1) (aref reg-matches 0)))))
 
-(defun process-css-line (in-line default-gamma default-background-gamma)
-  (let* ((invert-override (override-scan "invert-override" in-line))
-	 (gamma-override (override-scan "gamma-override" in-line))
-	 (backgroundp (to-boolean (ppcre:scan "background|shadow" in-line)))
-	 (gamma (cond (gamma-override (parse-float gamma-override :type 'double-float))
-		      (backgroundp default-background-gamma)
-		      (t default-gamma))))
-    (values
-     (format nil "--theme~A-color"
-	     (cond (invert-override (format nil "-override-~A" (multiple-value-call #'lw2.colors::safe-color-name (lw2.colors::decode-css-color invert-override))))
-		   (gamma-override (format nil "-gamma-~F" gamma))
-		   (backgroundp "-bg")
-		   (t "")))
-     invert-override
-     gamma)))
+(defmacro with-css-lines ((line-var stream &rest vars) &key each-color replace-color each-line finally)
+  (let #.(loop with our-vars = '(out-line
+				 default-gamma
+				 default-background-gamma
+				 invert-overrides
+				 gamma-overrides
+				 backgroundp)
+	      for var in our-vars
+	    collect `(,var (or (find ',var vars :test #'string=) (gensym (string ',var)))))
+       `(let ((,default-gamma 1.7d0)
+	      (,default-background-gamma 1.6d0)
+	      ,out-line ,invert-overrides ,gamma-overrides ,backgroundp)
+	  (declare (ignorable ,out-line))
+	  (loop for ,line-var = (read-line ,stream nil)
+	     while ,line-var
+	     do (progn
+		  (when-let ((x (override-scan "default-gamma" ,line-var)))
+		    (setf ,default-gamma (parse-float x :type 'double-float)))
+		  (when-let ((x (override-scan "default-background-gamma" ,line-var)))
+		    (setf ,default-background-gamma (parse-float x :type 'double-float)))
+		  (when-let ((x (override-scan "invert-override" ,line-var)))
+		    (setf ,invert-overrides (split-sequence #\Space x)))
+		  (when-let ((x (override-scan "gamma-override" ,line-var)))
+		    (setf ,gamma-overrides (split-sequence #\Space x)))
+		  (setf ,backgroundp (and (ppcre:scan "background|shadow" ,line-var) t)
+			,out-line ,(if replace-color
+				       `(ppcre:regex-replace-all lw2.colors::-css-color-scanner-
+								 ,line-var
+								 (lambda (target-string start end match-start match-end reg-starts reg-ends)
+								   (declare (ignore start end reg-starts reg-ends))
+								   (,replace-color (substring target-string match-start match-end))))
+				       line-var))
+		  ,@(when each-color
+		      `((ppcre:do-matches-as-strings (color-string lw2.colors::-css-color-scanner- ,line-var)
+			  (,each-color color-string))))
+		  ,@(when each-line `((,each-line ,out-line)))
+		  (when (ppcre:scan "[;}]\\s*$" ,line-var)
+		    (setf ,invert-overrides nil
+			  ,gamma-overrides nil)))
+	       finally (return ,(when finally `(,finally)))))))
 
-(defmacro with-css-lines ((line-var stream &rest vars) &body body)
-  (with-gensyms (default-gamma default-background-gamma part-line full-line)
-    `(let ((,default-gamma 1.7d0)
-	   (,default-background-gamma 1.6d0))
-       (loop for ,line-var = (loop with ,full-line = nil
-				for ,part-line = (read-line ,stream nil)
-				while ,part-line
-				do (progn
-				     (when (not ,part-line)
-				       (return ,full-line))
-				     (when-let ((x (override-scan "default-gamma" ,part-line)))
-				       (setf ,default-gamma (parse-float x :type 'double-float)))
-				     (when-let ((x (override-scan "default-background-gamma" ,part-line)))
-				       (setf ,default-background-gamma (parse-float x :type 'double-float)))
-				     (setf ,full-line (concatenate 'string ,full-line (string #\Newline) ,part-line))
-				     (when (ppcre:scan "[;{}]\\s*$" ,part-line)
-				       (return ,full-line))))
-	  while ,line-var
-	  do (multiple-value-bind ,vars
-		 (process-css-line ,line-var ,default-gamma ,default-background-gamma)
-	       ,@body)))))
+(defun safe-color-name* (color)
+  (multiple-value-call #'lw2.colors::safe-color-name (lw2.colors::decode-css-color color)))
+
+(defun color-variable-name (color invert-override gamma-override backgroundp)
+  (with-output-to-string (s)
+    (format s "--theme")
+    (cond (invert-override
+	   (format s "-override-~A" (safe-color-name* invert-override)))
+	  (gamma-override
+	   (format s "-gamma-~F" gamma-override))
+	  (backgroundp
+	   (format s "-bg")))
+    (format s "-color-~A" (safe-color-name* color))))
 
 (defun output-tweakable-css (file out-stream)
   (with-open-file (in-stream file)
-    (with-css-lines (in-line in-stream variable-prefix)
-      (let ((out-line (ppcre:regex-replace-all
-		       lw2.colors::-css-color-scanner-
-		       in-line
-		       (lambda (target-string start end match-start match-end reg-starts reg-ends)
-			 (declare (ignore start end reg-starts reg-ends))
-			 (let ((color-string (substring target-string match-start match-end)))
-			   (format nil "var(~A-~A)"
-				   variable-prefix
-				   (multiple-value-call #'lw2.colors::safe-color-name (lw2.colors::decode-css-color color-string))))))))
-	(write-line out-line out-stream)))))
+    (with-css-lines (in-line in-stream invert-overrides gamma-overrides backgroundp)
+      :replace-color (lambda (color)
+		       (format nil "var(~A)" (color-variable-name color (pop invert-overrides) (pop gamma-overrides) backgroundp)))
+      :each-line (lambda (out-line)
+		   (write-line out-line out-stream)))))
 
 (defun output-css-colors (file out-stream invert)
   (let ((used-colors (make-hash-table :test 'equal)))
     (with-open-file (in-stream file)
-      (format out-stream ":root {~%")
-      (with-css-lines (in-line in-stream variable-prefix invert-override gamma)
-	(ppcre:do-matches-as-strings (color-string lw2.colors::-css-color-scanner- in-line)
-	  (multiple-value-bind (r g b a) (lw2.colors::decode-css-color color-string)
-	    (let ((color-name (format nil "~A-~A"
-				      variable-prefix
-				      (lw2.colors::safe-color-name r g b a))))
-	      (unless (equal (gethash color-name used-colors) gamma)
-		(setf (gethash color-name used-colors) gamma)
-		(format out-stream "~A: ~A;~%"
-			color-name
-			(if invert
-			    (or invert-override
-				(multiple-value-call #'lw2.colors::encode-css-color (lw2.colors::perceptual-invert-rgba r g b a gamma)))
-			    color-string)))))))))
-  (format out-stream "}~%"))
+      (with-css-lines (in-line in-stream default-gamma default-background-gamma invert-overrides gamma-overrides backgroundp)
+	:each-color (lambda (color)
+		      (let ((args (list color (pop invert-overrides) (pop gamma-overrides) backgroundp)))
+			(setf (gethash (apply #'color-variable-name args) used-colors) args)))
+	:finally (lambda ()
+		   (format out-stream ":root {~%")
+		   (maphash (lambda (color-variable-name args)
+			      (destructuring-bind (color invert-override gamma-override backgroundp)
+				  args
+				(let ((out-color
+				       (if invert
+					   (or invert-override
+					      (multiple-value-call #'lw2.colors:encode-css-color
+						(multiple-value-call #'lw2.colors::perceptual-invert-rgba
+						  (lw2.colors::decode-css-color color)
+						  (or gamma-override
+						      (if backgroundp
+							  default-background-gamma
+							  default-gamma)))))
+					   color)))
+				  (format out-stream "~A: ~A;~%"
+					  color-variable-name
+					  out-color))))
+			    used-colors)
+		   (format out-stream "}~%"))))))
 
 (sb-ext:defglobal *css-generator-lock* (sb-thread:make-mutex :name "CSS generator lock"))
 
