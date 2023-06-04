@@ -710,11 +710,11 @@ signaled condition to *HTML-OUTPUT*."
 	  (format out-stream "</head>")
 	  (unwind-protect
 	       (progn
-		 (format out-stream "<body class=\"theme-~A\"><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
-			 (let ((theme (hunchentoot:cookie-in "theme")))
-			   (if (and theme (> (length theme) 0))
-			       theme
-			       "default"))
+		 (format out-stream "<body class=\"~{~A~^ ~}\"><div id=\"content\"~@[ class=\"~{~A~^ ~}\"~]>"
+			 (let* ((theme (nonempty-string (hunchentoot:cookie-in "theme")))
+				(dark-mode (nonempty-string (hunchentoot:cookie-in "dark-mode"))))
+			   (list-cond (t (format nil "theme-~A" (or theme "default")))
+				      (dark-mode (format nil "force-~A-mode" dark-mode))))
 			 (list-cond (content-class content-class)
 				    (hide-nav-bars "no-nav-bars")
 				    (preview "preview")))
@@ -883,7 +883,8 @@ signaled condition to *HTML-OUTPUT*."
 		(t
 		 (values t nil)))
 	(when (not *revalidate-default*)
-	  (setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))))
+	  (setf (hunchentoot:header-out :cache-control) (format nil "public, max-age=~A" (* 5 60))
+		(hunchentoot:header-out :vary) "cookie"))
 	(when (site-domain *current-site*)
 	  (setf (hunchentoot:header-out :origin-agent-cluster) "?0")) ; Allow document.domain in Chrome: https://developer.chrome.com/blog/immutable-document-domain/
 	(let ((*memoized-output-without-hyphens*

@@ -5,7 +5,7 @@ set -e
 SYSTEMS=(Mac Windows Linux)
 SUFFIXES=(.mac.css .windows.css .linux.css)
 
-if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php www/style_mobile_additions.css.php color-scheme-convert.php www/theme\* www/ea/\*.css.php www/accordius/\*.css.php ; then
+if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style.css.php www/style_mobile_additions.css.php www/theme\* www/ea/\*.css.php www/accordius/\*.css.php ; then
 	git ls-files --cached HEAD 'www/theme-*' |while read F; do
 		IN="${F#www/}"
 		OUTBASE="css/style${IN#theme}"
@@ -19,9 +19,7 @@ if [[ "$1" = "--force" ]] || ! git diff-index --quiet --cached HEAD -- www/style
 		done
 	done
 	for N in ${!SYSTEMS[*]}; do
-	        cp www/style-dark-preamble.css www/css/style-dark${SUFFIXES[N]}
-		php color-scheme-convert.php www/css/style${SUFFIXES[N]} 3 >>www/css/style-dark${SUFFIXES[N]}
-		git add www/css/style${SUFFIXES[N]} www/css/style-dark${SUFFIXES[N]}
+		git add www/css/style${SUFFIXES[N]}
 	done
 	git show :www/theme_tweaker.css.php | (cd www; php >css/theme_tweaker.css)
 	git add www/css/theme_tweaker.css

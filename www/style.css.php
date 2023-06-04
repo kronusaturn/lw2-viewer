@@ -30,6 +30,10 @@
 	--GW-comment-background-color-even: transparent;
 	--GW-comment-background-color-target: transparent;
 
+	--GW-toggle-widget-color: #888;
+	--GW-toggle-widget-hover-color: #444;
+	--GW-toggle-widget-shadow-color: rgba(255, 255, 255, 0.5);
+
 	--inverted-display: none;
 }
 
@@ -566,13 +570,88 @@ a#inbox-indicator.new-messages:hover::before {
 }
 <?php fit_content(".comments > .sublevel-nav.sort"); ?>
 
+
+/**********************/
+/* DARK MODE SELECTOR */
+/**********************/
+
+#dark-mode-selector {
+	position: absolute;
+	top: 4px;
+	right: -78px;
+	display: flex;
+	opacity: 0.4;
+}
+#dark-mode-selector:hover {
+	opacity: 1.0;
+}
+
+/*=---------=*/
+/*= Buttons =*/
+/*=---------=*/
+
+#dark-mode-selector button {
+	font-family: "Font Awesome", "Font Awesome 5 Free";
+	font-size: 1.125rem;
+	width: 24px;
+	height: 24px;
+	padding: 0;
+	line-height: 1;
+	font-weight: 400;
+}
+#dark-mode-selector button.select-mode-auto {
+}
+#dark-mode-selector button.select-mode-light {
+	font-size: 1.25rem;
+	padding: 1px 0 0 1px;
+}
+#dark-mode-selector button.select-mode-dark {
+	font-weight: 300;
+	font-size: 1.25rem;
+	padding: 1px 0 0 4px;
+}
+#dark-mode-selector button.select-mode-dark.selected {
+	font-weight: 400;
+}
+#dark-mode-selector button:disabled:active {
+	transform: none;
+}
+#dark-mode-selector button:disabled:hover {
+	cursor: default;
+}
+
+/*=----------------=*/
+/*= Hover tooltips =*/
+/*=----------------=*/
+
+#dark-mode-selector button::after {
+	content: attr(data-name);
+	font-family: <?php echo $UI_font; ?>;
+	font-weight: normal;
+	position: absolute;
+	display: block;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	top: 92px;
+	font-size: 1rem;
+	visibility: hidden;
+}
+#dark-mode-selector button.selected::after {
+	content: attr(data-name) " (selected)";
+}
+#dark-mode-selector button:hover:not(:active)::after {
+	visibility: visible;
+}
+
+
 /******************/
 /* WIDTH SELECTOR */
 /******************/
 
 #width-selector {
 	position: absolute;
-	top: 4px;
+	top: 40px;
 	right: -78px;
 }
 #width-selector button {
@@ -701,9 +780,6 @@ foreach ($content_width_settings as $name => $setting) {
 }
 .theme-selector button:nth-of-type(8) {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_H.gif")) ?>');
-}
-.theme-selector button:nth-of-type(9) {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/theme_I.gif")) ?>');
 }
 
 /*=------------------------------=*/
@@ -919,13 +995,25 @@ foreach ($content_width_settings as $name => $setting) {
 	content: "\F070";	
 }
 
+#anti-kibitzer-toggle button::before,
+#anti-kibitzer-toggle button::after {
+	background-color: var(--GW-toggle-widget-color);
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: var(--GW-toggle-widget-shadow-color) 0px 1px 1px;
+}
+#anti-kibitzer-toggle button:hover::before,
+#anti-kibitzer-toggle button:hover::after {
+	background-color: var(--GW-toggle-widget-hover-color);
+}
+
 /************************/
 /* TEXT SIZE ADJUSTMENT */
 /************************/
 
 #text-size-adjustment-ui {
 	position: absolute;
-	top: 30px;
+	top: 64px;
 	right: -78px;
 	opacity: 0.4;
 }
@@ -4257,7 +4345,7 @@ li {
 /************/
 
 .spoiler {
-    color: #000;
+    color: #000; /* invert-override: #666 */
     background-color: currentColor;
     transition: none;
     text-shadow: none;
@@ -4284,7 +4372,7 @@ li {
 .spoiler::selection,
 .spoiler ::selection {
 	color: #fff;
-	background-color: #000;
+	background-color: #000; /* invert-override: #666 */
 }
 .spoiler:not(:hover)::selection,
 .spoiler:not(:hover) ::selection {
@@ -4303,7 +4391,8 @@ li {
 	margin-bottom: 0;
 	padding-bottom: 0.25em;
 }
-.spoiler > p:hover ~ p {
+#content .spoiler > p:hover ~ p {
+	color: #000; /* invert-override: #666 */
 	background-color: currentColor;
 }
 .spoiler > p + p {

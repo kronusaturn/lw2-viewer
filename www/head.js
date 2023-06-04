@@ -87,7 +87,7 @@ Element.prototype.swapClasses = function (classes, whichToAdd) {
 /* DOM helpers */
 
 function insertHeadHTML(html) {
-	document.head.insertAdjacentHTML("beforeend", html);
+	document.head.insertAdjacentHTML("beforeend", html.replace(/\s+/, " "));
 }
 
 /********************/
@@ -128,27 +128,9 @@ Object.prototype.query = function (selector) {
 	return query(selector, this);
 }
 
-/***********************************/
-/* CONTENT COLUMN WIDTH ADJUSTMENT */
-/***********************************/
-
-GW.widthOptions = [
-	['normal', 'Narrow (fixed-width) content column', 'N'],
-	['wide', 'Wide (fixed-width) content column', 'W'],
-	['fluid', 'Full-width (fluid) content column', 'F']
-];
-
-function setContentWidth(widthOption) {
-	let currentWidth = localStorage.getItem("selected-width") || 'normal';
-	let head = query('head');
-	head.removeClasses(GW.widthOptions.map(wo => 'content-width-' + wo[0]));
-	head.addClass('content-width-' + (widthOption || 'normal'));
-}
-setContentWidth(localStorage.getItem('selected-width'));
-
-/********************************************/
-/* APPEARANCE CUSTOMIZATION (THEME TWEAKER) */
-/********************************************/
+/********/
+/* MISC */
+/********/
 
 Object.prototype.isEmpty = function () {
     for (var prop in this) if (this.hasOwnProperty(prop)) return false;
@@ -164,130 +146,313 @@ Array.prototype.clone = function() {
 	return JSON.parse(JSON.stringify(this));
 };
 
-GW.themeTweaker = { };
-GW.themeTweaker.filtersExclusionPaths = { };
-GW.themeTweaker.defaultFiltersExclusionTree = [ "#content", [ ] ];
-
-function exclusionTreeFromExclusionPaths(paths) {
-	if (!paths) return null;
-
-	let tree = GW.themeTweaker.defaultFiltersExclusionTree.clone();
-	paths.keys().flatMap(key => paths[key]).forEach(path => {
-		var currentNodeInTree = tree;
-		path.split(" ").slice(1).forEach(step => {
-			if (currentNodeInTree[1] == null)
-				currentNodeInTree[1] = [ ];
-
-			var indexOfMatchingChild = currentNodeInTree[1].findIndex(child => { return child[0] == step; });
-			if (indexOfMatchingChild == -1) {
-				currentNodeInTree[1].push([ step, [ ] ]);
-				indexOfMatchingChild = currentNodeInTree[1].length - 1;
-			}
-
-			currentNodeInTree = currentNodeInTree[1][indexOfMatchingChild];
-		});
-	});
-
-	return tree;
+/********************************************************************/
+/*	Reads the value of named cookie.
+	Returns the cookie as a string, or null if no such cookie exists.
+ */
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1, c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+	}
+	return null;
 }
-function selectorFromExclusionTree(tree) {
-	var selectorParts = [
-		"body::before, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container"
-	];
-	
-	function selectorFromExclusionTreeNode(node, path = [ ]) {
-		let [ value, children ] = node;
 
-		let newPath = path.clone();
-		newPath.push(value);
+/***************************************************************************/
+/*	Create and return a new element with the specified tag name, attributes,
+	and object properties.
+ */
+function newElement(tagName, attributes = { }, properties = { }) {
+	let element = document.createElement(tagName);
+	for (const attrName in attributes)
+		if (attributes.hasOwnProperty(attrName) && attributes[attrName] !== null)
+			element.setAttribute(attrName, attributes[attrName]);
+	for (const propName in properties)
+		if (properties.hasOwnProperty(propName))
+			element[propName] = properties[propName];
+	return element;
+}
 
-		if (!children) {
-			return value;
-		} else if (children.length == 0) {
-			return `${newPath.join(" > ")} > *, ${newPath.join(" > ")}::before, ${newPath.join(" > ")}::after`;
-		} else {
-			return `${newPath.join(" > ")} > *:not(${children.map(child => child[0]).join("):not(")}), ${newPath.join(" > ")}::before, ${newPath.join(" > ")}::after, ` + children.map(child => selectorFromExclusionTreeNode(child, newPath)).join(", ");
+/****************************/
+/* APPEARANCE CUSTOMIZATION */
+/****************************/
+
+Appearance = {
+	/*****************/
+	/*	Configuration.
+	 */
+
+	defaultTheme: "default",
+	defaultFilters: { },
+	defaultWidth: "normal",
+	defaultTextZoom: 1.0,
+
+	minTextZoom: 0.5,
+	maxTextZoom: 1.5,
+
+	widthOptions: [
+		[ "normal",	"Narrow (fixed-width) content column",	"N" ],
+		[ "wide",	"Wide (fixed-width) content column",	"W" ],
+		[ "fluid",	"Full-width (fluid) content column",	"F" ]
+	],
+
+	textSizeAdjustTargetElementsSelector: [
+		".post", 
+		".comment", 
+		".posting-controls", 
+		".sample-text"
+	].join(", "),
+
+	themeOptions: [
+		[ "default",		"Default theme (dark text on light background)",	"A" ],
+		[ "grey",			"Grey theme (more subdued than default theme)",		"C" ],
+		[ "ultramodern",	"Ultramodern theme (very hip)",						"D" ],
+		[ "zero",			"Theme zero (plain and simple)",					"E" ],
+		[ "brutalist",		"Brutalist theme (the Motherland calls!)",			"F" ],
+		[ "rts",			"ReadTheSequences.com theme",						"G" ],
+		[ "classic",		"Classic Less Wrong theme",							"H" ],
+		[ "less",			"Less theme (serenity now)",						"I" ]
+	],
+
+	defaultFiltersExclusionTree: [ "#content", [ ] ],
+
+	defaultThemeTweakerClippyState: true,
+
+	defaultAppearanceAdjustUIToggleState: false,
+
+	themeLessAppearanceAdjustUIElementsSelector: [
+		"#comments-view-mode-selector", 
+		"#theme-selector", 
+		"#dark-mode-selector",
+		"#width-selector", 
+		"#text-size-adjustment-ui", 
+		"#theme-tweaker-toggle", 
+		"#appearance-adjust-ui-toggle button"
+	].join(", "),
+
+	/******************/
+	/*	Infrastructure.
+	 */
+
+	currentTheme: null,
+	currentFilters: null,
+	currentWidth: null,
+	currentTextZoom: null,
+
+	filtersExclusionPaths: { },
+
+	themeTweakStyleBlock: null,
+	textZoomStyleBlock: null,
+
+	/*****************/
+	/*	Functionality.
+	 */
+
+	/*	Themes.
+	 */
+
+	getSavedTheme: () => {
+		return (readCookie("theme") || Appearance.defaultTheme);
+	},
+
+	/*	Filters (theme tweaks).
+	 */
+
+	getSavedFilters: () => {
+		return (JSON.parse(localStorage.getItem("theme-tweaks")) || Appearance.defaultFilters);
+	},
+
+	saveCurrentFilters: () => {
+		GWLog("Appearance.saveCurrentFilters");
+
+		if (Appearance.currentFilters == { })
+			localStorage.removeItem("theme-tweaks");
+		else
+			localStorage.setItem("theme-tweaks", JSON.stringify(Appearance.currentFilters));
+	},
+
+	applyFilters: (filters) => {
+		GWLog("Appearance.applyFilters");
+
+		if (typeof filters == "undefined")
+			filters = Appearance.currentFilters;
+
+		let fullStyleString = "";
+		if (!filters.isEmpty()) {
+			let filtersExclusionTree = (   Appearance.exclusionTreeFromExclusionPaths(Appearance.filtersExclusionPaths) 
+										|| Appearance.defaultFiltersExclusionTree);
+			fullStyleString = `body::before { content: ""; } body > #content::before { z-index: 0; }`
+							+ ` ${Appearance.selectorFromExclusionTree(filtersExclusionTree)}`
+							+ ` { filter: ${Appearance.filterStringFromFilters(filters)}; }`;
 		}
-	}
 	
-	return selectorParts + ", " + selectorFromExclusionTreeNode(tree);
-}
-function filterStringFromFilters(filters) {
-	var filterString = "";
-	for (key of Object.keys(filters)) {
-		let value = filters[key];
-		filterString += ` ${key}(${value})`;
-	}
-	return filterString;
-}
-function applyFilters(filters) {
-	var fullStyleString = "";
-	
-	if (!filters.isEmpty()) {
-		let filtersExclusionTree = exclusionTreeFromExclusionPaths(GW.themeTweaker.filtersExclusionPaths) || GW.themeTweaker.defaultFiltersExclusionTree;
-		fullStyleString = `body::before { content: ""; } body > #content::before { z-index: 0; } ${selectorFromExclusionTree(filtersExclusionTree)} { filter: ${filterStringFromFilters(filters)}; }`;
-	}
-	
-	// Update the style tag (if it’s already been loaded).
-	(query("#theme-tweak")||{}).innerHTML = fullStyleString;
-}
-insertHeadHTML("<style id='theme-tweak'></style>");
-GW.currentFilters = JSON.parse(localStorage.getItem("theme-tweaks") || "{ }");
-applyFilters(GW.currentFilters);
+		//	Update the style tag.
+		Appearance.themeTweakStyleBlock.innerHTML = fullStyleString;
 
-/************************/
-/* TEXT SIZE ADJUSTMENT */
-/************************/
+		//	Update the current filters.
+		Appearance.currentFilters = filters;
+	},
 
-insertHeadHTML("<style id='text-zoom'></style>");
-function setTextZoom(zoomFactor) {
-	if (!zoomFactor) return;
+	exclusionTreeFromExclusionPaths: (paths) => {
+		if (!paths)
+			return null;
 
-	let minZoomFactor = 0.5;
-	let maxZoomFactor = 1.5;
-	
-	if (zoomFactor <= minZoomFactor) {
-		zoomFactor = minZoomFactor;
-		queryAll(".text-size-adjust-button.decrease").forEach(function (button) {
-			button.disabled = true;
+		let tree = Appearance.defaultFiltersExclusionTree.clone();
+		paths.keys().flatMap(key => paths[key]).forEach(path => {
+			var currentNodeInTree = tree;
+			path.split(" ").slice(1).forEach(step => {
+				if (currentNodeInTree[1] == null)
+					currentNodeInTree[1] = [ ];
+
+				var indexOfMatchingChild = currentNodeInTree[1].findIndex(child => { return child[0] == step; });
+				if (indexOfMatchingChild == -1) {
+					currentNodeInTree[1].push([ step, [ ] ]);
+					indexOfMatchingChild = currentNodeInTree[1].length - 1;
+				}
+
+				currentNodeInTree = currentNodeInTree[1][indexOfMatchingChild];
+			});
 		});
-	} else if (zoomFactor >= maxZoomFactor) {
-		zoomFactor = maxZoomFactor;
-		queryAll(".text-size-adjust-button.increase").forEach(function (button) {
-			button.disabled = true;
-		});
-	} else {
-		queryAll(".text-size-adjust-button").forEach(function (button) {
-			button.disabled = false;
-		});
+
+		return tree;
+	},
+
+	selectorFromExclusionTree: (tree) => {
+		let selectorParts = [
+			"body::before, #ui-elements-container > div:not(#theme-tweaker-ui), #theme-tweaker-ui #theme-tweak-section-sample-text .sample-text-container"
+		];
+	
+		function selectorFromExclusionTreeNode(node, path = [ ]) {
+			let [ value, children ] = node;
+
+			let newPath = path.clone();
+			newPath.push(value);
+
+			if (!children) {
+				return value;
+			} else if (children.length == 0) {
+				return `${newPath.join(" > ")} > *, ${newPath.join(" > ")}::before, ${newPath.join(" > ")}::after`;
+			} else {
+				return `${newPath.join(" > ")} > *:not(${children.map(child => child[0]).join("):not(")}), ${newPath.join(" > ")}::before, ${newPath.join(" > ")}::after, ` + children.map(child => selectorFromExclusionTreeNode(child, newPath)).join(", ");
+			}
+		}
+	
+		return selectorParts + ", " + selectorFromExclusionTreeNode(tree);
+	},
+
+	filterStringFromFilters: (filters) => {
+		let filterString = "";
+		for (key of Object.keys(filters)) {
+			let value = filters[key];
+			filterString += ` ${key}(${value})`;
+		}
+		return filterString;
+	},
+
+	/*	Content column width.
+	 */
+
+	getSavedWidth: () => {
+		return (localStorage.getItem("selected-width") || Appearance.defaultWidth);
+	},
+
+	saveCurrentWidth: () => {
+		GWLog("Appearance.saveCurrentWidth");
+
+		if (Appearance.currentWidth == "normal")
+			localStorage.removeItem("selected-width");
+		else
+			localStorage.setItem("selected-width", Appearance.currentWidth);
+	},
+
+	setContentWidth: (widthOption) => {
+		GWLog("Appearance.setContentWidth");
+
+		document.head.removeClasses(Appearance.widthOptions.map(wo => "content-width-" + wo[0]));
+		document.head.addClass("content-width-" + (widthOption || Appearance.currentWidth));
+	},
+
+	/*	Text zoom.
+	 */
+
+	getSavedTextZoom: () => {
+		return (parseFloat(localStorage.getItem("text-zoom")) || Appearance.defaultTextZoom);
+	},
+
+	saveCurrentTextZoom: () => {
+		GWLog("Appearance.saveCurrentTextZoom");
+
+		if (Appearance.currentTextZoom == 1.0)
+			localStorage.removeItem("text-zoom");
+		else
+			localStorage.setItem("text-zoom", Appearance.currentTextZoom);
+	},
+
+	setTextZoom: (zoomFactor, save = true) => {
+		GWLog("Appearance.setTextZoom");
+
+		if (!zoomFactor)
+			return;
+
+		if (zoomFactor <= Appearance.minTextZoom) {
+			zoomFactor = Appearance.minTextZoom;
+			queryAll(".text-size-adjust-button.decrease").forEach(button => {
+				button.disabled = true;
+			});
+		} else if (zoomFactor >= Appearance.maxTextZoom) {
+			zoomFactor = Appearance.maxTextZoom;
+			queryAll(".text-size-adjust-button.increase").forEach(button => {
+				button.disabled = true;
+			});
+		} else {
+			queryAll(".text-size-adjust-button").forEach(button => {
+				button.disabled = false;
+			});
+		}
+
+		Appearance.currentTextZoom = zoomFactor;
+
+		Appearance.textZoomStyleBlock.innerHTML = `${Appearance.textSizeAdjustTargetElementsSelector} { zoom: ${zoomFactor}; }`;
+
+		if (window.generateImagesOverlay) {
+			requestAnimationFrame(() => {
+				generateImagesOverlay();
+			});
+		}
+
+		if (save)
+			Appearance.saveCurrentTextZoom();
+	},
+
+	/*********/
+	/*	Setup.
+	 */
+
+	//	Set up appearance system and apply saved settings.
+	setup: () => {
+		GWLog("Appearance.setup");
+
+		Appearance.currentTheme = Appearance.getSavedTheme();
+		Appearance.currentFilters = Appearance.getSavedFilters();
+		Appearance.currentWidth = Appearance.getSavedWidth();
+		Appearance.currentTextZoom = Appearance.getSavedTextZoom();
+
+		insertHeadHTML("<style id='theme-tweak'></style>");
+		insertHeadHTML("<style id='text-zoom'></style>");
+
+		Appearance.themeTweakStyleBlock = document.head.query("#theme-tweak");
+		Appearance.textZoomStyleBlock = document.head.query("#text-zoom");
+
+		Appearance.applyFilters();
+		Appearance.setContentWidth();
+		Appearance.setTextZoom();
 	}
+};
 
-	let textZoomStyle = query("#text-zoom");
-	textZoomStyle.innerHTML = 
-		`.post, .comment, .comment-controls {
-			zoom: ${zoomFactor};
-		}`;
-
-	if (window.generateImagesOverlay) setTimeout(generateImagesOverlay);
-}
-GW.currentTextZoom = localStorage.getItem('text-zoom');
-setTextZoom(GW.currentTextZoom);
-
-/**********/
-/* THEMES */
-/**********/
-
-GW.themeOptions = [
-	['default', 'Default theme (dark text on light background)', 'A'],
-	['dark', 'Dark theme (light text on dark background)', 'B'],
-	['grey', 'Grey theme (more subdued than default theme)', 'C'],
-	['ultramodern', 'Ultramodern theme (very hip)', 'D'],
-	['zero', 'Theme zero (plain and simple)', 'E'],
-	['brutalist', 'Brutalist theme (the Motherland calls!)', 'F'],
-	['rts', 'ReadTheSequences.com theme', 'G'],
-	['classic', 'Classic Less Wrong theme', 'H'],
-	['less', 'Less theme (serenity now)', 'I']
-];
+Appearance.setup();
 
 /*****************/
 /* ANTI-KIBITZER */
@@ -299,7 +464,7 @@ if (localStorage.getItem("antikibitzer") == "true") {
 	`.author, .inline-author, .karma-value, .individual-thread-page > h1 { visibility: hidden; }` + 
 	"</style>");
 
-	if(document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
+	if (document.location.pathname.match(new RegExp("/posts/.*/comment/"))) {
 		insertHeadHTML("<"+"title class='fake-title'></title>");
 	}
 }
@@ -481,30 +646,36 @@ Element.prototype.constructCommentControls = function() {
 	
 	let commentType = commentControls.parentElement.id.replace(/s$/, "");
 	commentControls.innerHTML = "";
-	let replyButton = document.createElement("button");
+	let replyButton;
 	if (commentControls.parentElement.hasClass("comments")) {
-		replyButton.className = "new-comment-button action-button";
-		replyButton.innerHTML = (commentType == "nomination" ? "Add nomination" : "Post new " + commentType);
-		replyButton.setAttribute("accesskey", (commentType == "comment" ? "n" : ""));
-		replyButton.setAttribute("title", "Post new " + commentType + (commentType == "comment" ? " [n]" : ""));
+		replyButton = newElement("BUTTON", {
+			"class": "new-comment-button action-button",
+			"accesskey": (commentType == "comment" ? "n" : ""),
+			"title": ("Post new " + commentType + (commentType == "comment" ? " [n]" : "")),
+			"tabindex": "-1"
+		}, {
+			"innerHTML": (commentType == "nomination" ? "Add nomination" : "Post new " + commentType)
+		})
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
 			let buttonsList = [];
-			if(!commentControls.parentElement.query(".comment-thread"))
+			if (!commentControls.parentElement.query(".comment-thread"))
 				buttonsList.push("delete-button");
 			buttonsList.push("retract-button", "edit-button");
 			buttonsList.forEach(buttonClass => {
-				let button = commentControls.appendChild(document.createElement("button"));
-				button.addClass(buttonClass);
+				let button = commentControls.appendChild(newElement("BUTTON", { "class": buttonClass }));
 				button.updateCommentControlButton();
 			});
 		}
-		replyButton.className = "reply-button action-button";
-		replyButton.innerHTML = "Reply";
-		replyButton.dataset.label = "Reply";
+		replyButton = newElement("BUTTON", {
+			"class": "reply-button action-button",
+			"data-label": "Reply",
+			"tabindex": "-1"
+		}, {
+			"innerHTML": "Reply"
+		});
 	}
 	commentControls.appendChild(replyButton);
-	replyButton.tabIndex = '-1';
 
 	// Activate buttons.
 	commentControls.queryAll(".action-button").forEach(button => {
@@ -561,12 +732,11 @@ GW.commentActionButtonClicked = (event) => {
 };
 
 function initializeCommentControls() {
-	e = document.createElement("div");
-	e.className = "comment-controls posting-controls";
+	e = newElement("DIV", { "class": "comment-controls posting-controls" });
 	document.currentScript.insertAdjacentElement("afterend", e);
 	e.constructCommentControls();
 
-	if(window.location.hash) {
+	if (window.location.hash) {
 		let comment = e.closest(".comment-item");
 		if(comment && window.location.hash == "#" + comment.id)
 			expandAncestorsOf(comment);

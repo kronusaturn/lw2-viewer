@@ -8,3 +8,4 @@ config.lisp
 webpush.vapid.key
 www/robots.txt
 www/fonts.css
+www/generated-css

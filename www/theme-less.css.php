@@ -10,6 +10,9 @@
 /* THEME LESS */
 /**************/
 
+/* default-gamma: 2.6 */
+/* default-background-gamma: 2.2 */
+
 /*===========*/
 /* VARIABLES */
 /*===========*/
@@ -692,6 +695,7 @@ body {
 	#comments-view-mode-selector,
 	#theme-selector,
 	#width-selector,
+	#dark-mode-selector,
 	#text-size-adjustment-ui,
 	#theme-tweaker-toggle {
 		pointer-events: none;
@@ -705,6 +709,7 @@ body {
 	#theme-selector::after,
 	#theme-selector::before,
 	#width-selector::after,
+	#dark-mode-selector::after,
 	#text-size-adjustment-ui::after {
 		content: "";
 		background-color: #fff;
@@ -715,9 +720,16 @@ body {
 		top: 0;
 		left: 0;
 	}
+	#dark-mode-selector::after {
+		width: calc(100% + 2px);
+		height: calc(100% + 2px);
+		top: -1px;
+		left: -1px;
+	}
 	#comments-view-mode-selector.engaged,
 	#theme-selector.engaged,
 	#width-selector.engaged,
+	#dark-mode-selector.engaged,
 	#text-size-adjustment-ui.engaged,
 	#theme-tweaker-toggle.engaged {
 		pointer-events: auto;
@@ -778,6 +790,23 @@ body {
 	}
 	#width-selector.engaged::after {
 		max-width: 0px;
+	}
+
+	<?php fit_content("#dark-mode-selector"); ?>
+	#dark-mode-selector {
+		left: -67px;
+		top: calc(100% - 120px);
+	}
+	#dark-mode-selector::after {
+		max-width: 1000px;
+		max-height: 1000px;
+		transition:
+			max-width 0.2s ease,
+			max-height 0.2s ease;
+	}
+	#dark-mode-selector.engaged::after {
+		max-width: 0px;
+		max-height: 0px;
 	}
 
 	#text-size-adjustment-ui {
@@ -964,6 +993,33 @@ body {
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	opacity: 1.0;
+}
+
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#dark-mode-selector {
+	outline: 1px solid #92c396;
+}
+#dark-mode-selector button {
+	color: #92c396;
+}
+#dark-mode-selector button.selected {
+	background-color: #92c396;
+	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #92c396 inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #92c396;
+	text-shadow: none;
+	top: -36px;
 }
 
 /*======================*/
@@ -2666,9 +2722,10 @@ strong, b {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#site-nav-ui-toggle {
 		top: 10px;
 		left: 10px;
@@ -2750,6 +2807,52 @@ strong, b {
 	#theme-tweaker-toggle button {
 		color: #999;
 		font-weight: 400;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #aaa;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		box-shadow: none;
+		border: 1px solid #999;
+	}
+	#theme-selector #theme-tweaker-toggle button {
+		color: #819681;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		color: #819681;
+		opacity: 1.0;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before {
+		font-size: 1.5em;
+		font-weight: 300;
+	}
+	#theme-selector #anti-kibitzer-toggle button::after {
+		font-weight: 400;
+	}
+	#theme-selector #dark-mode-selector {
+		border: 1px solid #999;
+	}
+	#theme-selector #dark-mode-selector button {
+		color: #819681;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #c4dbc4;
+		color: #fff;
+	}
+	#theme-selector #dark-mode-selector button + button {
+		box-shadow: 
+			-1px 0 0 0 #999;
+	}
+	#theme-selector #dark-mode-selector button:first-child.selected {
+		border-radius: 10px 0 0 10px;
+	}
+	#theme-selector #dark-mode-selector button:last-child.selected {
+		border-radius: 0 10px 10px 0;
+	}
+	#theme-selector #dark-mode-selector button.selected::after {
+		text-shadow: 0 0 1px #fff;
 	}
 
 	#quick-nav-ui {

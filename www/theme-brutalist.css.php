@@ -14,6 +14,9 @@
 /*	Color scheme.
 	*/
 :root {
+	--GW-toggle-widget-color: #999;
+	--GW-toggle-widget-hover-color: #000;
+	--GW-toggle-widget-shadow-color: rgba(255,255,255,0.5);
 }
 
 /*======*/
@@ -266,20 +269,50 @@ body {
 /* ANTI-KIBITZER TOGGLE */
 /*======================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #999;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
-}
 #anti-kibitzer-toggle button:hover {
 	box-shadow: none;
 }
 #anti-kibitzer-toggle button:hover::before,
 #anti-kibitzer-toggle button:hover::after {
 	background-color: #000;
-	text-shadow: rgba(255,255,255,0.2) 0px 1px 1px;
+}
+
+/*======================*/
+/* PREVIEW POPUP TOGGLE */
+/*======================*/
+
+#anti-kibitzer-toggle:hover, #preview-popup-toggle:hover {
+	--GW-toggle-widget-shadow-color: transparent;
+}
+
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
+
+#dark-mode-selector {
+	outline: 1px solid #000;
+}
+#dark-mode-selector button {
+	color: #000;
+}
+#dark-mode-selector button:hover {
+	box-shadow: none;
+	background-color: #ccc;
+}
+#dark-mode-selector button.selected {
+	background-color: #000;
+	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #000 inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #000;
+	text-shadow: none;
 }
 
 /*=========================*/
@@ -1734,9 +1767,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #000;
@@ -1785,6 +1819,52 @@ select {
 	}
 	#theme-selector .theme-selector-close-button {
 		font-weight: 400;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #000;
+		border-top-width: 2px;
+		margin: 8px 0 0 0;
+		padding: 8px;
+		padding-left: 8px;
+		padding-right: 8px;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		border: 2px solid #000;
+		box-shadow: none;
+		border-radius: 0;
+	}
+	#theme-selector #theme-tweaker-toggle button {
+		color: #000;
+	}
+	#theme-selector #anti-kibitzer-toggle button {
+		border-radius: 0;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #000;
+		color: #000;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before {
+		font-size: 1.5em;
+	}
+	#theme-selector #dark-mode-selector {
+		border: 2px solid #000;
+		border-radius: 0;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		color: #000;
+		box-shadow: 
+			0 0 0 2px #fff inset,
+			0 0 0 4px #000 inset;
+	}
+	#theme-selector #dark-mode-selector button.select-mode-light,
+	#theme-selector #dark-mode-selector button.select-mode-dark {
+		font-weight: 900;
+	}
+	#theme-selector #dark-mode-selector button::after {
+		font-size: 0.875rem;
+		font-weight: 700;
 	}
 
 	#quick-nav-ui {

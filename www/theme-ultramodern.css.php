@@ -16,6 +16,9 @@
 /*	Color scheme.
 	*/
 :root {
+	--GW-toggle-widget-color: #222;
+	--GW-toggle-widget-hover-color: #000;
+	--GW-toggle-widget-shadow-color: rgba(255,255,255,0.4);
 }
 
 /*======*/
@@ -393,20 +396,35 @@ body {
 	border: 1px solid #ccc;
 }
 
-/*======================*/
-/* ANTI-KIBITZER TOGGLE */
-/*======================*/
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #222;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.4) 0px 1px 1px;
+#dark-mode-selector {
+	outline: 1px solid #ccc;
+	opacity: 0.5;
 }
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: #000;
+#dark-mode-selector button {
+	color: #ddd;
+}
+#dark-mode-selector button:hover {
+	color: #444;
+}
+#dark-mode-selector button.selected {
+	background-color: #ccc;
+	color: #777;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #ccc inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #ccc;
+	text-shadow: none;
+	font-weight: 300;
 }
 
 /*======================*/
@@ -414,7 +432,7 @@ body {
 /*======================*/
 
 #text-size-adjustment-ui button {
-	color: #444;
+	color: #ccc;
 }
 #text-size-adjustment-ui button.default {
 	font-weight: 600;
@@ -1975,9 +1993,10 @@ input::selection {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button,
 	#theme-selector .theme-selector-close-button  {
 		color: #444;
@@ -2023,6 +2042,32 @@ input::selection {
 		text-shadow: 
 			0 -1px 0 #fff,
 			0 0.5px 0.5px #000;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #444;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		border: 1px solid #444;
+	}
+	#theme-selector .auxiliary-controls-container #theme-tweaker-toggle button {
+		color: #444;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #000;
+	}
+	#theme-selector #dark-mode-selector {
+		border: 1px solid #444;
+	}
+	#theme-selector #dark-mode-selector button {
+		color: #444;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		color: #aaa;
+		background-color: #444;
+		border-radius: 8px;
+		box-shadow: 0 0 2px 0 #444;
 	}
 
 	#quick-nav-ui {
@@ -2113,6 +2158,10 @@ input::selection {
 		}
 		.nav-bar-top:not(#primary-bar) .nav-item:not(#nav-item-search) .nav-inner {
 			padding: 6px 10px;
+		}
+
+		.active-bar {
+			margin: 0 -4px;
 		}
 
 		.archive-nav > *[class^='archive-nav-'] + *[class^='archive-nav-']::before {

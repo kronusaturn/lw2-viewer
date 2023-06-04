@@ -387,20 +387,30 @@ body {
 	color: #000;
 }
 
-/*======================*/
-/* ANTI-KIBITZER TOGGLE */
-/*======================*/
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: #888;
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+#dark-mode-selector {
+	outline: 1px solid #999;
 }
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: #444;
+#dark-mode-selector button {
+	color: #777;
+}
+#dark-mode-selector button.selected {
+	background-color: #999;
+	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #999 inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #999;
+	text-shadow: none;
 }
 
 /*======================*/
@@ -2077,9 +2087,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #aaa;
 		text-shadow:
@@ -2123,6 +2134,33 @@ select {
 		text-shadow: 
 			0 -1px 0 #fff,
 			0 0.5px 0.5px #000;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #999;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		background-color: #e6e6e6;
+		box-shadow: 
+			0 0 10px 0   #999         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #999;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #444;
+	}
+	#theme-selector #dark-mode-selector {
+		background-color: #e6e6e6;
+		box-shadow: 
+			0 0 10px 0   #999         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #999;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #999;
+		border-radius: 8px;
+		box-shadow: 0 0 2px 0 #999;
 	}
 
 	#quick-nav-ui {

@@ -464,20 +464,30 @@ body {
 	color: <?php echo ($platform == 'Mac') ? '#aaa' : '#888'; ?>;
 }
 
-/*======================*/
-/* ANTI-KIBITZER TOGGLE */
-/*======================*/
+/*====================*/
+/* DARK MODE SELECTOR */
+/*====================*/
 
-#anti-kibitzer-toggle button::before,
-#anti-kibitzer-toggle button::after {
-	background-color: var(--GW-toggle-widget-color);
-	-webkit-background-clip: text;
-	color: transparent;
-	text-shadow: rgba(255,255,255,0.5) 0px 1px 1px;
+#dark-mode-selector {
+	outline: 1px solid #777;
 }
-#anti-kibitzer-toggle button:hover::before,
-#anti-kibitzer-toggle button:hover::after {
-	background-color: var(--GW-toggle-widget-hover-color);
+#dark-mode-selector button {
+	color: #777;
+}
+#dark-mode-selector button.selected {
+	background-color: #777;
+	color: #fff;
+}
+#dark-mode-selector button:not(.selected) + button:not(.selected) {
+	box-shadow: 1px 0 0 0 #777 inset;
+}
+#dark-mode-selector button:disabled:hover {
+	text-shadow: none;
+}
+#dark-mode-selector button::after {
+	font-family: <?php echo $UI_font; ?>;
+	color: #999;
+	text-shadow: none;
 }
 
 /*======================*/
@@ -2023,9 +2033,10 @@ select {
 /* MOBILE */
 /*========*/
 
-/*******************************************************/
-@media not screen and (hover:hover) and (pointer:fine) {
-/*******************************************************/
+/*******************************************/
+@media only screen and (max-width: 1160px) {
+/*******************************************/
+
 	#ui-elements-container > div[id$='-ui-toggle'] button  {
 		color: #bbb;
 		text-shadow:
@@ -2075,6 +2086,33 @@ select {
 			1px 1px 0 #ccc,
 			0 0 8px #ccc;
 		opacity: 1.0;
+	}
+
+	#theme-selector .auxiliary-controls-container {
+		border-top-color: #bbb;
+	}
+	#theme-selector .auxiliary-controls-container button {
+		background-color: #fffffa;
+		box-shadow: 
+			0 0 10px 0   #bbb         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #bbb;
+	}
+	#theme-selector #anti-kibitzer-toggle button::before,
+	#theme-selector #anti-kibitzer-toggle button::after {
+		background-color: #444;
+	}
+	#theme-selector #dark-mode-selector {
+		background-color: #fffffa;
+		box-shadow: 
+			0 0 10px 0   #bbb         inset, 
+			0 0 0    1px transparent;
+		border: 1px solid #bbb;
+	}
+	#theme-selector #dark-mode-selector button.selected {
+		background-color: #aaa;
+		border-radius: 8px;
+		box-shadow: 0 0 2px 0 #bbb;
 	}
 
 	#quick-nav-ui {

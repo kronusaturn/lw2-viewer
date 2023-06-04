@@ -438,8 +438,9 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	   (unless (eq b1 b2) (return nil))
 	   (when (eq b1 nil) (return t)))))))
 
-(defun call-with-atomic-file-replacement (fn filename open-fn)
+(defun call-with-atomic-file-replacement (fn filename open-fn if-unchanged)
   (let* ((normal-return nil)
+	 (filename (merge-pathnames filename))
 	 (temp-filename (make-pathname :name (concatenate 'string (pathname-name filename) ".new")
 				       :defaults filename))
 	 (stream (funcall open-fn temp-filename)))
@@ -448,16 +449,17 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
 	   (setf normal-return t))
       (close stream)
       (if (and normal-return
-	       (or (not (probe-file filename))
+	       (or (not (eq if-unchanged :keep-original))
+		   (not (probe-file filename))
 		   (not (file-equal filename temp-filename))))
 	  (uiop:rename-file-overwriting-target temp-filename filename)
 	  (uiop:delete-file-if-exists temp-filename)))))
 
-(defmacro with-atomic-file-replacement ((stream filename &rest open-options) &body body)
+(defmacro with-atomic-file-replacement ((stream filename &rest open-options &key if-unchanged &allow-other-keys) &body body)
   (with-gensyms (body-fn open-fn)
-    `(dynamic-flet ((,open-fn (filename) (open filename :direction :output :if-exists :supersede ,@open-options))
+    `(dynamic-flet ((,open-fn (filename) (open filename :direction :output :if-exists :supersede :allow-other-keys t ,@open-options))
 		    (,body-fn (,stream) ,@body))
-		   (call-with-atomic-file-replacement #',body-fn ,filename #',open-fn))))
+		   (call-with-atomic-file-replacement #',body-fn ,filename #',open-fn ,if-unchanged))))
 
 (defun random-string (length)
   (let ((string (make-array length :element-type 'character :initial-element #\Space)))

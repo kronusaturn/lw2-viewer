@@ -1,7 +1,7 @@
 (in-package :asdf)
 
 (asdf:defsystem :lw2-viewer
-  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core" "parse-float")
+  :depends-on ("uiop" "flexi-streams" "hunchentoot" "dexador" "cl-json" "lmdb" "local-time" "plump" "clss" "cl-ppcre" "xml-emitter" "city-hash" "bit-smasher" "cl-unicode" "parse-js" "cl-markdown" "websocket-driver-client" "ironclad" "cl-base64" "djula" "split-sequence" "cl-typesetting" "named-readtables" "collectors" "closer-mop" "chronicity" "parenscript" "trivial-gray-streams" "trivia" "iterate" "introspect-environment" "trivial-macroexpand-all" "trivial-cltl2" "dufy/core" "parse-float" "global-vars" "cl-grnm")
   :components ((:module "src"
 		:components ((:file "utils" :depends-on ("macro-utils"))
 			     (:file "macro-utils")
@@ -23,7 +23,7 @@
                               :depends-on ("backend-modules" "backend" "lw2-login"))
 			     (:file "routes")
                              (:file "sites" :depends-on ("utils" "routes" "backend-modules" "fonts-modules"))
-			     (:file "resources" :depends-on ("config-package" "utils" "sites" "context"))
+			     (:file "resources" :depends-on ("config-package" "utils" "sites" "context" "colors"))
 			     (:file "response" :depends-on ("utils" "conditions" "sites" "routes" "html-reader"))
 			     (:file "fonts-modules")
 			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules" "backend" "resources"))
@@ -45,7 +45,7 @@
 			     (:static-file "../text-clean-regexps.js")
 			     (:static-file "../html-clean-regexps.js")
 			     (:file "colors" :depends-on ("utils"))
-			     (:file "images" :depends-on ("conditions" "html-reader" "utils" "lmdb" "backend" "legacy-archive"))
+			     (:file "images" :depends-on ("conditions" "html-reader" "utils" "lmdb" "backend" "legacy-archive" "resources"))
 			     (:file "elicit-predictions" :depends-on ("utils" "html-reader" "backend" "graphql"))
                              (:file "clean-html" :depends-on ("utils" "links" "lmdb" "backend" "context" "sites" "conditions" "colors" "images" "elicit-predictions" "../text-clean-regexps.js" "../html-clean-regexps.js"))
                              (:file "lw2-login" :depends-on ("utils" "backend" "backend-modules" "context"))

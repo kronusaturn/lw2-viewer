@@ -31,7 +31,7 @@
 (sb-ext:defglobal *fonts-redirect-thread* nil)
 
 (defun update-obormot-fonts ()
-  (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :element-type 'character)
+  (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :if-unchanged :keep-original :element-type 'character)
     (iter
      (for uri in *obormot-fonts-stylesheet-uris*)
      (for response = (dex:get uri

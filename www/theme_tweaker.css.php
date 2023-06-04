@@ -27,31 +27,7 @@
 	background-color: #000;
 	opacity: 0.6;
 }
-#theme-tweaker-ui::after {
-	content: "";
-	position: fixed;
-	top: 87px;
-	right: calc((100% - 900px) / 2 + 26px);
-	background-color: #bfb8bf;
-	width: 18px;
-	height: 16px;
-	z-index: 2;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_close_widget.gif")) ?>');
-	background-size: 100%;
-	background-repeat: no-repeat;
-	background-position: center center;
-	box-shadow: 
-		0 -1px 0 0 #fff8ff,
-		-1px 0 0 0 #fff8ff,
-		-1px -1px 0 0 #fff8ff,
-		0 0 0 1px #7f787f,
-		0 -1px 0 1px #dfd8df,
-		-1px 0 0 1px #dfd8df,
-		-1px -1px 0 1px #dfd8df,
-		0 0 0 2px #030303;
-	cursor: pointer;
-}
-#theme-tweaker-ui .main-theme-tweaker-window {
+.theme-tweaker-window {
 	position: fixed;
 	z-index: 1;
 	background-color: #bfb8bf;
@@ -65,16 +41,91 @@
 		-1px 0 0 1px #dfd8df,
 		-1px -1px 0 1px #dfd8df,
 		0 0 0 2px #030303;
+	display: flex;
+	flex-flow: column;
+	align-items: stretch;
+	justify-content: stretch;
+	padding: 2px;
+}
+
+.theme-tweaker-window-title-bar {
+	height: 25px;
+	width: 100%;
+	display: flex;
+	background-color: #03037f;
+}
+
+.theme-tweaker-window-title {
+	flex: 1 1 auto;
+	color: #fff8ff;
+	padding: 4px 6px 3px 30px;
+	cursor: default;
+	text-shadow: 1px 0 0 #fff;
+	letter-spacing: 1px;
+}
+.theme-tweaker-window-title h1 {
+	font-size: inherit;
+	font-weight: normal;
+	margin: 0;
+}
+
+.theme-tweaker-window-title-bar-buttons-container {
+	display: flex;
+	align-items: center;
+	padding: 4px;
+}
+
+.theme-tweaker-window-title-bar-buttons-container button {
+	width: 18px;
+	height: 16px;
+	background-size: 14px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	margin: 0 0 0 7px;
+}
+
+.theme-tweaker-window-title-bar-buttons-container .help-button {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_widget.gif")) ?>');	
+}
+
+.theme-tweaker-window-title-bar-buttons-container .minimize-button.minimize {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_minimize_widget.gif")) ?>');	
+}
+.theme-tweaker-window-title-bar-buttons-container .minimize-button.maximize {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_maximize_widget.gif")) ?>');	
+}
+
+.theme-tweaker-window-title-bar-buttons-container .close-button {
+	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_close_widget.gif")) ?>');
+	background-size: 100%;
+	background-position: center bottom;
+}
+
+.theme-tweaker-window-content-view {
+	padding: 12px;
+	height: calc(100% - 25px);
+	display: flex;
+	flex-flow: column;
+}
+
+#theme-tweaker-ui .main-window {
 	width: calc(900px - 40px);
 	max-width: calc(100vw - 20px);
 	max-height: calc(100vh - 160px);
 	top: 80px;
 	left: calc((100% - 900px) / 2 + 20px);
-	padding: 30px 10px 10px 10px;
+	height: 1200px;
+}
+#theme-tweaker-ui .theme-tweaker-window-title-bar {
+	background-repeat: no-repeat;
+	background-size: 20px;
+	background-position: 4px 50%;
+}
+#theme-tweaker-ui .main-window .theme-tweaker-window-title-bar {
+	background-image: url('data:image/gif;base64,R0lGODdhIAAgAOYAAAAAAAMDCwMD9AQDqwQDsgUDpAoDBAoDoqsDVKsDWq4DT7ADVrIDXf4DC/8D/QQEnAUE/qQET6QEUqQEW7AESvUEA/0EBAUFEPAFCPcF/wMImgMI/gMJBZsJWvIJBJCBmIuElH2Fj4WFlIiFfImFhoOGi4qGjI6GmpKGjoKHm5OHk4mIhoWKkoqKjIqKk4SLjIeLfY2LmX2NhYSOmoeOhoKQkQOkWKOkaqWlXaulXKSmTqSmUqqmYQqnYKmnVQWoXaWocZ+pbAiqVaOqVKSqTKmqVKyqWwOrVJ+rU6WrWrCuWcS+2Mi/wMy/082/zsrCzMrDxcLE1cXExLzFy77FxMTFzMzF1bfGwbzGvrfH18vIw7/J08HJu8PJxMPJzLTKyL3KzL7Kw73Lvs3Lyr3Mt8HM0LPRuf/2A/j38//3+fz+Cv3+9P7+BO//A/T/BPT/Cfb//vf/9///7P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAAHQALAAAAAAgACAAAAf/gHSCg4SFQ0NJOTqFjI2ORXNzaZEAjpaNRnBVbA4OV0oBl4w0KS4iLjI5c11unRlsOQYgLyUutS2VjSEHBQQDDz5zb1icGVo4AATKDwO/F441vgXNQ3BSPWFsUmxURgAFAHMBcwC5jC4azb2qP0c22WBqUkMAAfXl5oUmTV5cVGBG5hxpx0YMmypJUCCjUgWLlHyEWJiJFGnHHDZCtJ0Zo4NcmR0ArMypAnGQiCUU1yCZ84WNBQxb2HgB8IINFHpzooRqZGLMnDWRcFy0QJQbGzIH2/AwsOahoxdMJDAAOseiy6IQIESxidNpoxMdiIabg0STGi9sNkAQAOGJEWQ5/0sKYoGgQYUALSKp6sLGCZusbFbgXDNFLh0FRMVSBOBjh5EdRYrswBmJy05GExJboDknDjl7+Mql9HKZUIQGmy1U2AxnTuufFGN3/iC3roUAiQGwAEpVNtUdIMoVQiD2RQQLqMP1jk2VhxsAJkzkk6AawInjyV2klD1niJsSJrxgMbdALAgZcySg3sx9Dpo1RNjMMSCltbnTm0FESpBbhGw5QCShhjAAeEGJIJltlgACCUygAHHIjUVREWs8cRE5Y+VCgWqoeaDZegDMQAUVYYDhAxtZuHERAFSEUwl1FlwQWmi5GYBPDmyEcaEBLrhIR4IAuODCCCKw4AIICd5WwlEgAOQAg3xqiEbOBKgFUAIKjcBogQGEcADADfIVSImN5bzgCABkWlkIY89NcaApKpBgyS0tyMBIkzH4R44ofDJJBABR9NjnoAAEEaRhg94pXCAAOw==');
 }
 #theme-tweaker-ui .controls-container {
 	overflow-y: scroll;
-	max-height: calc(100vh - 320px);
 	box-shadow: 
 		0 -1px 0 0 #030303,
 		-1px 0 0 0 #030303,
@@ -85,48 +136,31 @@
 		-1px -1px 0 1px #7f787f,
 		0 0 0 2px #fff8ff;
 	padding: 16px;
-	margin: 4px;
 }
 
-#theme-tweaker-ui h1 {
-	font-size: inherit;
-	font-weight: normal;
-	margin: 0;
-	position: absolute;
-	background-color: #03037f;
-	background-repeat: no-repeat;
-	background-size: 20px;
-	color: #fff8ff;
-	padding: 4px 6px 3px 30px;
-	background-position: 4px 50%;
-	left: 2px;
-	top: 2px;
-	width: calc(100% - 4px);
-	cursor: default;
-	text-shadow: 1px 0 0 #fff;
-	letter-spacing: 1px;
-}
-#theme-tweaker-ui .main-theme-tweaker-window h1 {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_themes_icon.gif")) ?>');
-}
-
-#theme-tweaker-ui .current-theme {
-	margin: 1em -8px 1.25em -8px;
-	padding: 0 12px 1em 12px;
+#theme-tweaker-ui .main-window .theme-select {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	margin: 0 -12px 1.25em -12px;
+	padding: 3px 12px 13px 12px;
 	box-shadow: 
 		0 1px 0 #7f787f,
 		0 2px 0 #fff8ff;
 	cursor: default;
+	user-select: none;
 }
-#theme-tweaker-ui .current-theme span {
+#theme-tweaker-ui .main-window .theme-select .current-theme {
+	margin: 0;
+	pointer-events: none;
+}
+#theme-tweaker-ui .main-window .theme-select .current-theme span {
 	text-shadow: 1px 0 0 #000;
 	letter-spacing: 1px;
 }
 
-#theme-tweaker-ui .theme-selector {
-	position: absolute;
-	top: 19px;
-	left: 225px;
+#theme-tweaker-ui .main-window .theme-select .theme-selector {
+	margin: 0 0 0 2em;
 }
 #theme-tweaker-ui .theme-selector button {
 	width: 26px;
@@ -134,7 +168,10 @@
 	display: inline-block;
 	padding: 1px 0 0 1px;
 	border: 4px solid #bfb8bf;
-	margin: 8px 10px 8px 4px;
+	margin: 0;
+}
+#theme-tweaker-ui .theme-selector button + button {
+	margin: 0 0 0 14px;
 }
 #theme-tweaker-ui .theme-selector button:active,
 #theme-tweaker-ui .theme-selector button.selected {
@@ -249,15 +286,7 @@
 /* This doesn't work in Mozilla browsers, so hide it */
 @-moz-document url-prefix() {
 	#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
-/* 
-		height: 0;
-		overflow: hidden;
-		padding: 0;
-		border: 0;
-		margin: 0 0 -16px 0;
-		visibility: hidden;
- */
-	display: none;
+		display: none;
 	}
 }
 
@@ -306,7 +335,6 @@
 }
 
 #theme-tweaker-ui input[type='range'] {
-	width: 100%;
 	position: relative;
 	-webkit-appearance: none;
 	width: 100%;
@@ -478,9 +506,10 @@ input[type='range']::-ms-thumb {
 
 #theme-tweaker-ui .buttons-container {
 	text-align: right;
-	margin: 10px 3px 0 0;
+	margin: 18px 0 0 0;
 }
 #theme-tweaker-ui button {
+	background-color: #bfb8bf;
 	box-shadow: 
 		0 -1px 0 0 #fff8ff,
 		-1px 0 0 0 #fff8ff,
@@ -490,15 +519,23 @@ input[type='range']::-ms-thumb {
 		-1px 0 0 1px #dfd8df,
 		-1px -1px 0 1px #dfd8df,
 		0 0 0 2px #030303;
-	margin: 0.5em 1px 0.5em 1em;
+}
+#theme-tweaker-ui .main-theme-tweaker-window > button {
+	margin: 0.5em 0 0 0;
+}
+#theme-tweaker-ui .controls-container button,
+#theme-tweaker-ui .buttons-container button,
+#theme-tweaker-ui .help-window button {
 	width: 7em;
 	padding: 7px 0 6px 0;
 }
 #theme-tweaker-ui .buttons-container button {
 	color: inherit;
 }
+#theme-tweaker-ui .buttons-container button + button {
+	margin-left: 1em;
+}
 #theme-tweaker-ui button.default-button {
-	padding: 6px 0 6px 0;
 	box-shadow: 
 		0 -1px 0 0 #fff8ff,
 		-1px 0 0 0 #fff8ff,
@@ -530,36 +567,7 @@ input[type='range']::-ms-thumb {
 	outline: 1px dotted #000;
 }
 
-#theme-tweaker-ui .minimize-button {
-	width: 18px;
-	height: 16px;
-	position: absolute;
-	top: -1px;
-	right: 30px;
-	background-size: 14px;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-#theme-tweaker-ui .minimize-button.minimize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_minimize_widget.gif")) ?>');	
-}
-#theme-tweaker-ui .minimize-button.maximize {
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_maximize_widget.gif")) ?>');	
-}
-
-#theme-tweaker-ui .help-button {
-	width: 18px;
-	height: 16px;
-	position: absolute;
-	top: -1px;
-	right: 55px;
-	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_widget.gif")) ?>');	
-	background-size: 14px;
-	background-repeat: no-repeat;
-	background-position: center center;
-}
-
-#theme-tweaker-ui .reset-defaults-button {
+#theme-tweaker-ui .buttons-container .reset-defaults-button {
 	width: 10em;
 	float: left;
 }
@@ -626,6 +634,11 @@ input[type='range']::-ms-thumb {
 	line-height: 1.3;
 	color: #000;
 }
+#theme-tweaker-ui .clippy-container .hint img {
+	vertical-align: bottom;
+	position: relative;
+	bottom: 2px;
+}
 #theme-tweaker-ui .clippy-container .clippy {
 	width: 200px;
 	height: 125px;
@@ -670,10 +683,9 @@ input[type='range']::-ms-thumb {
 		0 0 0 2px #030303;
 	top: 200px;
 	left: calc((100% - 300px) / 2);
-	padding: 40px 10px 10px 10px;
 	pointer-events: auto;
 }
-#theme-tweaker-ui .help-window h1 {
+#theme-tweaker-ui .help-window .theme-tweaker-window-title-bar {
 	background-image: url('data:image/gif;base64,<?php echo base64_encode(file_get_contents("assets/win95_help_icon.gif")) ?>');
 }
 #theme-tweaker-ui div.section#theme-tweak-section-clippy {
@@ -698,13 +710,14 @@ input[type='range']::-ms-thumb {
 
 #theme-tweaker-ui .clippy-close-button {
 	position: absolute;
-	top: 5px;
-	right: 11px;
+	top: 8px;
+	right: 8px;
 	width: 16px;
 	height: 16px;
 	border-radius: 8px;
 	color: inherit;
 	padding: 1px 0;
+	background-color: transparent;
 	box-shadow: 
 		-1px -1px 0 #dfd8df inset,
 		0 -1px 0 #7f787f,
@@ -721,6 +734,32 @@ input[type='range']::-ms-thumb {
 		0 0 0 3px #030303;
 }
 
+#theme-tweaker-ui .main-window.minimized {
+	width: 320px;
+	height: 29px;
+	overflow: hidden;
+	top: 20px;
+	right: 20px;
+	left: auto;
+}
+#theme-tweaker-ui.main-window-minimized::after {
+	top: 27px;
+	right: 27px;
+}
+#theme-tweaker-ui.main-window-minimized::before {
+	opacity: 0.0;
+	height: 0;
+}
+#theme-tweaker-ui.main-window-minimized .clippy-container {
+	opacity: 1.0;
+}
+#theme-tweaker-ui.main-window-minimized .clippy-container .hint span {
+	color: #c00;
+}
+#theme-tweaker-ui.main-window-minimized {
+	height: 0;
+}
+
 /*========*/
 /* MOBILE */
 /*========*/
@@ -733,7 +772,8 @@ input[type='range']::-ms-thumb {
 		top: 10px;
 		right: 8px;
 	}
-	#theme-tweaker-ui .main-theme-tweaker-window {
+
+	#theme-tweaker-ui .main-window {
 		max-width: unset;
 		max-height: unset;
 		left: 3px;
@@ -741,29 +781,51 @@ input[type='range']::-ms-thumb {
 		width: calc(100% - 5px);
 		height: calc(100% - 5px)
 	}
-	#theme-tweaker-ui .controls-container {
-		max-height: calc(100% - 192px);
-		padding: 0.75em;
-	}
-	#theme-tweaker-ui .current-theme {
-		margin: 0.75em -8px 0 -8px;
+
+	#theme-tweaker-ui .main-window .theme-select {
 		box-shadow: none;
-		padding: 0 12px;
+		margin-bottom: 0;
 	}
-	#theme-tweaker-ui .theme-selector {
-		position: unset;
-		margin: 0.5em 0 1em 0;
+	#theme-tweaker-ui .main-window .theme-select .theme-selector {
+		margin: 1em 0 0.625em 0;
 		white-space: nowrap;
 	}
+
 	#theme-tweaker-ui .clippy-container .clippy {
 		transform: scale(0.375) translate(-215px, 215px);
 	}
 
 	#theme-tweaker-ui .controls-container {
-		margin-right: -12px;
+		padding: 0.75em;
+		margin-right: -16px;
 	}
 	#theme-tweaker-ui .controls-container::-webkit-scrollbar {
 		width: 32px;
+	}
+	/*	Compensating for Firefox mobile scroll bar nonsense.
+	 */
+	@-moz-document url-prefix() {
+		#theme-tweaker-ui .controls-container {
+			padding-right: 1.25em;
+		}
+		#theme-tweaker-ui input[type='range'] {
+			padding: 0 0.5em 0 0.3em;
+			margin: 0 2.5em 0 1.5em;
+			width: calc(100% - 4em);
+		}
+		.theme-tweak-control-label {
+			margin-right: 4.45em;
+		}
+		.theme-tweak-control-label + .notch {
+			left: calc((100% - 4.8em) / 3 + 1.8em + 7px);
+		}
+		#theme-tweak-label-hue-rotate + .notch {
+			left: calc(3em);
+		}
+	}
+
+	#theme-tweaker-ui .main-window .buttons-container button:last-child {
+		margin-top: 1em;
 	}
 
 	@media only screen and (max-width: 369px) {
