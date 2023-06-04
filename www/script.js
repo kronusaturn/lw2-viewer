@@ -4461,7 +4461,6 @@ function pushNotificationsButtonClicked(event) {
 
 function MarkdownFromHTML(text, linePrefix) {
 	GWLog("MarkdownFromHTML");
-	console.log(text);
 
 	let docFrag = document.createRange().createContextualFragment(text);
 	let output = "";
@@ -4499,7 +4498,7 @@ function MarkdownFromHTML(text, linePrefix) {
 
 	let doConversion = (node) => {
 		if(node.nodeType == Node.TEXT_NODE) {
-			let lines = node.nodeValue.split(/\r|\n/m);
+			let lines = node.nodeValue.replace(/[\][*\\#<>]/g, "\\$&").split(/\r|\n/m);
 			for(text of lines.slice(0, -1)) {
 				out(text);
 				newLine();
@@ -4591,6 +4590,9 @@ function MarkdownFromHTML(text, linePrefix) {
 				out('`');
 				node.childNodes.forEach(doConversion);
 				out('`');
+				break;
+			case "STYLE":
+			case "SCRIPT":
 				break;
 			default:
 				node.childNodes.forEach(doConversion);
