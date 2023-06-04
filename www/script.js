@@ -4500,10 +4500,14 @@ function MarkdownFromHTML(text, linePrefix) {
 		if(node.nodeType == Node.TEXT_NODE) {
 			let lines = node.nodeValue.replace(/[\][*\\#<>]/g, "\\$&").split(/\r|\n/m);
 			for(text of lines.slice(0, -1)) {
-				out(text);
-				newLine();
+				if(text.trim().length > 0) {
+					out(text.trim());
+					newLine();
+				}
 			}
-			out(lines.at(-1));
+			if(lines.at(-1).trim().length > 0) {
+				out(lines.at(-1).trim());
+			}
 		} else if(node.nodeType == Node.ELEMENT_NODE) {
 			switch(node.tagName) {
 			case "P":
