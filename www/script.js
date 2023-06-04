@@ -4567,13 +4567,13 @@ function MarkdownFromHTML(text, linePrefix) {
 				newParagraph();
 				break;
 			case "A":
-				let href = node.href;
+				let href = node.getAttribute("href");
 				out('[');
 				node.childNodes.forEach(doConversion);
 				out(`](${href})`);
 				break;
 			case "IMG":
-				let src = node.src;
+				let src = node.getAttribute("src");
 				let alt = node.alt || "";
 				out(`![${alt}](${src})`);
 				break;
