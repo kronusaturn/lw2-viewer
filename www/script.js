@@ -4465,6 +4465,7 @@ function MarkdownFromHTML(text, linePrefix) {
 	let docFrag = document.createRange().createContextualFragment(text);
 	let output = "";
 	let owedLines = -1;
+	let atLineBeginning = true;
 	linePrefix = linePrefix || "";
 
 	let out = text => {
@@ -4473,16 +4474,25 @@ function MarkdownFromHTML(text, linePrefix) {
 		}
 		output += text;
 		owedLines = 0;
+		atLineBeginning = false;
+	}
+	let outText = text => {
+		if(atLineBeginning) text = text.trimStart();
+		text = text.replace(/\s+/gm, " ");
+		if(text.length > 0)
+			out(text);
 	}
 	let forceLine = n => {
 		n = n || 1;
 		out(("\n" + linePrefix).repeat(n));
+		atLineBeginning = true;
 	}
 	let newLine = (n) => {
 		n = n || 1;
 		if(owedLines >= 0 && owedLines < n) {
 			owedLines = n;
 		}
+		atLineBeginning = true;
 	};
 	let newParagraph = () => {
 		newLine(2);
@@ -4498,17 +4508,9 @@ function MarkdownFromHTML(text, linePrefix) {
 
 	let doConversion = (node) => {
 		if(node.nodeType == Node.TEXT_NODE) {
-			let lines = node.nodeValue.replace(/[\][*\\#<>]/g, "\\$&").split(/\r|\n/m);
-			for(text of lines.slice(0, -1)) {
-				if(text.trim().length > 0) {
-					out(text.trim());
-					newLine();
-				}
-			}
-			if(lines.at(-1).trim().length > 0) {
-				out(lines.at(-1).trim());
-			}
-		} else if(node.nodeType == Node.ELEMENT_NODE) {
+			outText(node.nodeValue.replace(/[\][*\\#<>]/g, "\\$&"));
+		}
+		else if(node.nodeType == Node.ELEMENT_NODE) {
 			switch(node.tagName) {
 			case "P":
 			case "DIV":
