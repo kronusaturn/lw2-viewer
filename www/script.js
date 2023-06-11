@@ -627,7 +627,7 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 		}
 	}
 	let textarea = commentControls.query("textarea");
-	textarea.value = editMarkdownSource;
+	if(editMarkdownSource) textarea.value = editMarkdownSource;
 	textarea.addTextareaFeatures();
 	textarea.focus();
 }
