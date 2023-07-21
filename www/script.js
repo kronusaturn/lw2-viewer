@@ -314,6 +314,11 @@ function registerCopyProcessorsForDocument(doc) {
 			|| GW.copyProcessors.length == 0)
 			return;
 
+		// Don't apply copy processors to input fields.
+		if (({'TEXTAREA': true, 'INPUT': true})[document.activeElement.tagName]) {
+			return;
+		}
+
 		event.preventDefault();
 		event.stopPropagation();
 
