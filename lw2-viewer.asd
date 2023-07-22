@@ -12,7 +12,7 @@
                              (:file "context")
 			     (:file "html-reader")
 			     (:file "client-script" :depends-on ("html-reader"))
-			     (:file "interface-utils" :depends-on ("links" "html-reader"))
+			     (:file "interface-utils" :depends-on ("links" "html-reader" "context" "sites"))
 			     (:file "user-context")
 			     (:file "conditions" :depends-on ("utils" "html-reader"))
 			     (:file "schema-type" :depends-on ("utils" "backend-modules"))

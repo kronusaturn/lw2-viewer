@@ -1,6 +1,8 @@
 (uiop:define-package #:lw2.interface-utils
   (:use #:cl #:lw2.links #:lw2.html-reader)
-  (:import-from #:lw2.utils #:hash-cond)
+  (:import-from #:lw2.utils #:hash-cond #:alist-bind)
+  (:import-from #:lw2.context #:*current-site*)
+  (:import-from #:lw2.sites #:ea-forum-viewer-site)
   (:export #:pretty-time #:pretty-time-js #:pretty-time-html
 	   #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
 
@@ -68,9 +70,25 @@
 		 (format nil "LW: ~A AF: ~A" base-score af-score)
 		 (pretty-number base-score "point")))
 	   (extended-text ()
-	     (pretty-number (cdr (assoc :agreement extended-score))))
+	     (alist-bind
+	      (agreement agree disagree) extended-score
+	      ;; LW uses agreement, EAF uses agree and disagree
+	       (cond
+		 ((typep *current-site* 'ea-forum-viewer-site)
+		  (format nil #.(uiop:strcat "~D" #\HAIR_SPACE #\RATIO #\HAIR_SPACE "~D")
+			  (or agree 0)
+			  (or disagree 0)))
+		 ((or agree agreement)
+		  (pretty-number (or agree agreement 0))))))
 	   (extended-tooltip ()
-	     (votes-to-tooltip (cdr (assoc :agreement-vote-count extended-score))))
+	     (alist-bind
+	      (agreement-vote-count agree disagree) extended-score
+	      ;; LW uses agreement-vote-count
+	      (cond
+		((typep *current-site* 'ea-forum-viewer-site)
+		 (format nil "Total points: ~D" (+ (or agree 0) (or disagree 0))))
+		(agreement-vote-count
+		 (votes-to-tooltip (or agreement-vote-count 0))))))
 	   (voting (class tooltip text)
 	     <div class=(safe ("~A voting-controls" class))
 	          (with-html-stream-output (:stream stream)
@@ -89,7 +107,7 @@
 	(progn
 	  (when base-score
 	    (voting "karma" (votes-to-tooltip vote-count) (text)))
-	  (when extended-score
+	  (when (or extended-score (typep *current-site* 'ea-forum-viewer-site))
 	    (voting "agreement"
 		    (extended-tooltip)
 		    (extended-text)))))))
