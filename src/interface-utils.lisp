@@ -1,8 +1,6 @@
 (uiop:define-package #:lw2.interface-utils
   (:use #:cl #:lw2.links #:lw2.html-reader)
   (:import-from #:lw2.utils #:hash-cond #:alist-bind)
-  (:import-from #:lw2.context #:*current-site*)
-  (:import-from #:lw2.sites #:ea-forum-viewer-site)
   (:export #:pretty-time #:pretty-time-js #:pretty-time-html
 	   #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
 
@@ -61,7 +59,7 @@
               (typecase votes (integer votes) (list (length votes))))
       ""))
 
-(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score)
+(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score ea-agreement-voting)
   (labels ((button (vote-type)
 	     (when with-buttons
 	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Post" "Comment") tabindex="-1" disabled autocomplete="off"></button>))
@@ -74,7 +72,7 @@
 	      (agreement agree disagree) extended-score
 	      ;; LW uses agreement, EAF uses agree and disagree
 	       (cond
-		 ((typep *current-site* 'ea-forum-viewer-site)
+		 (ea-agreement-voting
 		  (format nil #.(uiop:strcat "~D" #\HAIR_SPACE #\RATIO #\HAIR_SPACE "~D")
 			  (or agree 0)
 			  (or disagree 0)))
@@ -85,7 +83,7 @@
 	      (agreement-vote-count agree disagree) extended-score
 	      ;; LW uses agreement-vote-count
 	      (cond
-		((typep *current-site* 'ea-forum-viewer-site)
+		(ea-agreement-voting
 		 (format nil "Total points: ~D" (+ (or agree 0) (or disagree 0))))
 		(agreement-vote-count
 		 (votes-to-tooltip (or agreement-vote-count 0))))))
@@ -107,7 +105,7 @@
 	(progn
 	  (when base-score
 	    (voting "karma" (votes-to-tooltip vote-count) (text)))
-	  (when (or extended-score (typep *current-site* 'ea-forum-viewer-site))
+	  (when (or extended-score ea-agreement-voting)
 	    (voting "agreement"
 		    (extended-tooltip)
 		    (extended-text)))))))
