@@ -770,7 +770,7 @@
 		(handler-bind ((error (lambda (condition)
 					(declare (ignore condition))
 					(when hosted-here
-					  (return post)))))
+					  (return (remove :fm-crosspost post :key #'car))))))
 		  (let* ((*current-site* (find-site (backend-magnum-crosspost-site backend)))
 			 (*current-backend* (site-backend *current-site*))
 			 (*retrieve-crosspost* nil)
