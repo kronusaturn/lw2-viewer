@@ -10,7 +10,10 @@
 	   #:lw2-client-error #:lw2-not-found-error #:lw2-user-not-found-error #:lw2-not-allowed-error #:lw2-login-required-error #:lw2-server-error #:lw2-connection-error #:lw2-unknown-error
 	   #:html-output-stream-error-p
 	   #:log-condition #:log-conditions
-	   #:log-and-ignore-errors)
+	   #:log-and-ignore-errors
+	   #:abort-response
+	   #:abort-response-if-unrecoverable
+	   #:with-error-html-block)
   (:recycle #:lw2.backend #:lw2-viewer))
 
 (in-package #:lw2.conditions)
@@ -119,3 +122,20 @@
 	     (when (interesting-condition-p c) (log-condition c))
 	     (return-from log-and-ignore-errors (values nil c)))))
        ,@body)))
+
+(defun abort-response ()
+  (throw 'abort-response nil))
+
+(defun abort-response-if-unrecoverable (condition)
+  (when (html-output-stream-error-p condition)
+    (abort-response)))
+
+(defmacro with-error-html-block (() &body body)
+  "If an error occurs within BODY, write an HTML representation of the
+signaled condition to *HTML-OUTPUT*."
+  `(block with-error-html-block
+     (handler-bind ((serious-condition (lambda (c)
+					 (abort-response-if-unrecoverable c)
+					 (error-to-html c)
+					 (return-from with-error-html-block nil))))
+       (log-conditions (progn ,@body)))))

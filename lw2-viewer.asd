@@ -54,11 +54,12 @@
 			     (:file "push-notifications" :depends-on ("backend"))
 			     (:file "background-loader" :depends-on ("backend" "push-notifications" "clean-html"))
 			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend" "backlinks"))
+			     (:file "comment-threads" :depends-on ("utils" "user-context" "conditions"))
 			     (:module "data-viewers"
 				      :components ((:file "post")
 						   (:file "comment")
 						   (:file "tag"))
-				      :depends-on ("schema-type" "utils" "backend" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links" "lmdb" "backlinks")))
+				      :depends-on ("schema-type" "utils" "backend" "comment-threads" "context" "user-context" "sites" "clean-html" "html-reader" "interface-utils" "links" "lmdb" "backlinks")))
                 :depends-on ())
                (:module "templates"
                 :components ((:static-file "conversation.html")
