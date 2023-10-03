@@ -226,7 +226,7 @@
           </div>)
       (when debate-responses
 	(with-html-stream-output (:stream stream)
-	  (output-comments stream "debate-responses" debate-responses nil :replies-open nil)))
+	  (output-comments stream "debate-response" debate-responses nil :replies-open nil)))
       (backlinks-to-html (get-backlinks post-id) post-id)
       (when (nonempty-string html-body)
 	(with-html-stream-output (post-meta-to-html post :body nil :bottom)))

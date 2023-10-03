@@ -30,6 +30,7 @@
    (retracted boolean)
    (deleted-public boolean)
    (answer boolean :backend-type backend-q-and-a)
+   (debate-response boolean :backend-type backend-debates)
    (parent-answer-id (or null string) :backend-type backend-q-and-a)
    (nominated-for-review t :backend-type backend-lw2)
    (reviewing-for-review t :backend-type backend-lw2)
@@ -56,7 +57,8 @@
 			     (< (* 1000 (local-time:timestamp-to-unix (local-time:now))) (+ js-time 15000)))
 			"just-posted-comment")
 		       (highlight-new "comment-item-highlight")
-		       (retracted "retracted")))
+		       (retracted "retracted")
+		       (debate-response "debate-response")))
 	       data-post-id=post-id
 	       data-tag-id=(cdr (assoc :--id tag))>
 	    <div class="comment-meta">
