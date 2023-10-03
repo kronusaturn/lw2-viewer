@@ -1,14 +1,17 @@
 (uiop:define-package #:lw2.comment-threads
-    (:use #:cl #:lw2.utils #:lw2.user-context #:lw2.conditions #:lw2.data-viewers.comment)
+    (:use #:cl #:lw2.utils #:lw2.context #:lw2.user-context #:lw2.conditions #:lw2.html-reader #:lw2.data-viewers.comment)
   (:import-from #:alexandria #:if-let)
   (:export #:make-comment-parent-hash
 	   #:comment-chrono-to-html
 	   #:comment-item-to-html
 	   #:comment-thread-to-html
 	   #:comment-tree-to-html
+	   #:output-comments
 	   #:sort-items))
 
 (in-package #:lw2.comment-threads)
+
+(named-readtables:in-readtable html-reader)
 
 (defun make-comment-parent-hash-real (comments)
   (let ((existing-comment-hash (make-hash-table :test 'equal))
@@ -103,3 +106,36 @@
               (let* ((c-id (cdr (assoc :--id c)))
                      (new-c (acons :children (gethash c-id comment-hash) c)))
                 (comment-item-to-html out-stream new-c)))))))
+
+(defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono replies-open)
+  (labels ((output-comments-inner ()
+	     (with-error-html-block ()
+	       (if target
+		   (comment-thread-to-html out-stream
+					   (lambda ()
+					     (comment-item-to-html
+					      out-stream
+					      target
+					      :level-invert preview
+					      :extra-html-fn (lambda (c-id)
+							       (let ((*comment-individual-link* nil))
+								 (comment-tree-to-html out-stream (make-comment-parent-hash comments)
+										       :target c-id
+										       :level-invert preview))))))
+		   (if comments
+		       (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
+			 (if chrono
+			     (comment-chrono-to-html out-stream comments)
+			     (let ((parent-hash (make-comment-parent-hash comments)))
+			       (when overcomingbias-sort
+				 (setf (gethash nil parent-hash)
+				       (sort-items (gethash nil parent-hash) :old)))
+			       (comment-tree-to-html out-stream parent-hash))))
+		       <div class="comments-empty-message">("No ~As." id)</div>)))))
+    (if preview
+	(output-comments-inner)
+	(progn (format out-stream "<div id=\"~As\" class=\"comments~:[~; replies-open~]\">" id (and *enable-voting* replies-open))
+	       (unless target
+		 <script>initializeCommentControls\(\)</script>)
+	       (output-comments-inner)
+	       (format out-stream "</div>")))))

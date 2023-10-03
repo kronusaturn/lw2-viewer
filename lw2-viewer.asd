@@ -54,7 +54,7 @@
 			     (:file "push-notifications" :depends-on ("backend"))
 			     (:file "background-loader" :depends-on ("backend" "push-notifications" "clean-html"))
 			     (:file "admin" :depends-on ("lmdb" "clean-html" "backend" "backlinks"))
-			     (:file "comment-threads" :depends-on ("utils" "user-context" "conditions"))
+			     (:file "comment-threads" :depends-on ("utils" "context" "user-context" "conditions" "html-reader"))
 			     (:module "data-viewers"
 				      :components ((:file "post")
 						   (:file "comment")

@@ -1125,39 +1125,6 @@
 							    :query (list-cond (need-auth "need-auth" "y")))
 					     (hunchentoot:request-uri*))))))))))
 
-(defun output-comments (out-stream id comments target &key overcomingbias-sort preview chrono replies-open)
-  (labels ((output-comments-inner ()
-	     (with-error-html-block ()
-	       (if target
-		   (comment-thread-to-html out-stream
-					   (lambda ()
-					     (comment-item-to-html
-					      out-stream
-					      target
-					      :level-invert preview
-					      :extra-html-fn (lambda (c-id)
-							       (let ((*comment-individual-link* nil))
-								 (comment-tree-to-html out-stream (make-comment-parent-hash comments)
-										       :target c-id
-										       :level-invert preview))))))
-		   (if comments
-		       (progn #|<div class="comments-empty-message">(safe (pretty-number (length comments) id))</div>|#
-			 (if chrono
-			     (comment-chrono-to-html out-stream comments)
-			     (let ((parent-hash (make-comment-parent-hash comments)))
-			       (when overcomingbias-sort
-				 (setf (gethash nil parent-hash)
-				       (sort-items (gethash nil parent-hash) :old)))
-			       (comment-tree-to-html out-stream parent-hash))))
-		       <div class="comments-empty-message">("No ~As." id)</div>)))))
-    (if preview
-	(output-comments-inner)
-	(progn (format out-stream "<div id=\"~As\" class=\"comments~:[~; replies-open~]\">" id (and *enable-voting* replies-open))
-	       (unless target
-		 <script>initializeCommentControls\(\)</script>)
-	       (output-comments-inner)
-	       (format out-stream "</div>")))))
-
 (define-json-endpoint (view-karma-vote-post forum-site "/karma-vote/post")
   (let ((auth-token *current-auth-token*))
     (request-method
@@ -1237,7 +1204,9 @@
 					  (generate-item-link :post post-id)
 					  (clean-text-to-html title :hyphenation nil)))
 				(output-comments out-stream "comment" comments target-comment :chrono chrono :preview preview)))))
-	       (let ((post-sequences (get-post-sequences post-id)))
+	       (let ((post-sequences (get-post-sequences post-id))
+		     (debate-responses (when (cdr (assoc :debate post))
+					 (get-post-debate-responses post-id))))
 		 (emit-page (out-stream :title title
 					:content-class (format nil "post-page comment-thread-page~{ ~A~}"
 							       (list-cond ((cdr (assoc :question post)) "question-post-page")
@@ -1251,7 +1220,7 @@
 						       (lw2-not-allowed-error
 							<p>This probably means the post has been deleted or moved back to the author's drafts.</p>)))
 			      (t
-			       (post-body-to-html post)))
+			       (post-body-to-html (acons :debate-responses debate-responses post))))
 			    (when (and lw2-auth-token (equal (logged-in-userid) (cdr (assoc :user-id post))))
 			      (format out-stream "<div class=\"post-controls\"><a class=\"edit-post-link button\" href=\"/edit-post?post-id=~A\" accesskey=\"e\" title=\"Edit post [e]\">Edit post</a></div>"
 				      (cdr (assoc :--id post))))
@@ -1275,8 +1244,6 @@
 				(let* ((real-comments (get-post-comments post-id))
 				       (answers (when (cdr (assoc :question post))
 						  (get-post-answers post-id)))
-				       (debate-responses (when (cdr (assoc :debate post))
-							   (get-post-debate-responses post-id)))
 				       (posted-at (and (typep *current-backend* 'backend-lw2)
 						       (cdr (assoc :posted-at post))))
 				       (posted-timestamp (and posted-at (local-time:parse-timestring posted-at)))
@@ -1302,8 +1269,6 @@
 										    (list "nomination" nominations nominations-open))
 										   ((or reviews reviews-open)
 										    (list "review" reviews reviews-open))
-										   ((cdr (assoc :debate post))
-										    (list "debate-responses" debate-responses nil))
 										   ((cdr (assoc :question post))
 										    (list "answer" answers t))
 										   (t

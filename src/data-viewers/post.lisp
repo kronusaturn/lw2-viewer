@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.data-viewers.post
   (:use #:cl #:lw2.utils #:lw2.sites #:lw2.backend #:lw2.context #:lw2.clean-html #:lw2.schema-type #:lw2.html-reader #:lw2.interface-utils #:lw2.user-context #:lw2.links #:lw2.backlinks)
+  (:import-from #:lw2.comment-threads #:output-comments)
   (:import-from #:alexandria #:when-let)
   (:export #:post-headline-to-html #:post-body-to-html))
 
@@ -30,6 +31,7 @@
    (draft boolean)
    (question boolean :backend-type backend-q-and-a)
    (debate boolean :backend-type backend-debates)
+   (debate-responses list :graphql-ignore t)
    ;; todo: allow recursive schema types and clean this up
    (target-post-relations list
 			  :context :body
@@ -171,7 +173,7 @@
     (post-meta-to-html post :listing skip-section nil)))
 
 (defun post-body-to-html (post)
-  (schema-bind (:post (rectify-post post) (post-id url question title html-body is-event local-start-time local-end-time location google-location contact-info) :context :body)
+  (schema-bind (:post (rectify-post post) (post-id url question title html-body debate debate-responses is-event local-start-time local-end-time location google-location contact-info) :context :body)
     <main class=("post~{ ~A~}" (list-cond
 				(url "link-post")
 				(question "question-post")))>
@@ -212,7 +214,8 @@
 		      <li>Contact: (safe (clean-text-to-html contact-info))</li>)
 		    </ul>)))
 	</div>))
-      (when (or url (nonempty-string html-body))
+      (when (and (or url (nonempty-string html-body))
+		 (not (and debate debate-responses)))
         <div class="body-text post-body">
           (if url <p><a class="link-post-link" href=(presentable-link url)>Link post</a></p>)
   	  (with-html-stream-output (:stream stream)
@@ -220,7 +223,10 @@
 		  (*link-hook* (lambda (link) (add-backlink link post-id)))
 		  (lw2.lmdb:*memoized-output-stream* stream))
 	      (clean-html* (or html-body "") :with-toc t :post-id post-id)))
-        </div>)
+          </div>)
+      (when debate-responses
+	(with-html-stream-output (:stream stream)
+	  (output-comments stream "debate-responses" debate-responses nil :replies-open nil)))
       (backlinks-to-html (get-backlinks post-id) post-id)
       (when (nonempty-string html-body)
 	(with-html-stream-output (post-meta-to-html post :body nil :bottom)))
