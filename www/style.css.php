@@ -1456,7 +1456,7 @@ article {
 	max-width: 100%;
 }
 
-.post-meta + .comments {
+.index-page .post-meta + .comments {
 	margin-top: 3em;
 }
 
