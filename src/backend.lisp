@@ -1089,22 +1089,46 @@
   (backend-progress-forum
    (format nil "pf-prod-~(~A~)" index)))
 
+(define-backend-function encode-algolia-search-query (query indexes)
+  (backend-algolia-search
+   (json:encode-json-alist-to-string
+    (alist
+     "requests"
+     (loop for index in indexes
+	   collect (alist "indexName" (algolia-search-index-name index)
+			  "params" (format nil "query=~A&hitsPerPage=200&page=0"
+					   (url-rewrite:url-encode query)))))))
+  (backend-lw2
+   (json:encode-json-to-string
+    (loop for index in indexes
+	  collect (alist "indexName" (algolia-search-index-name index)
+			 "params" (alist "query" query
+					 "hitsPerPage" 200
+					 "page" 0))))))
+
+(define-backend-function decode-algolia-search-results (data)
+  (backend-algolia-search
+   (cdr (assoc :results data)))
+  (backend-lw2
+   data))
+
 (define-backend-function lw2-search-query (query &key (indexes '(:tags :posts :comments)))
   (backend-algolia-search
    (call-with-http-response
     (lambda (req-stream)
       (let* ((tags nil)
 	     (result-groups (loop
-			       for results in (cdr (assoc :results (json:decode-json req-stream)))
-			       for index in indexes
-			       for hits = (cdr (assoc :hits results))
-			       do (setf hits (case index
-					       (:posts (map 'list (lambda (post) (if (cdr (assoc :comment-count post)) post (alist* :comment-count 0 post))) hits))
-					       (:comments (map 'list #'search-result-markdown-to-html hits))
-					       (:tags (progn (setf tags (map 'list (lambda (tag) (alist* :----typename "Tag" tag)) hits))
-							     nil))
-					       (t hits)))
-			       collect hits)))
+				  for results in (decode-algolia-search-results
+						  (json:decode-json req-stream))
+				  for index in indexes
+				  for hits = (cdr (assoc :hits results))
+				  do (setf hits (case index
+						  (:posts (map 'list (lambda (post) (if (cdr (assoc :comment-count post)) post (alist* :comment-count 0 post))) hits))
+						  (:comments (map 'list #'search-result-markdown-to-html hits))
+						  (:tags (progn (setf tags (map 'list (lambda (tag) (alist* :----typename "Tag" tag)) hits))
+								nil))
+						  (t hits)))
+				  collect hits)))
 	(values
 	 (with-collector (col)
 	   (let ((remaining-result-groups result-groups))
@@ -1122,11 +1146,7 @@
     :headers '(("Origin" . "https://www.greaterwrong.com")
 	       ("Referer" . "https://www.greaterwrong.com/")
 	       ("Content-Type" . "application/json"))
-    :content (json:encode-json-alist-to-string
-	      (alist "requests" (loop for index in indexes
-				   collect (alist "indexName" (algolia-search-index-name index)
-						  "params" (format nil "query=~A&hitsPerPage=200&page=0"
-								   (url-rewrite:url-encode query))))))
+    :content (encode-algolia-search-query query indexes)
     :want-stream t)))
 
 (define-backend-function get-username-wrapper (user-id fn)
