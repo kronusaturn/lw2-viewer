@@ -1617,7 +1617,12 @@
                                                                              (sort :member '(:top :new :old) :default :new))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
 		    (user-info
-		     (let ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token)))
+		     (let* ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token))
+			    (canonical-slug (cdr (assoc :slug ui))))
+		       (when (and user-slug
+				  canonical-slug
+				  (not (string-equal user-slug canonical-slug)))
+			 (return-from view-user (redirect (format nil "/users/~A" canonical-slug))))
 		       (if (and (not (cdr (assoc :deleted ui))) (cdr (assoc :--id ui)))
 			   ui
 			   (error 'lw2-user-not-found-error))))
