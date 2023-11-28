@@ -1157,6 +1157,12 @@
        "[deleted]"
        (funcall fn user-id))))
 
+(define-backend-function get-user-full-name-wrapper (user-id fn)
+  (backend-base
+   (funcall fn user-id))
+  (backend-ea-forum
+   ""))
+
 (define-cache-database 'backend-lw2-legacy "comment-markdown-source" "post-markdown-source")
 
 (defun markdown-source-db-name (target-type)
@@ -1236,7 +1242,7 @@
     (rate-limit (user-id) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) :fields '(:slug))))))))
 
 (with-rate-limit
-  (simple-cacheable ("user-full-name" 'backend-lw2-legacy "userid-to-full-name" user-id)
+  (simple-cacheable ("user-full-name" 'backend-lw2-legacy "userid-to-full-name" user-id :get-wrapper #'get-user-full-name-wrapper)
     (rate-limit (user-id) (or (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :document-id user-id) :fields '(:full-name)))))
 			      ""))))
 
