@@ -51,7 +51,9 @@
 
 (defun clean-lw-link (url)
   (when url
-    (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com")))
+    (let* ((url (ppcre:regex-replace "([^/]*//[^/]*)lesserwrong\.com" url "\\1lesswrong.com"))
+	   (url (ppcre:regex-replace "([^/:]*://[^/]*)forum-bots\.effectivealtruism.org" url "\\1forum.effectivealtruism.org")))
+      url)))
 
 (defun votes-to-tooltip (votes)
   (if votes
