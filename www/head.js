@@ -636,6 +636,11 @@ Element.prototype.updateCommentControlButton = function() {
 	});
 }
 
+Element.prototype.commentChildCount = function() {
+	let element = this.query("[data-child-count]");
+	return Number(element.dataset["childCount"] || 0);
+}
+
 Element.prototype.constructCommentControls = function() {
 	GWLog("constructCommentControls");
 	let commentControls = this;
@@ -659,7 +664,7 @@ Element.prototype.constructCommentControls = function() {
 	} else {
 		if (commentControls.parentElement.query(".comment-body").hasAttribute("data-markdown-source")) {
 			let buttonsList = [];
-			if (!commentControls.parentElement.query(".comment-thread"))
+			if (commentControls.parentElement.commentChildCount() === 0)
 				buttonsList.push("delete-button");
 			buttonsList.push("retract-button", "edit-button");
 			buttonsList.forEach(buttonClass => {
