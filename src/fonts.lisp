@@ -64,7 +64,7 @@
 
 (defmethod call-with-fonts-source-resources ((fonts-source obormot-fonts-source) fn)
   (maybe-update-obormot-fonts)
-  (with-resource-bindings ((:preconnect "https://s3.amazonaws.com/")
+  (with-resource-bindings ((:preconnect "https://files.obormot.net/")
 			   (:style "/fonts.css"))
     (funcall fn)))
 
