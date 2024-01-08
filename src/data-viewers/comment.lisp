@@ -47,7 +47,7 @@
     (generate-item-link (if post-id :post :tag) (or post-id (cdr (assoc :slug tag))) :comment-id comment-id)))
 
 (defun comment-to-html (out-stream comment &key with-post-title)
-  (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)))
+  (if (or (cdr (assoc :deleted comment)) (cdr (assoc :deleted-public comment)) (not (cdr (assoc :html-body comment))))
       (format out-stream "<div class=\"comment deleted-comment\"><div class=\"comment-meta\"><span class=\"deleted-meta\">[ ]</span></div><div class=\"body-text comment-body\">[deleted]</div></div>")
       (schema-bind (:comment comment :auto :context :index)
         (multiple-value-bind (pretty-time js-time) (pretty-time posted-at)
