@@ -104,9 +104,12 @@
 	   (html-output-stream-error-p condition))))
 
 (defun log-condition (condition)
-  (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
-    (format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
-    (sb-debug:print-backtrace :stream outstream :from :interrupted-frame :print-frame-source t))) 
+  (handler-case
+      (with-open-file (outstream "./logs/error.log" :direction :output :if-exists :append :if-does-not-exist :create)
+	(format outstream "~%~A: ~S ~A~%" (local-time:format-timestring nil (local-time:now)) condition condition)
+	(sb-debug:print-backtrace :stream outstream :from :interrupted-frame :print-frame-source t))
+    (serious-condition ()
+      nil)))
 
 (defmacro log-conditions (&body body)
   `(block log-conditions
