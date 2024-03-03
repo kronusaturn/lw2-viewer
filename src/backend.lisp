@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:iterate #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
 	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
+  (:import-from #:alexandria-2 #:subseq*)
   (:import-from #:collectors #:with-collector)
   (:import-from #:lw2.user-context #:*current-auth-token*)
   (:reexport #:lw2.backend-modules)
@@ -612,8 +613,9 @@
        (let ((terms
 	      (alist-without-null* :before before
 				   :after after
-				   :limit limit
-				   :offset offset
+				   ;; Workaround offsets not working as of 2024-02-02
+				   :limit (if limit (+ limit (or offset 0)))
+				   #| :offset offset |#
 				   :karma-threshold karma-threshold
 				   view-terms)))
 	 (values terms cache-key))))))
@@ -635,14 +637,19 @@
      (values (lw2-query-string :post :list query-terms)
 	     cache-key))))
 
-(define-backend-function get-posts-index (&rest args &key &allow-other-keys)
+(define-backend-function get-posts-index (&rest args &key (limit 21) offset &allow-other-keys)
   (backend-lw2-legacy
    (declare (dynamic-extent args))
    (multiple-value-bind (query-string cache-key)
        (apply #'%get-posts-index-query-string backend args)
      (if cache-key
 	 (get-cached-index-query cache-key query-string)
-	 (lw2-graphql-query query-string)))))
+	 (let ((result (lw2-graphql-query query-string))
+	       (offset (or offset 0)))
+	   ;; Workaround offsets not working as of 2024-02-02
+	   (if limit
+	       (subseq* result offset (+ limit offset))
+	       result))))))
 
 (define-backend-operation get-posts-index backend-lw2-tags :around (&rest args &key hide-tags offset (limit 21) &allow-other-keys)
   ;; Workaround for https://github.com/LessWrong2/Lesswrong2/issues/3099
