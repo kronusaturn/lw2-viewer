@@ -1366,7 +1366,7 @@ a.comment-parent-link:hover::before {
 	left: 4px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.karma .upvote::after {
 		left: 4px;
 		bottom: 4px;
@@ -1395,7 +1395,7 @@ a.comment-parent-link:hover::before {
 	left: 2px;
 	top: 1px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.agreement .upvote::after {
 		left: 4px;
 		bottom: 2px;
@@ -1678,7 +1678,7 @@ input[type='submit']:active {
 .button:active {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

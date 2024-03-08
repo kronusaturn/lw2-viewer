@@ -1026,7 +1026,7 @@ h1.post-title {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	#comments::before {
 		box-shadow: 0 3px 3px -4px #000 inset;
 	}
@@ -1763,7 +1763,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

@@ -179,7 +179,7 @@ body {
 		-5px -4px 8px -4px #bbb inset;
 }
 /* And for Gecko: */
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.active-bar {
 		box-shadow: 0 -3px 4px -2px #ccc;
 	}
@@ -886,7 +886,7 @@ h1.listing.own-post-listing {
 	font-family: <?php echo $text_font; ?>;
 	font-weight: 400;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.body-text {
 		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
 	}
@@ -1064,7 +1064,7 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	#comments::before {
 		box-shadow: 0 3px 3px -4px #000 inset;
 	}
@@ -1366,7 +1366,7 @@ div.comment-child-links a {
 	left: 4px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.karma .upvote::after {
 		left: 4px;
 		bottom: 4px;
@@ -1395,7 +1395,7 @@ div.comment-child-links a {
 	left: 2px;
 	top: 1px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.agreement .upvote::after {
 		left: 4px;
 		bottom: 2px;
@@ -1520,7 +1520,7 @@ div.comment-child-links a {
 	box-shadow: 
 		0 0 0 1px #eee inset;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.posting-controls textarea {
 		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
 	}
@@ -1730,7 +1730,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

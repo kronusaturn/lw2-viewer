@@ -1012,7 +1012,7 @@ head.content-width-fluid + body > * {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -1241,7 +1241,7 @@ head.content-width-fluid + body > * {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -1273,7 +1273,7 @@ head.content-width-fluid + body > * {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -7606,7 +7606,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

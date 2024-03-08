@@ -284,7 +284,7 @@
 	opacity: 0.5;
 }
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	#theme-tweaker-ui #theme-tweak-section-text-size-adjust {
 		display: none;
 	}
@@ -804,7 +804,7 @@ input[type='range']::-ms-thumb {
 	}
 	/*	Compensating for Firefox mobile scroll bar nonsense.
 	 */
-	@-moz-document url-prefix() {
+	@supports (-moz-appearance: none) {
 		#theme-tweaker-ui .controls-container {
 			padding-right: 1.25em;
 		}

@@ -835,7 +835,7 @@ body {
 	#theme-tweaker-toggle.engaged {
 		visibility: visible;
 	}
-	@-moz-document url-prefix() {
+	@supports (-moz-appearance: none) {
 		#theme-tweaker-toggle {
 			left: 18px;
 		}
@@ -1114,7 +1114,7 @@ h1.listing .post-title-link {
 	text-shadow: <?php global $platform; echo ($platform == 'Mac' ? 'none' : '0 0 0 #444'); ?>;
 	color: <?php global $platform; echo ($platform == 'Mac' ? '#444' : '#000'); ?>;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	h1.listing .post-title-link {
 		text-shadow: none;
 	}
@@ -1996,7 +1996,7 @@ div.comment-child-links a {
 	left: 4px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.karma .upvote::after {
 		left: 4px;
 		bottom: 4px;
@@ -2025,7 +2025,7 @@ div.comment-child-links a {
 	left: 2px;
 	top: 1px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.agreement .upvote::after {
 		left: 4px;
 		bottom: 2px;
@@ -2414,7 +2414,7 @@ button:focus:not(:hover),
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

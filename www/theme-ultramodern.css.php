@@ -1055,7 +1055,7 @@ a.post-section.alignment-forum:hover::before {
 		1.5px 0 1.5px -1.5px #bbb inset, 
 		1px 0 1px -1px #777 inset;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.comment-item {
 		box-shadow:
 			1.5px 0 1.5px -1px #bbb inset, 
@@ -1351,7 +1351,7 @@ div.comment-child-links a {
 	left: 4px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.karma .upvote::after {
 		left: 4px;
 		bottom: 4px;
@@ -1380,7 +1380,7 @@ div.comment-child-links a {
 	left: 2px;
 	top: 1px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.agreement .upvote::after {
 		left: 4px;
 		bottom: 2px;
@@ -1500,7 +1500,7 @@ div.comment-child-links a {
 		0.5px 0.5px 1px #aaa,
 		0.5px 0.5px 1px #bbb;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.posting-controls textarea {
 		font-weight: <?php global $platform; echo ($platform == 'Windows' ? '300' : '400'); ?>;
 	}
@@ -1672,7 +1672,7 @@ input[type='submit']:active {
 .button:focus:not(:hover) {
 	transform: none;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

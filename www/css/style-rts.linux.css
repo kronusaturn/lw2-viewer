@@ -1012,7 +1012,7 @@ head.content-width-fluid + body > * {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -1241,7 +1241,7 @@ head.content-width-fluid + body > * {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -1273,7 +1273,7 @@ head.content-width-fluid + body > * {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -7525,7 +7525,7 @@ a.comment-parent-link:hover::before {
 	left: 4px;
 	top: 4px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.karma .upvote::after {
 		left: 4px;
 		bottom: 4px;
@@ -7554,7 +7554,7 @@ a.comment-parent-link:hover::before {
 	left: 2px;
 	top: 1px;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.agreement .upvote::after {
 		left: 4px;
 		bottom: 2px;
@@ -7837,7 +7837,7 @@ input[type='submit']:active {
 .button:active {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}

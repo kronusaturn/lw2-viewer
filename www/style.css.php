@@ -1022,7 +1022,7 @@ foreach ($content_width_settings as $name => $setting) {
 }
 
 /* This doesn't work in Mozilla browsers, so hide it */
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	#text-size-adjustment-ui {
 		display: none;
 	}
@@ -1251,7 +1251,7 @@ foreach ($content_width_settings as $name => $setting) {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}
@@ -1283,7 +1283,7 @@ foreach ($content_width_settings as $name => $setting) {
 	padding: 6px 4px 4px 4px;
 	max-width: 8%;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.archive-nav *[class^='archive-nav-item'] {
 		padding: 5px 4px;
 	}

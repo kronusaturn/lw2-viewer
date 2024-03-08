@@ -164,7 +164,7 @@ body {
 		-5px -4px 8px -4px #bbb inset;
 }
 /* And for Gecko: */
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.nav-bar:not(#bottom-bar) {
 		box-shadow: 0 -3px 4px -2px #ccc;
 	}
@@ -1040,7 +1040,7 @@ a.post-section.alignment-forum:hover::before {
 	border-top: 1px solid #000;
 	box-shadow: 0 3px 4px -4px #000 inset;
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.comments::before {
 		box-shadow: 0 3px 3px -4px #000 inset;
 	}
@@ -1644,7 +1644,7 @@ input[type='submit']:active {
 .button:active {
 	transform: scale(0.9);
 }
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	.button:active {
 		transform: none;
 	}
@@ -1762,7 +1762,7 @@ select {
 }
 
 <?php if ($platform != 'Mac') echo <<<EOT
-@-moz-document url-prefix() {
+@supports (-moz-appearance: none) {
 	h1.listing s,
 	.post > h1:first-of-type s {
 	  position: relative;
