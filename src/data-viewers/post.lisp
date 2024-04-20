@@ -139,7 +139,7 @@
       <a class="comment-count" href=("~A#comments" (if (eq context :body) "" (generate-item-link :post post)))>
 	(safe (pretty-number (or comment-count 0) "comment"))
       </a>
-      (when (and (eq context :listing) word-count)
+      (when word-count
 	<span class="read-time" title=(safe (pretty-number word-count "word" :text))>(max 1 (round word-count 300))<span> min read</span></span>)
       (if page-url <a class="lw2-link" href=(clean-lw-link page-url)>(main-site-abbreviation *current-site*)<span> link</span></a>)
       (when (and legacy-id (eq context :body))
