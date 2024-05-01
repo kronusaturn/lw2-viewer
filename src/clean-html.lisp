@@ -873,14 +873,15 @@
 			     (let (updated)
 			       (dolist (style-item style-list)
 				 (when (member (car style-item) '("color" "background" "background-color" "border" "border-color") :test #'string-equal)
-				   (setf (cdr style-item)
-					 (regex-replace-body (-css-color-scanner- (cdr style-item))
-					   (multiple-value-bind (r g b a) (decode-css-color (match))
-					     (when (and r g b a)
-					       (let ((color-name (safe-color-name r g b a)))
-						 (setf updated t
-						       (gethash color-name used-colors) (list r g b a))
-						 (format nil "var(--user-color-~A)" color-name))))))))
+				   (ignore-errors
+				     (setf (cdr style-item)
+					   (regex-replace-body (-css-color-scanner- (cdr style-item))
+					     (multiple-value-bind (r g b a) (decode-css-color (match))
+					       (when (and r g b a)
+						 (let ((color-name (safe-color-name r g b a)))
+						   (setf updated t
+							 (gethash color-name used-colors) (list r g b a))
+						   (format nil "var(--user-color-~A)" color-name)))))))))
 			       (when updated
 				 (setf (plump:attribute node "style") (alist-to-style-string style-list))))))))
 		  (when (and aggressive-deformat (tag-is node "div"))
