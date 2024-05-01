@@ -47,6 +47,7 @@
 	1.0d0)))
 
 (defun decode-css-color (color-string)
+  ;; TODO: handle CSS variables
   (regex-case color-string
 	      ("#[0-9a-fA-F]{3}\\s*$" (values* (parse-multi-hex color-string 3 1 :start 1 :key (lambda (x) (declare (type (integer 0 15) x)) (/ (+ x (* x 16)) 255.0d0))) 1.0d0))
 	      ("#[0-9a-fA-F]{4}\\s*$" (parse-multi-hex color-string 4 1 :start 1 :key (lambda (x) (declare (type (integer 0 15) x)) (/ (+ x (* x 16)) 255.0d0))))
