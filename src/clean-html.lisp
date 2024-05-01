@@ -926,6 +926,7 @@
 		     (let ((href (plump:attribute node "href")))
 		       (when href
 			 (let* ((href (string-trim '(#\Space #\Newline #\Tab #\Return #\Linefeed #\Page) href))
+				(href (string-left-trim "*" href)) ; for https://www.greaterwrong.com/posts/c8khnHoRTSGjmHLLf/
 				(href (if (ppcre:scan "^(?:(?:[a-z]+:)?//|/|#)" href) href (format nil "http://~A" href)))
 				(href (or (with-direct-link (presentable-link href)) href)))
 			   (when href
