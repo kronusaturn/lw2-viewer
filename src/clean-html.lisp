@@ -287,7 +287,7 @@
   (when (plump:element-p node)
     (let ((tag (plump:tag-name node)))
       (to-boolean
-       (some (lambda (x) (string= tag x))
+       (some (lambda (x) (string-equal tag x))
 	     args)))))
 
 (defun every-ancestor (node test)
