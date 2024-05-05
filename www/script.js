@@ -426,6 +426,7 @@ function processUserStatus(userStatus) {
 	} else {
 		location.reload();
 	}
+	activateTrigger("userStatusReady");
 }
 
 /**************/
@@ -642,20 +643,24 @@ Element.prototype.injectReplyForm = function(editMarkdownSource) {
 function showCommentEditForm(commentItem) {
 	GWLog("showCommentEditForm");
 
-	let commentBody = commentItem.query(".comment-body");
-	commentBody.style.display = "none";
+	addTriggerListener("userStatusReady", {priority: -1, fn: () => {
+		let commentBody = commentItem.query(".comment-body");
+		commentBody.style.display = "none";
 
-	let commentControls = commentItem.query(".comment-controls");
-	commentControls.injectReplyForm(commentBody.dataset.markdownSource);
-	commentControls.query("form").addClass("edit-existing-comment");
-	expandTextarea(commentControls.query("textarea"));
+		let commentControls = commentItem.query(".comment-controls");
+		commentControls.injectReplyForm(commentBody.dataset.markdownSource);
+		commentControls.query("form").addClass("edit-existing-comment");
+		expandTextarea(commentControls.query("textarea"));
+	}});
 }
 
 function showReplyForm(commentItem) {
 	GWLog("showReplyForm");
 
-	let commentControls = commentItem.query(".comment-controls");
-	commentControls.injectReplyForm(commentControls.dataset.enteredText);
+	addTriggerListener("userStatusReady", {priority: -1, fn: () => {
+		let commentControls = commentItem.query(".comment-controls");
+		commentControls.injectReplyForm(commentControls.dataset.enteredText);
+	}});
 }
 
 function hideReplyForm(commentControls) {
