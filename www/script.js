@@ -147,12 +147,14 @@ document.addEventListener('readystatechange', activateReadyStateTriggers);
 activateReadyStateTriggers();
 
 function callWithServerData(fname, uri) {
-	doAjax({
-		location: uri,
-		onSuccess: (event) => {
-			let response = JSON.parse(event.target.responseText);
-			window[fname](response);
-		}
+	setTimeout(function () {
+		doAjax({
+			location: uri,
+			onSuccess: (event) => {
+				let response = JSON.parse(event.target.responseText);
+				window[fname](response);
+			}
+		});
 	});
 }
 
