@@ -1004,7 +1004,7 @@
   (when (eq view :new) (redirect (replace-query-params (hunchentoot:request-uri*) "view" "all" "all" nil) :type :permanent) (return))
   (component-value-bind ((sort-string sort-widget))
     (multiple-value-bind (posts total last-modified)
-	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (1+ limit) :sort sort-string :karma-threshold karma-threshold)
+	(get-posts-index :view (string-downcase view) :before before :after after :offset offset :limit (+ 20 limit) :sort sort-string :karma-threshold karma-threshold)
       (handle-last-modified last-modified)
       (let ((page-title (format nil "~@(~A posts~)" view)))
 	(renderer ()
@@ -1638,15 +1638,15 @@
 	       (multiple-value-bind (items total last-modified)
                  (case show
                    (:posts
-		    (get-user-page-items user-id :posts :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
+		    (get-user-page-items user-id :posts :offset offset :limit (+ 20 (user-pref :items-per-page)) :sort-type sort-type))
                    (:comments
-		    (get-user-page-items user-id :comments :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type))
+		    (get-user-page-items user-id :comments :offset offset :limit (+ 20 (user-pref :items-per-page)) :sort-type sort-type))
                    (:drafts
-		    (get-user-page-items user-id :posts :drafts t :offset offset :limit (+ 1 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+		    (get-user-page-items user-id :posts :drafts t :offset offset :limit (+ 20 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 		   (:conversations
                      (let ((conversations
                              (lw2-graphql-query (lw2-query-string :conversation :list
-                                                                  (alist :view "userConversations" :limit (+ 1 (user-pref :items-per-page)) :offset offset :user-id user-id)
+                                                                  (alist :view "userConversations" :limit (+ 20 (user-pref :items-per-page)) :offset offset :user-id user-id)
                                                                   :fields '(:--id :created-at :title (:participants :display-name :slug) :----typename))
                                                 :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
                        (lw2-graphql-query-map
@@ -1705,7 +1705,7 @@
 		     (lw2-not-allowed-error
 		      <p>This may mean your login token has expired or become invalid. You can try <a href="/login">logging in again</a>.</p>)))
 		   (t
-		    (get-user-page-items user-id :both :offset offset :limit (+ 1 (user-pref :items-per-page)) :sort-type sort-type)))
+		    (get-user-page-items user-id :both :offset offset :limit (+ 20 (user-pref :items-per-page)) :sort-type sort-type)))
 		 (handle-last-modified last-modified)
                  (let ((with-next (> (length items) (+ (if (eq show :all) offset 0) (user-pref :items-per-page))))
                        (interleave (if (eq show :all) (comment-post-interleave items :limit (user-pref :items-per-page) :offset (if (eq show :all) offset nil) :sort-by sort-type) (firstn items (user-pref :items-per-page))))) ; this destructively sorts items
@@ -2087,7 +2087,7 @@
 		   (format out-stream "</div>"))))
 	(multiple-value-bind (posts total)
 	  (lw2-graphql-query (lw2-query-string :post :list
-					       (alist :view (if day "new" "top") :limit 51 :offset offset
+					       (alist :view (if day "new" "top") :limit (+ 20 50) :offset offset
 						      :after (if (and year (not day)) (format nil "~A-~A-~A" (or year earliest-year) (or month 1) (or day 1)))
                                                       :before (if year (format nil "~A-~A-~A" (or year current-year) (or month 12)
                                                                                (or day (local-time:days-in-month (or month 12) (or year current-year))))))))

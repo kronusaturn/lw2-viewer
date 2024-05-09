@@ -590,7 +590,7 @@
 		(t () (get-cached-result)))
 	      (query-and-put))))))
 
-(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 21) offset before after karma-threshold &allow-other-keys)
+(define-backend-function get-posts-index-query-terms (&key view (sort "new") (limit 40) offset before after karma-threshold &allow-other-keys)
   (backend-lw2-legacy
    (let ((sort-key (alexandria:switch (sort :test #'string=)
 				      ("new" "new")
@@ -609,7 +609,8 @@
 			    ("reviews" (alist :view "reviews2019"))
 			    (t (values
 				(alist :sorted-by sort-key :filter "frontpage")
-				(if (not (or (string/= sort "new") (/= limit 21) offset before after karma-threshold)) "new-not-meta"))))
+				(if (not (or (string/= sort "new") (/= limit 40) offset before after karma-threshold))
+				    "new-not-meta"))))
        (let ((terms
 	      (alist-without-null* :before before
 				   :after after
@@ -637,7 +638,7 @@
      (values (lw2-query-string :post :list query-terms)
 	     cache-key))))
 
-(define-backend-function get-posts-index (&rest args &key (limit 21) offset &allow-other-keys)
+(define-backend-function get-posts-index (&rest args &key (limit 40) offset &allow-other-keys)
   (backend-lw2-legacy
    (declare (dynamic-extent args))
    (multiple-value-bind (query-string cache-key)
@@ -651,7 +652,7 @@
 	       (subseq* result offset (+ limit offset))
 	       result))))))
 
-(define-backend-operation get-posts-index backend-lw2-tags :around (&rest args &key hide-tags offset (limit 21) &allow-other-keys)
+(define-backend-operation get-posts-index backend-lw2-tags :around (&rest args &key hide-tags offset (limit 40) &allow-other-keys)
   ;; Workaround for https://github.com/LessWrong2/Lesswrong2/issues/3099
   (declare (dynamic-extent args))
   (if hide-tags
@@ -972,7 +973,7 @@
 	   (user-deleted user-id deleted))))
      result)))
 
-(define-backend-function get-notifications (&key user-id (offset 0) (limit 21) auth-token)
+(define-backend-function get-notifications (&key user-id (offset 0) (limit 40) auth-token)
   (backend-lw2-legacy
    (lw2-graphql-query (lw2-query-string :notification :list
 					(alist* :user-id user-id :limit limit :offset offset *notifications-base-terms*)
@@ -1024,7 +1025,7 @@
   (backend-lw2-legacy
    (cache-get "comment-reply-by-user" (concatenate 'string comment-id " " user-id))))
 
-(define-backend-function get-user-page-items (user-id request-type &key (offset 0) (limit 21) (sort-type :date) drafts
+(define-backend-function get-user-page-items (user-id request-type &key (offset 0) (limit 40) (sort-type :date) drafts
 						      (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-lw2-legacy
    (multiple-value-bind (real-offset real-limit) (if (eq request-type :both)
@@ -1032,7 +1033,7 @@
 						     (values offset limit))
      (let* ((cache-database (when (and (eq request-type :both)
 				       (or (not offset) (= offset 0))
-				       (= limit 21)
+				       (= limit 40)
 				       (eq sort-type :date)
 				       (not drafts)
 				       (not auth-token))
