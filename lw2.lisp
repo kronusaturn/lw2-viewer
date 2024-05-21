@@ -1282,6 +1282,25 @@
    (:post ()
 	  (post-comment :post-id post-id :need-auth need-auth))))
 
+(define-page view-collaborate-on-post "/collaborateOnPost" ()
+  (request-method
+   (:get ()
+    (let* ((post-id (hunchentoot:get-parameter "postId"))
+	   (key (hunchentoot:get-parameter "key"))
+	   ;; Make sure key is alphanumeric
+	   (key (and key (ppcre:scan "^[a-zA-Z0-9]*$" key)
+		     key))
+	   (*graphql-uri-hook* (lambda (uri)
+				 (if key
+				     (concatenate 'string uri "?key=" key)
+				     uri)))
+	   (post (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :context :body)
+				    :auth-token *current-auth-token*))
+	   (title (cdr (assoc :title post))))
+      (emit-page (out-stream :title title
+			     :content-class "post-page comment-thread-page no-comments")
+		 (post-body-to-html post))))))
+
 (defparameter *edit-post-template* (compile-template* "edit-post.html"))
 
 (define-page view-edit-post "/edit-post" (title url section tags post-id link-post)

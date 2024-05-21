@@ -6,6 +6,7 @@
   (:import-from #:lw2.user-context #:*current-auth-token*)
   (:reexport #:lw2.backend-modules)
   (:export #:*use-alignment-forum*
+	   #:*graphql-uri-hook*
 	   #:*graphql-debug-output*
 	   #:*revalidate-default* #:*force-revalidate-default*
            #:*messages-index-fields*
@@ -54,6 +55,7 @@
       dex:*use-connection-pool* nil)
 
 (defvar *use-alignment-forum* nil)
+(defvar *graphql-uri-hook* #'identity)
 
 (defvar *graphql-debug-output* nil)
 
@@ -346,7 +348,7 @@
   (backend-graphql
    (call-with-http-response
     fn
-    (graphql-uri *current-backend*)
+    (funcall *graphql-uri-hook* (graphql-uri *current-backend*))
     :method :post
     :headers (backend-request-headers auth-token nil)
     :content (dynamic-let ((q (alist :query query))) (json:encode-json-to-string q))
