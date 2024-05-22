@@ -136,6 +136,7 @@
 
 (sb-ext:defglobal *connection-pool* (make-hash-table :test 'equal))
 (sb-ext:defglobal *connection-pool-lock* (sb-thread:make-mutex :name "*connection-pool-lock*"))
+(sb-ext:defglobal *connection-pool-entries-per-origin* 8)
 
 (defun connection-push (dest connection)
   (let ((connection-pool *connection-pool*)
@@ -143,7 +144,7 @@
     (sb-thread:with-mutex (*connection-pool-lock*)
       (let ((vector (or (gethash dest connection-pool)
 			(setf (gethash dest connection-pool)
-			      (make-array 4 :fill-pointer 0)))))
+			      (make-array *connection-pool-entries-per-origin* :fill-pointer 0)))))
 	(unless (vector-push connection vector)
 	  (setf old-connection (vector-pop vector))
 	  (vector-push connection vector))))
@@ -156,6 +157,16 @@
       (when-let (vector (gethash dest connection-pool))
 		(when (> (fill-pointer vector) 0)
 		  (vector-pop vector))))))
+
+(defun clear-connection-pool ()
+  (let ((connection-pool *connection-pool*))
+    (sb-thread:with-mutex (*connection-pool-lock*)
+      (maphash
+       (lambda (dest vector)
+	 (loop for connection across vector
+	       do (force-close connection))
+	 (remhash dest connection-pool))
+       connection-pool))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defstruct (token-bucket (:constructor %make-token-bucket))

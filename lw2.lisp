@@ -1295,7 +1295,7 @@
 				     (concatenate 'string uri "?key=" key)
 				     uri)))
 	   (post (lw2-graphql-query (lw2-query-string :post :single (alist :document-id post-id) :context :body)
-				    :auth-token *current-auth-token*))
+				    :auth-token (if (not key) *current-auth-token*))) ; Apparently keys don't work when logged in?
 	   (title (cdr (assoc :title post))))
       (emit-page (out-stream :title title
 			     :content-class "post-page comment-thread-page no-comments")
