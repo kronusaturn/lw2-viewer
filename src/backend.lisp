@@ -509,7 +509,7 @@
 				  (and (not force-revalidate) (eq is-fresh :skip))))
 	   (get-cached-result)
 	   (let ((timeout (if cached-result
-			      (if force-revalidate nil 3)
+			      (if force-revalidate nil 0.5)
 			      nil))
 		 (thread (ensure-cache-update-thread query cache-db cache-key)))
 	     (block retrieve-result
