@@ -766,7 +766,7 @@
     (let* ((*current-prefs* (safe-decode-json (hunchentoot:cookie-in "prefs")))
 	   (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
       (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
-	  (cond ((ppcre:scan "GPTBot|ClaudeBot|GoogleOther|AmazonBot|facebookexternalhit" (hunchentoot:header-in* :user-agent))
+	  (cond ((ppcre:scan "GPTBot|ClaudeBot|GoogleOther|AmazonBot|facebookexternalhit|FriendlyCrawler" (hunchentoot:header-in* :user-agent))
 		 ;; Low priority bots
 		 (values nil nil))
 		((ppcre:scan "(?:^|,?)\\s*(?:no-cache|max-age=0)(?:$|,)" (hunchentoot:header-in* :cache-control))
