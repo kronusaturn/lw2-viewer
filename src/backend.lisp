@@ -235,7 +235,7 @@
 
 (defun check-rate-limit ()
   (or (token-bucket-decrement *global-token-bucket* *rate-limit-cost-factor*)
-      (error "Rate limit exceeded. Try again later.")))
+      (error 'lw2-rate-limit-exceeded)))
 
 (defun call-with-http-response (fn uri-string &rest args &key &allow-other-keys)
   (when *enable-rate-limit*
