@@ -109,7 +109,7 @@
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
 (sb-ext:defglobal *image-threads* (make-hash-table :test 'equal :synchronized t))
-(defparameter *current-version* 5)
+(defparameter *current-version* 6)
 
 (defun filename-to-uri (filename)
   (concatenate 'base-string "/proxy-assets/" filename))
