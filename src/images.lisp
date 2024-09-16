@@ -192,9 +192,9 @@
 			 (write-char #\Space stream)
 			 (write-string attr stream)
 			 (when value
-			   (write-string "='" stream)
+			   (write-string "=\"" stream)
 			   (plump:encode-entities value stream)
-			   (write-char #\' stream)))))
+			   (write-char #\" stream)))))
 	       (finish-tag (attrs predicate stream)
 		 (write-attributes attrs predicate stream)
 		 (write-char #\> stream)))
