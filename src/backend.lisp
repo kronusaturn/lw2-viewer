@@ -177,7 +177,7 @@
     (token-limit internal-time-units-per-second :type fixnum))
 
   (defun make-token-bucket (&key rate burst (fill-ratio 1.0))
-    (let* ((scaled-rate (rationalize (/ internal-time-units-per-second rate)))
+    (let* ((scaled-rate (rationalize (* internal-time-units-per-second rate)))
 	   (base-cost (numerator scaled-rate))
 	   (tokens-per-unit (denominator scaled-rate))
 	   (token-limit (* base-cost burst)))
