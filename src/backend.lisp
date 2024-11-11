@@ -977,9 +977,8 @@
 		 (when user-id
 	 (with-cache-transaction
 	   (when display-name
-	     (cache-username user-id display-name))
-	   (when full-name
-	     (cache-user-full-name user-id full-name))
+	     (cache-username user-id display-name)
+	     (cache-user-full-name user-id (or full-name "")))
 	   (when slug
 	     (cache-user-slug user-id slug)
 	     (cache-slug-userid slug user-id))
