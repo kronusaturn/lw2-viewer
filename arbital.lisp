@@ -28,39 +28,16 @@
 
 (define-backend-function get-page-body (params page-type)
   (backend-arbital
-   (let* ((query (json:encode-json-to-string params))
-	  (page-key (case page-type
+   (let* ((page-key (case page-type
 		      (:explore (cdr (assoc :page-alias params)))
 		      (t (or (cdr (assoc :lens-id params))
 			     (cache-get "alias-to-lens-id" (cdr (assoc :page-alias params)))
 			     (cdr (assoc :page-alias params))))))
-	   (fn (lambda ()
-		 (let* ((json-string
-			 (block nil
-			   (loop
-			      (handler-case
-				  (sb-sys:with-deadline (:seconds 600 :override t)
-				    (multiple-value-bind (result status headers uri)
-					(dex:request (case page-type
-						       (:explore "https://arbital.com/json/explore/")
-						       (t "https://arbital.com/json/primaryPage/"))
-						     :headers (alist "content-type" "application/json")
-						     :method :post
-						     :content query
-						     :keep-alive nil)
-				      (declare (ignore status uri))
-				      (cond ((string= (gethash "content-type" headers) "application/json")
-					     (return result))
-					    ((string= result "Couldn't find page")
-					     (return "\"not-found\"")))))
-				(t () nil))
-			      (sleep 2))))
-			(data (decode-arbital-json json-string)))
-		   (update-arbital-aliases data)
-		   json-string))))
+	  (fn (lambda ()
+		(error "Data cannot be retrieved from Arbital."))))
       (call-with-safe-json
        (lambda ()
-	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key)))))))
+	 (lw2-graphql-query-timeout-cached fn "page-body-json" (format nil "~@[~A ~]~A" (unless (eq page-type :primary-page) page-type) page-key) :revalidate nil))))))
 
 (defun add-arbital-scrape-files (directory)
   (with-cache-transaction
