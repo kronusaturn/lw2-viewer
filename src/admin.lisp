@@ -78,3 +78,19 @@
     (map-posts-and-comments
      printer
      :skip-comments skip-comments)))
+
+(defun write-user-comments-to-stream (identifier-type identifier stream)
+  (let* ((user-id (ccase identifier-type
+		    (:user-id identifier)
+		    (:user-slug (lw2.backend::get-slug-userid identifier))))
+	 (first t)
+	 (fn (lambda (comment post-id comment-id)
+	       (declare (ignore post-id comment-id))
+	       (when (string= (cdr (assoc :user-id comment)) user-id)
+		 (if first
+		     (setf first nil)
+		     (format stream ",~%"))
+		 (json:encode-json comment stream)))))
+    (format stream "[~%")
+    (map-posts-and-comments fn :skip-posts t)
+    (format stream "~%]~%")))
