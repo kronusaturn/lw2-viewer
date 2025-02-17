@@ -10,8 +10,8 @@
 	(last-done nil))
     (format *error-output* "Press Enter to abort.~%")
     (labels ((report-progress ()
-	       (when (= 0 (mod done-count 1))
-		 (format *error-output* "Finished ~A of ~A posts.~A" done-count total-count (string #\Return))
+	       (when (= 0 (mod done-count 10))
+		 (format *error-output* "~AFinished ~A of ~A posts." (string #\Return) done-count total-count)
 		 (force-output *error-output*))))
       (loop
 	 for (post post-id) = (with-cache-readonly-transaction
