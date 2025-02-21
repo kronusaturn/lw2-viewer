@@ -1580,7 +1580,7 @@
 	 (renderer ()
 	   (post-comment :tag-id tag-id)))))))
 
-(define-component-routes forum-site (view-tag (regex-route :regex "^/(?:tag|topics)/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
+(define-component-routes forum-site (view-tag (regex-route :regex "^/(?:tag|topics|w)/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
 
 (define-route 'ea-forum-viewer-site 'regex-route :name 'view-tags-redirect :regex "^/tag/" :handler (lambda () (redirect (ppcre:regex-replace "^/tag/" (hunchentoot:request-uri*) "/topics/"))))
 
