@@ -79,6 +79,20 @@
      printer
      :skip-comments skip-comments)))
 
+(defun call-with-compressed-output-stream (fn output)
+  (let ((compressor
+	 (uiop:launch-program '("zstd" "-19")
+			      :output output
+			      :input :stream)))
+    (unwind-protect
+	 (funcall fn (uiop:process-info-input compressor))
+      (uiop:close-streams compressor))))
+
+(defmacro with-compressed-output-stream ((stream filespec) &body body)
+  `(let ((fn (lambda (,stream) ,@body)))
+     (declare (dynamic-extent fn))
+     (call-with-compressed-output-stream fn ,filespec)))
+
 (defun write-user-comments-to-stream (identifier-type identifier stream)
   (let* ((user-id (ccase identifier-type
 		    (:user-id identifier)
@@ -94,3 +108,15 @@
     (format stream "[~%")
     (map-posts-and-comments fn :skip-posts t)
     (format stream "~%]~%")))
+
+(defun write-all-posts-to-stream (stream)
+  (let* ((first t)
+	 (fn (lambda (post post-id &optional comment-id)
+	       (declare (ignore post-id comment-id))
+	       (if first
+		   (setf first nil)
+		   (format stream ",~%"))
+	       (json:encode-json post stream))))
+    (format stream "[~%")
+    (map-posts-and-comments fn :skip-comments t)
+    (format stream "]~%")))
