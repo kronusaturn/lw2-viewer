@@ -7,8 +7,9 @@
 (defun check-valid-alist (object)
   (and (consp object)
        (every (lambda (pair)
-		(let ((key (car pair)))
-		  (or (symbolp key) (stringp key))))
+		(and (consp pair)
+		     (let ((key (car pair)))
+		       (or (symbolp key) (stringp key)))))
 	      object)))
 
 (defun map-posts-and-comments (fn &key skip-comments skip-posts)
