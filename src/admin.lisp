@@ -4,6 +4,13 @@
 
 (in-package #:lw2.admin)
 
+(defun check-valid-alist (object)
+  (and (consp object)
+       (every (lambda (pair)
+		(let ((key (car pair)))
+		  (or (symbolp key) (stringp key))))
+	      object)))
+
 (defun map-posts-and-comments (fn &key skip-comments skip-posts)
   (let ((total-count (count-database-entries "post-body-json"))
 	(done-count 0)
@@ -83,10 +90,15 @@
   (let ((compressor
 	 (uiop:launch-program '("zstd" "-19")
 			      :output output
-			      :input :stream)))
+			      :input :stream))
+	(abnormal-exit t))
     (unwind-protect
-	 (funcall fn (uiop:process-info-input compressor))
-      (uiop:close-streams compressor))))
+	 (progn (funcall fn (uiop:process-info-input compressor))
+		(setf abnormal-exit nil))
+      (when abnormal-exit
+	(uiop:terminate-process compressor))
+      (uiop:close-streams compressor)
+      (uiop:wait-process compressor))))
 
 (defmacro with-compressed-output-stream ((stream filespec) &body body)
   `(let ((fn (lambda (,stream) ,@body)))
@@ -100,7 +112,8 @@
 	 (first t)
 	 (fn (lambda (comment post-id comment-id)
 	       (declare (ignore post-id comment-id))
-	       (when (string= (cdr (assoc :user-id comment)) user-id)
+	       (when (and (check-valid-alist comment)
+			  (string= (cdr (assoc :user-id comment)) user-id))
 		 (if first
 		     (setf first nil)
 		     (format stream ",~%"))
@@ -113,10 +126,11 @@
   (let* ((first t)
 	 (fn (lambda (post post-id &optional comment-id)
 	       (declare (ignore post-id comment-id))
-	       (if first
-		   (setf first nil)
-		   (format stream ",~%"))
-	       (json:encode-json post stream))))
+	       (when (check-valid-alist post)
+		 (if first
+		     (setf first nil)
+		     (format stream ",~%"))
+		 (json:encode-json post stream)))))
     (format stream "[~%")
     (map-posts-and-comments fn :skip-comments t)
     (format stream "]~%")))
