@@ -213,7 +213,7 @@
      (values (graphql-mutation-string mutation-name terms fields) mutation-name)))
   (backend-lw2-modernized
    (let* ((mutation-name (concatenate 'string (string-downcase mutation-type) (string-capitalize target-type)))
-	  (selector-type (concatenate 'string (string-capitalize target-type) "SelectorUniqueInput"))
+	  (selector-type "SelectorInput")
 	  (data-type (concatenate 'string (string-capitalize mutation-type) (string-capitalize target-type) "DataInput"))
 	  (data (append
 		 (cdr (assoc :document terms))
