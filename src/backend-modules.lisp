@@ -24,7 +24,7 @@
     #:backend-lw2-tags
     #:backend-lw2-tags-comments
     #:backend-lw2-wiki-tags
-    #:backend-magnum-crossposts #:backend-magnum-crosspost-site #:backend-lw2-crossposts #:backend-eaf-crossposts
+    #:backend-magnum-crossposts #:backend-magnum-crosspost-site #:backend-crossposts-v1 #:backend-crossposts-v2
     #:backend-lw2-misc-workarounds
     #:backend-lw2-misc-features
     #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
@@ -116,10 +116,10 @@
   ((magnum-crosspost-site :accessor backend-magnum-crosspost-site :initarg :magnum-crosspost-site :type (or simple-string null) :initform nil))
   (:metaclass backend-class))
 
-(defclass backend-lw2-crossposts (backend-magnum-crossposts) ()
+(defclass backend-crossposts-v1 (backend-magnum-crossposts) ()
   (:metaclass backend-class))
 
-(defclass backend-eaf-crossposts (backend-magnum-crossposts) ()
+(defclass backend-crossposts-v2 (backend-magnum-crossposts) ()
   (:metaclass backend-class))
 
 (defclass backend-lw2-wiki-tags (backend-lw2-tags) ()
@@ -154,7 +154,7 @@
 		       backend-shortform
 		       backend-lw2-tags-comments
 		       backend-lw2-wiki-tags
-		       backend-lw2-crossposts) ()
+		       backend-crossposts-v2) ()
   (:metaclass backend-class))
 
 (defclass backend-ea-forum (backend-oauth2.0-login
@@ -170,7 +170,7 @@
 			    backend-shortform
 			    backend-lw2-tags-comments
 			    backend-lw2-wiki-tags
-			    backend-eaf-crossposts) ()
+			    backend-crossposts-v2) ()
   (:metaclass backend-class))
 
 (defclass backend-progress-forum (backend-passport-js-login
