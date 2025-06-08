@@ -409,7 +409,9 @@
 
 (defvar *background-cache-update-threads* (make-hash-table :test 'equal
 							   :weakness :value
-							   :synchronized t)) 
+							   :synchronized t))
+
+(defparameter *background-cache-update-threads-max* 6)
 
 (defvar *parsed-results-cache* (make-hash-table :test 'equal
 						:weakness :value
@@ -488,10 +490,13 @@
 			(return error)))
 		 (remhash key *background-cache-update-threads*))))
       (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
-				     (let ((thread (gethash key *background-cache-update-threads*)))
-				       (if thread thread
-					 (setf (gethash key *background-cache-update-threads*)
-					       (make-thread-with-current-backend #'background-fn :name "background cache update"))))))))
+	(when (>= (hash-table-count *background-cache-update-threads*)
+		  *background-cache-update-threads-max*)
+	  (error 'lw2-rate-limit-exceeded))
+	(let ((thread (gethash key *background-cache-update-threads*)))
+	  (if thread thread
+	      (setf (gethash key *background-cache-update-threads*)
+		    (make-thread-with-current-backend #'background-fn :name "background cache update"))))))))
 
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (decoder 'decode-query-result)
 								 (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
@@ -505,21 +510,21 @@
 		      (with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))
 		    (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
 		    (values result count last-modified)))))
-       (if (and cached-result (or (not revalidate)
-				  (and (not force-revalidate) (eq is-fresh :skip))))
-	   (get-cached-result)
-	   (let ((timeout (if cached-result
-			      (if force-revalidate nil 0.5)
-			      nil))
-		 (thread (ensure-cache-update-thread query cache-db cache-key)))
-	     (block retrieve-result
-	       (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
-		   (get-cached-result)
-		   (handler-bind
-		       ((fatal-error (lambda (c)
-				       (declare (ignore c))
-				       (if cached-result
-					   (return-from retrieve-result (get-cached-result))))))
+       (block retrieve-result
+	 (handler-bind
+	     ((fatal-error (lambda (c)
+			     (declare (ignore c))
+			     (if cached-result
+				 (return-from retrieve-result (get-cached-result))))))
+	   (if (and cached-result (or (not revalidate)
+				      (and (not force-revalidate) (eq is-fresh :skip))))
+	       (get-cached-result)
+	       (let ((timeout (if cached-result
+				  (if force-revalidate nil 0.5)
+				  nil))
+		     (thread (ensure-cache-update-thread query cache-db cache-key)))
+		 (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
+		     (get-cached-result)
 		     (multiple-value-bind (new-result last-modified)
 			 (sb-thread:join-thread thread :timeout timeout)
 		       (typecase new-result
