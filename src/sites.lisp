@@ -112,7 +112,8 @@
 
 (defgeneric call-with-site-context (site request fn)
   (:method :around ((site site) (request t) fn)
-    (let ((*current-site* site))
+    (let ((*current-site* site)
+	  (*default-last-modified* (load-time-value (get-universal-time))))
       (call-next-method)))
   (:method ((site site) (request t) fn)
     (funcall fn))

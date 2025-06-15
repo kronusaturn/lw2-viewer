@@ -174,6 +174,10 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defparameter *type-accessors*
     '((:byte-vector (vector (unsigned-byte 8)) x x :byte-vector)
+      (:uint64 (unsigned-byte 64)
+       (let ((vec (nibbles:make-octet-vector 8))) (setf (nibbles:ub64ref/le vec 0) x) vec)
+       (and x (nibbles:ub64ref/le x 0))
+       :byte-vector)
       (:string string (and x (string-to-octets x :external-format :utf-8)) x :string)
       (:json t
        (and x (string-to-octets (json:encode-json-to-string x) :external-format :utf-8))

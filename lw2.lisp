@@ -41,7 +41,7 @@
 (add-template-directory (asdf:system-relative-pathname "lw2-viewer" "templates/"))
 
 (define-cache-database 'backend-lw2-legacy
-    "auth-token-to-userid" "auth-token-to-username" "user-ignore-list")
+    "auth-token-to-userid" "auth-token-to-username" "user-ignore-list" "user-last-modified")
 
 (defvar *read-only-mode* nil)
 (defvar *read-only-default-message* "Due to a system outage, you cannot log in or post at this time.")
@@ -746,10 +746,15 @@
 		     (or (null expires)
 			 (and (integerp expires) (<= (get-unix-time) (- expires (* 60 60 24))))))
 	    (with-cache-readonly-transaction
-		(values
-		 auth-token
-		 (cache-get "auth-token-to-userid" auth-token)
-		 (cache-get "auth-token-to-username" auth-token)))))
+		(let* ((user-id (cache-get "auth-token-to-userid" auth-token))
+		       (user-last-modified (when user-id
+					     (cache-get "user-last-modified" user-id :value-type :uint64))))
+		  (when user-last-modified
+		    (setf *default-last-modified* (max *default-last-modified* user-last-modified)))
+		  (values
+		   auth-token
+		   user-id
+		   (cache-get "auth-token-to-username" auth-token))))))
       (let ((*current-user-slug* (and *current-userid* (get-user-slug *current-userid*)))
 	    (*enable-rate-limit* (if *current-userid* nil *enable-rate-limit*)))
 	(funcall fn)))))
@@ -992,7 +997,7 @@
 
 (defun handle-last-modified (last-modified)
   (when last-modified
-    (let ((last-modified (max last-modified (load-time-value (get-universal-time)))))
+    (let ((last-modified (max last-modified *default-last-modified*)))
       (setf (hunchentoot:header-out :last-modified) (hunchentoot:rfc-1123-date last-modified)
 	    (hunchentoot:header-out :vary) "cookie")
       (hunchentoot:handle-if-modified-since last-modified))))
@@ -1414,7 +1419,8 @@
 	      (if (string= state "ignore")
 		  (setf (gethash target-id ignore-hash) t)
 		  (remhash target-id ignore-hash))
-	      (cache-put "user-ignore-list" user-id ignore-hash :value-type :json))))
+	      (cache-put "user-ignore-list" user-id ignore-hash :value-type :json)
+	      (cache-put "user-last-modified" user-id (get-universal-time) :value-type :uint64))))
       (when return
 	(redirect return))))
 
