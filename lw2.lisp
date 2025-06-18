@@ -138,23 +138,29 @@
 	  (t (format out-stream "~{<p>~A</p>~}" (loop for block in (cdr (assoc :blocks content)) collect (encode-entities (cdr (assoc :text block))))))))
       (format out-stream "</div></div>"))))
 
-(defun conversation-index-to-html (out-stream conversation)
+(defun conversation-index-to-html (conversation)
   (alist-bind ((conversation-id string :--id)
                (title (or null string))
                (created-at (or null string))
                (participants list)
-               (messages-total fixnum))
+               (message-count (or null fixnum)))
     (rectify-conversation conversation)
     (multiple-value-bind (pretty-time js-time) (if created-at (pretty-time created-at) (values "[Error]" 0))
-      (format out-stream "<h1 class=\"listing\"><a href=\"/conversation?id=~A\">~A</a></h1><div class=\"post-meta\"><div class=\"conversation-participants\"><ul>~:{<li><a href=\"/users/~A\">~A</a></li>~}</ul></div><div class=\"messages-count\">~A</div><div class=\"date\" data-js-date=\"~A\">~A~A</div></div>"
-              (encode-entities conversation-id)
-              (encode-entities title)
-              (loop for p in participants
-                    collect (list (encode-entities (cdr (assoc :slug p))) (encode-entities (cdr (assoc :display-name p)))))
-              (pretty-number messages-total "message")
-              js-time
-              pretty-time
-	      (pretty-time-js)))))
+      <h1 class="listing"><a href=("/conversation?id=~A" conversation-id)>(progn title)</a></h1>
+      <div class="post-meta">
+        <div class="conversation-participants">
+          <ul>
+	    (dolist (p participants)
+	      (alist-bind ((slug string)
+			   (display-name string))
+			  p
+			  <li><a href=("/users/~A" slug)>(progn display-name)</a></li>))
+	  </ul>
+        </div>
+        (when message-count
+	  <div class="messages-count">(safe (pretty-number message-count "message"))</div>)
+        <div class="date" data-js-date=js-time>(safe pretty-time) (safe (pretty-time-js))</div>
+      </div>)))
 
 (defun collection-to-contents (collection &optional (heading-level 1) (used-anchors (make-hash-table :test 'equal)))
   (alist-bind ((title (or string null)))
@@ -323,7 +329,7 @@
 		  (conversation-message-to-html out-stream x)
 	       (format out-stream "</li></ul>")))
 	    (:conversation
-	     (conversation-index-to-html out-stream x))
+	     (conversation-index-to-html x))
 	    (:post
 	     (post-headline-to-html x :need-auth (or need-auth (cdr (assoc :draft x))) :skip-section skip-section))
 	    (:comment
@@ -1672,19 +1678,16 @@
                    (:drafts
 		    (get-user-page-items user-id :posts :drafts t :offset offset :limit (+ 20 (user-pref :items-per-page)) :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
 		   (:conversations
-                     (let ((conversations
-                             (lw2-graphql-query (lw2-query-string :conversation :list
-                                                                  (alist :view "userConversations" :limit (+ 20 (user-pref :items-per-page)) :offset offset :user-id user-id)
-                                                                  :fields '(:--id :created-at :title (:participants :display-name :slug) :----typename))
-                                                :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                       (lw2-graphql-query-map
-                         (lambda (c)
-                           (lw2-query-string* :message :total (alist :view "messagesConversation" :conversation-id (cdr (assoc :--id c)))))
-                         conversations
-                         :postprocess (lambda (c result)
-                                        (acons :messages-total result c))
-                         :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
-                   (:inbox
+		    (lw2-graphql-query (lw2-query-string :conversation :list
+							 (alist :view "userConversations" :limit (+ 20 (user-pref :items-per-page)) :offset offset :user-id user-id)
+							 :fields '(:--id
+								   :created-at
+								   :title
+								   (:participants :display-name :slug)
+								   :message-count
+								   :----typename))
+				       :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
+		   (:inbox
 		    (error-explanation-case
                      (prog1
                        (let ((notifications (get-notifications :user-id user-id :offset offset :auth-token (hunchentoot:cookie-in "lw2-auth-token")))
