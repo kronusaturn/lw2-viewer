@@ -775,7 +775,22 @@
 (defun call-with-error-page (fn)
   (with-response-context ()
     (let* ((*current-prefs* (safe-decode-json (hunchentoot:cookie-in "prefs")))
-	   (*preview* (string-equal (hunchentoot:get-parameter "format") "preview")))
+	   (*preview* (string-equal (hunchentoot:get-parameter "format") "preview"))
+	   (max-requests-in-progress (or (block nil
+					   (ignore-errors (parse-integer
+							   (or (hunchentoot:header-in* :x-max-requests)
+							       (return nil)))))
+					 *max-requests-in-progress*))
+	   (requests-in-progress (if (boundp '*test-acceptor*) ; TODO fix this hack
+				     (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))
+				     0)))
+      (when (and max-requests-in-progress
+		 (> requests-in-progress max-requests-in-progress))
+	(set-default-headers 429)
+	(let ((*html-output* (flex:make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
+	  <title>Too many requests</title>
+	  <h1>Too many requests</h1><p>Please try again later.</p>)
+	(return-from call-with-error-page t))
       (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	  (cond ((or (let ((revalidate-header (hunchentoot:header-in* :x-revalidate)))
 		       (and revalidate-header (string-equal revalidate-header "no")))
@@ -822,15 +837,14 @@
 						      do <input type="hidden" name=key value=value>)
 						   <input type="submit" value="Retry">
 						   </form>))
-				      (return-from call-with-error-page)))))
+				      (return-from call-with-error-page t)))))
 		  (log-conditions
-		   (if (or (eq (hunchentoot:request-method*) :post)
-			   (not (and (boundp '*test-acceptor*) (boundp '*hunchentoot-taskmaster*)))) ; TODO fix this hack
+		   (if (eq (hunchentoot:request-method*) :post)
 		       (funcall fn)
 		       (sb-sys:with-deadline (:seconds (expt 1.3
 							     (min (round (log 30 1.3))
-								  (- (hunchentoot:taskmaster-max-thread-count (symbol-value '*hunchentoot-taskmaster*))
-								     (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))))))
+								  (- max-requests-in-progress
+								     requests-in-progress))))
 			 (funcall fn))))))))))))
 
 (defmacro with-error-page (&body body)

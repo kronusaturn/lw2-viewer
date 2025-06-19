@@ -40,3 +40,6 @@
 
 ; List of extra resources to include on every page on every site.
 ;(defparameter *html-global-resources* '())
+
+; Limit how many requests to handle in parallel, as a last ditch rate limit.
+(defparameter *max-requests-in-progress* 16)
