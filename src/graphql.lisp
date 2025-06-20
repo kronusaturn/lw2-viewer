@@ -92,8 +92,13 @@
 (defgrammar graphql-simple-field (field)
   (typecase field
     (atom (graphql-name field))
-    (list (emit (graphql-name (first field))
-		(graphql-simple-field-list (rest field))))))
+    (list (let ((field-identifier (first field)))
+	    (typecase field-identifier
+	      (atom (emit (graphql-name field-identifier)))
+	      (list (emit (graphql-name (first field-identifier)))
+		    (emit (graphql-argument-alist (rest field-identifier)))))
+	    (when (rest field)
+	      (graphql-simple-field-list (rest field)))))))
 
 (defgrammar graphql-simple-field-list (fields)
   (emit "{" (separated-list graphql-simple-field "," fields) "}"))
