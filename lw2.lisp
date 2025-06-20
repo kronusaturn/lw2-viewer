@@ -1271,6 +1271,20 @@
 			      (write-string "<script> </script>" out-stream)
 			      (finish-output out-stream)
 			      (with-error-html-block ()
+				(when-let ((user-id (logged-in-userid)))
+				  (let ((rate-limit-data (lw2-graphql-query
+							  (lw2-query-string :user :single
+									    (alist :document-id user-id)
+									    :fields `(((:rate-limit-next-able-to-comment
+											,@(alist :post-id post-id))))))))
+				    (alist-bind (rate-limit-next-able-to-comment) rate-limit-data
+				      (when rate-limit-next-able-to-comment
+				        (alist-bind (next-eligible rate-limit-message) rate-limit-next-able-to-comment
+					  <div class="rate-limit-message error-box">
+					    <p>You are currently rate limited. You may comment again after (pretty-time-html next-eligible)</p>
+					    <p>(safe rate-limit-message)</p>
+					  </div>))))))
+			      (with-error-html-block ()
 				;; Temporary hack to support nominations
 				(let* ((real-comments (get-post-comments post-id))
 				       (answers (when (cdr (assoc :question post))
