@@ -784,6 +784,8 @@
 	   (requests-in-progress (if (boundp '*test-acceptor*) ; TODO fix this hack
 				     (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))
 				     0)))
+      (declare (type (or null (and fixnum (integer 0))) max-requests-in-progress)
+	       (type (and fixnum (integer 0)) requests-in-progress))
       (when (and max-requests-in-progress
 		 (> requests-in-progress max-requests-in-progress))
 	(set-default-headers 429)
