@@ -1282,10 +1282,15 @@
 				    (alist-bind (rate-limit-next-able-to-comment) rate-limit-data
 				      (when rate-limit-next-able-to-comment
 				        (alist-bind (next-eligible rate-limit-message) rate-limit-next-able-to-comment
-					  <div class="rate-limit-message error-box">
-					    <p>You are currently rate limited. You may comment again after (pretty-time-html next-eligible)</p>
-					    <p>(safe rate-limit-message)</p>
-					  </div>))))))
+					  (let ((next-eligible (local-time:parse-timestring next-eligible))
+						;; Suppress warning when less than 15 seconds are left.
+						(thresh (local-time:timestamp+ (local-time:now)
+									       15 :sec)))
+					    (when (local-time:timestamp< thresh next-eligible)
+					      <div class="rate-limit-message error-box">
+					        <p>You are currently rate limited. You may comment again after (pretty-time-html next-eligible)</p>
+					        <p>(safe rate-limit-message)</p>
+					      </div>))))))))
 			      (with-error-html-block ()
 				;; Temporary hack to support nominations
 				(let* ((real-comments (get-post-comments post-id))
