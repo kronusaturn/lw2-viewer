@@ -8,18 +8,23 @@
 
 (named-readtables:in-readtable html-reader)
 
-(defun pretty-time (timestring &key format loose-parsing)
-  (let ((time (if loose-parsing
-		  (chronicity:parse timestring)
-		  (local-time:parse-timestring timestring))))
+(defun ensure-timestamp (timespec &optional loose-parsing)
+  (etypecase timespec
+    (local-time:timestamp timespec)
+    (string (if loose-parsing
+		(chronicity:parse timespec)
+		(local-time:parse-timestring timespec)))))
+
+(defun pretty-time (timespec &key format loose-parsing)
+  (let ((time (ensure-timestamp timespec loose-parsing)))
     (values (local-time:format-timestring nil time :timezone local-time:+utc-zone+ :format (or format '(:day #\  :short-month #\  :year #\  :hour #\: (:min 2) #\  :timezone)))
 	    (* (local-time:timestamp-to-unix time) 1000))))
 
 (defun pretty-time-js ()
   "<script async src='data:text/javascript,prettyDate()'></script>")
 
-(defun pretty-time-html (timestring)
-  (multiple-value-bind (pretty-time js-time) (pretty-time timestring)
+(defun pretty-time-html (timespec)
+  (multiple-value-bind (pretty-time js-time) (pretty-time timespec)
     (format *html-output* "<span class=\"date hide-until-init\" data-js-date=~A>~A~A</span>"
 	    js-time
 	    pretty-time
