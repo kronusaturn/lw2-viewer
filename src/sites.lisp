@@ -9,6 +9,7 @@
     #:alternate-frontend-site #:lw2-frontend-site #:lesswrong-viewer-site #:ea-forum-viewer-site
     #:progress-forum-viewer-site
     #:arbital-site
+    #:site-extended-vote-style
     #:site-class #:call-route-handler #:site-class-routes
     #:site-uri #:site-host #:site-domain #:site-link-base #:site-secure #:site-backend #:site-title #:site-description #:background-loader-enabled #:site-fonts-source
     #:main-site-title #:main-site-abbreviation #:main-site-uri #:always-canonical
@@ -109,6 +110,11 @@
 (defun find-site (host)
   (find-if (lambda (site) (host-matches site host))
            *sites*))
+
+(defgeneric site-extended-vote-style (site)
+  (:method ((site lesswrong-viewer-site)) :lw)
+  (:method ((site ea-forum-viewer-site)) :ea)
+  (:method ((site t)) nil))
 
 (defgeneric call-with-site-context (site request fn)
   (:method :around ((site site) (request t) fn)

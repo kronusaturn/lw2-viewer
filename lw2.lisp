@@ -1423,7 +1423,8 @@
 								:vote-count (+ vote-count (if (member (cdr (assoc :karma current-vote)) '(nil "neutral") :test #'equal)
 											      0
 											      1))
-								:extended-score extended-score))
+								:extended-score extended-score
+								:extended-vote-style (site-extended-vote-style *current-site*)))
 				    (out (make-hash-table)))
 				(loop for (axis . axis-vote) in current-vote
 				   do (setf (gethash axis out) (list* axis-vote (gethash axis vote-buttons))))

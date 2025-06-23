@@ -66,7 +66,7 @@
               (typecase votes (integer votes) (list (length votes))))
       ""))
 
-(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score ea-agreement-voting)
+(defun vote-buttons (base-score &key (with-buttons t) vote-count post-id af-score as-text extended-score extended-vote-style)
   (labels ((button (vote-type)
 	     (when with-buttons
 	       <button type="button" class=("vote ~A" vote-type) data-vote-type=vote-type data-target-type=(if post-id "Post" "Comment") tabindex="-1" disabled autocomplete="off"></button>))
@@ -78,21 +78,21 @@
 	     (alist-bind
 	      (agreement agree disagree) extended-score
 	      ;; LW uses agreement, EAF uses agree and disagree
-	       (cond
-		 (ea-agreement-voting
+	       (case extended-vote-style
+		 (:ea
 		  (format nil #.(uiop:strcat "~D" #\HAIR_SPACE #\RATIO #\HAIR_SPACE "~D")
 			  (or agree 0)
 			  (or disagree 0)))
-		 ((or agree agreement)
+		 (:lw
 		  (pretty-number (or agree agreement 0))))))
 	   (extended-tooltip ()
 	     (alist-bind
 	      (agreement-vote-count agree disagree) extended-score
 	      ;; LW uses agreement-vote-count
-	      (cond
-		(ea-agreement-voting
+	      (case extended-vote-style
+		(:ea
 		 (format nil "Total points: ~D" (+ (or agree 0) (or disagree 0))))
-		(agreement-vote-count
+		(:lw
 		 (votes-to-tooltip (or agreement-vote-count 0))))))
 	   (voting (class tooltip text)
 	     <div class=(safe ("~A voting-controls" class))
@@ -112,7 +112,7 @@
 	(progn
 	  (when base-score
 	    (voting "karma" (votes-to-tooltip vote-count) (text)))
-	  (when (or extended-score ea-agreement-voting)
+	  (when extended-vote-style
 	    (voting "agreement"
 		    (extended-tooltip)
 		    (extended-text)))))))
