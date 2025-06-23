@@ -601,7 +601,7 @@
 	      (delimit)
 	      (write-string ".body-text { hyphens: auto; -ms-hyphens: auto; -webkit-hyphens: auto; }" out-stream)))
 	  (when preview
-	    (format out-stream "<base target='_top'>"))
+	    (format out-stream "<base target='_top' href='~A'>" (encode-entities (hunchentoot:script-name*))))
 	  (when extra-head (funcall extra-head))
 	  (format out-stream "</head>")
 	  (unwind-protect
