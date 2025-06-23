@@ -1066,7 +1066,7 @@
 				       (t (alist :view "userPosts"))))
 				    (terms (alist* :offset real-offset :limit real-limit :user-id user-id base-terms)))
 			       (declare (dynamic-extent base-terms terms))
-			       (lw2-query-string* :post :list terms)))
+			       (lw2-query-string :post :list terms)))
 			   (comments-query-string ()
 			     (let* ((view (ecase sort-type
 						    (:score "postCommentsTop")
@@ -1077,17 +1077,18 @@
 						  :user-id user-id
 						  :view view)))
 			       (declare (dynamic-extent view terms))
-			       (lw2-query-string* :comment :list terms
-						  :context :index))))
+			       (lw2-query-string :comment :list terms
+						 :context :index))))
 		    (declare (dynamic-extent #'posts-query-string #'comments-query-string))
 		    (case request-type
-		      (:both (let ((result (multiple-value-call #'concatenate 'list
-								(lw2-graphql-query-multi (list (posts-query-string) (comments-query-string))))))
+		      (:both (let ((result (concatenate 'list
+							(lw2-graphql-query (posts-query-string) :auth-token auth-token)
+							(lw2-graphql-query (comments-query-string) :auth-token auth-token))))
 			       (ecase return-type
 				 (:string (json:encode-json-to-string result))
 				 ((nil) result))))
-		      (:posts (lw2-graphql-query (format nil "{~A}" (posts-query-string)) :auth-token auth-token :return-type return-type))
-		      (:comments (lw2-graphql-query (format nil "{~A}" (comments-query-string)) :auth-token auth-token :return-type return-type)))))))
+		      (:posts (lw2-graphql-query (posts-query-string) :auth-token auth-token :return-type return-type))
+		      (:comments (lw2-graphql-query (comments-query-string) :auth-token auth-token :return-type return-type)))))))
        (if cache-database
 	   (lw2-graphql-query-timeout-cached fn cache-database user-id :decoder 'deserialize-query-result :revalidate revalidate :force-revalidate force-revalidate)
 	   (funcall fn))))))
