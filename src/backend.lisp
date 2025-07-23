@@ -34,7 +34,7 @@
 	   #:get-user
            #:get-notifications #:check-notifications
 	   #:mark-comment-replied #:check-comment-replied
-	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-full-name #:get-user-slug
+	   #:lw2-search-query #:get-post-title #:get-post-slug #:get-slug-postid #:get-username #:get-user-full-name #:get-user-slug #:get-slug-userid
 	   #:do-wl-rest-mutate #:do-wl-rest-query #:do-wl-create-tag)
   (:recycle #:lw2-viewer)
   (:unintern #:get-posts #:make-posts-list-query #:define-backend-fields

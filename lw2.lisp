@@ -1863,7 +1863,7 @@
 				     :csrf-token (make-csrf-token))))))
    (:post ((text :required t))
      (let* ((id (or id
-		    (let ((participant-ids (list (logged-in-userid) (cdar (lw2-graphql-query (lw2-query-string :user :single (alist :slug to) :fields '(:--id)))))))
+		    (let ((participant-ids (list (logged-in-userid) (get-slug-userid to))))
 		      (do-create-conversation (hunchentoot:cookie-in "lw2-auth-token") (alist :participant-ids participant-ids :title subject))))))
        (do-create-message (hunchentoot:cookie-in "lw2-auth-token") id text)
        (redirect (format nil "/conversation?id=~A" id))))))

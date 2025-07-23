@@ -109,7 +109,7 @@
 (defun write-user-comments-to-stream (identifier-type identifier stream)
   (let* ((user-id (ccase identifier-type
 		    (:user-id identifier)
-		    (:user-slug (lw2.backend::get-slug-userid identifier))))
+		    (:user-slug (get-slug-userid identifier))))
 	 (first t)
 	 (fn (lambda (comment post-id comment-id)
 	       (declare (ignore post-id comment-id))
