@@ -554,10 +554,12 @@
     (if (eq return-type :single)
 	(json:lisp-to-camel-case (string query-type))
 	(concatenate 'string (json:lisp-to-camel-case (string query-type)) "s"))
-    (alist :input (case return-type
-		    (:single (alist :selector args))
-		    (:list (alist :enable-total with-total :terms args))
-		    (:total (alist :enable-total t :terms args))))
+    (if (eq (caar args) :selector)
+	args
+	(alist :input (case return-type
+			(:single (alist :selector args))
+			(:list (alist :enable-total with-total :terms args))
+			(:total (alist :enable-total t :terms args)))))
     (case return-type
       (:total '(:total-count))
       (:list (list-cond (t :results fields)
@@ -1274,7 +1276,7 @@
 
 (with-rate-limit
   (simple-cacheable ("slug-userid" 'backend-lw2-legacy "slug-to-userid" slug)
-    (rate-limit (slug) (cdr (first (lw2-graphql-query (lw2-query-string :user :single (alist :slug slug) :fields '(:--id))))))))
+    (rate-limit (slug) (cdr (first (first (lw2-graphql-query (lw2-query-string :user :list (alist :selector (alist :users-profile (alist :slug slug))) :fields '(:--id)))))))))
 
 (with-rate-limit
   (simple-cacheable ("slug-tagid" 'backend-lw2-tags "slug-to-tagid" slug :catch-errors nil)
