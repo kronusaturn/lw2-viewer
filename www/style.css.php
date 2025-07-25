@@ -59,6 +59,7 @@ script {
 body {
 	padding: 0;
 	margin: 0;
+	overflow-anchor: none;
 }
 body::before {
 	background-color: inherit;
