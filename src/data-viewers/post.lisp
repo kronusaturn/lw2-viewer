@@ -92,10 +92,10 @@
     <input type="checkbox" tabindex="-1" id=("qualified-linking-toolbar-toggle-checkbox-~(~A~)" meta-location)>
     <label for=("qualified-linking-toolbar-toggle-checkbox-~(~A~)" meta-location)><span>&#xf141\;</span></label>
     <div class="qualified-linking-toolbar">
-      <a href=url>Post permalink</a>
-      <a href=("~A?comments=false" url)>Link without comments</a>
-      <a href=("~A?hide-nav-bars=true" url)>Link without top nav bars</a>
-      <a href=("~A?comments=false&hide-nav-bars=true" url)>Link without comments or top nav bars</a>
+      <a rel="bookmark" href=url>Post permalink</a>
+      <a rel="nofollow" href=("~A?comments=false" url)>Link without comments</a>
+      <a rel="nofollow" href=("~A?hide-nav-bars=true" url)>Link without top nav bars</a>
+      <a rel="nofollow" href=("~A?comments=false&hide-nav-bars=true" url)>Link without comments or top nav bars</a>
     </div>
   </nav>)
 
