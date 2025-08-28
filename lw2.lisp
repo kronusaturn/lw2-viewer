@@ -1691,7 +1691,11 @@
 (define-page view-user (:regex "^/users/(.*?)(?:$|\\?)|^/user" user-slug) (id
                                                                              (offset :type fixnum :default 0)
                                                                              (show :member '(:all :posts :comments :drafts :conversations :inbox) :default :all)
-                                                                             (sort :member '(:top :new :old) :default :new))
+                                                                             (sort :member '(:top :new :old) :default :new)
+									     (format :type string))
+	     (when (and (string-equal format "rss") (eq sort :old))
+	       (with-error-page
+		   (redirect (replace-query-params (hunchentoot:request-uri*) "sort" nil))))
              (let* ((auth-token (if (eq show :inbox) *current-auth-token*))
 		    (user-info
 		     (let* ((ui (get-user (cond (user-slug :user-slug) (id :user-id)) (or user-slug id) :auth-token auth-token))
@@ -1789,7 +1793,8 @@
                                      :top-nav (lambda ()
                                                 (page-toolbar-to-html :title title
 								      :enable-push-notifications (eq show :inbox)
-                                                                      :rss (not (member show '(:drafts :conversations :inbox)))
+                                                                      :rss (and (not (member show '(:drafts :conversations :inbox)))
+										(not (eq sort :old)))
                                                                       :new-post (if (eq show :drafts) "drafts" t)
                                                                       :new-conversation (if own-user-page t user-slug)
 								      :ignore (if (and (logged-in-userid) (not own-user-page))
