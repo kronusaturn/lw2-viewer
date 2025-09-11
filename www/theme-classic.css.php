@@ -1112,29 +1112,12 @@ h1.post-title {
 	opacity: 0.8;
 }
 
-.comment-item .voting-controls.active-controls::after,
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls.active-controls::after,
-.post .voting-controls .karma-value::after,
+.voting-controls .explanation,
 .author::before {
 	background-color: #fff;
 	color: #888;
 	box-shadow: 0 0 0 1px #ccc inset;
 	border-radius: 4px;
-}
-.comment-item .voting-controls.active-controls::after,
-.post .voting-controls.active-controls::after {
-	padding: 6px;
-	max-width: unset;
-	bottom: -46px;
-	width: 110px;
-}
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls .karma-value::after {
-	padding: 2px 8px;
-	top: -36px;
-	min-width: 64px;
-	font-weight: normal;
 }
 
 /*====================*/

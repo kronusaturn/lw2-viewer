@@ -1693,21 +1693,15 @@ a.post-section.alignment-forum:hover::before {
 	color: #bbb;
 }
 
-.comment-item .voting-controls.active-controls::after,
-.comment-item .voting-controls .karma-value::after,
+.voting-controls .explanation,
 .author::before {
 	background-color: #fff;
 	color: #bbb;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #eee inset;
 }
-.comment-item .voting-controls.active-controls::after {
-	padding: 6px 4px 4px 4px;
-	bottom: -42px;
-}
-.comment-item .voting-controls .karma-value::after {
-	padding: 4px 8px 0 8px;
-	top: -30px;
+.top-post-meta .voting-controls .explanation {
+	top: 83px;
 }
 
 /*====================*/

@@ -1974,62 +1974,36 @@ article {
 
 /*= Karma controls hover tooltips =*/
 
+.voting-controls .explanation {
+	display: none;
+}
+
 @media only screen and (pointer: fine) {
 	.post .voting-controls,
 	.comment-item .voting-controls {
 		position: relative;
 	}
-	.post .karma.active-controls::after,
-	.comment-item .karma.active-controls::after {
-		content: "Double-click for strong vote";
+	.voting-controls .explanation {
 		position: absolute;
 		pointer-events: none;
 		display: block;
-		left: 6px;
+		left: 50%;
 		width: 100%;
+		min-width: 13em;
+		transform: translateX(-50%);
 		line-height: 1.15;
 		white-space: normal;
 		text-align: center;
 		font-size: 0.875rem;
 		opacity: 0;
 		transition: opacity 0.2s ease;
-	}
-	.post .voting-controls.active-controls:hover::after,
-	.comment-item .voting-controls.active-controls:hover::after {
-		opacity: 1.0;
-	}
-
-	.post .voting-controls .karma-value::after,
-	.comment-item .voting-controls .karma-value::after {
-		content: attr(title);
-		position: absolute;
-		pointer-events: none;
-		display: block;
-		left: 50%;
-		transform: translateX(-50%);
-		white-space: pre-wrap;
-		width: max-content;
-		text-align: center;
-		font-size: 0.875rem;
-		color: #bbb;
-		opacity: 0;
-		transition: opacity 0.2s ease;
-	}
-	.post .voting-controls.agreement .karma-value:hover::after,
-	.comment-item .voting-controls.agreement .karma-value:hover::after {
-		top: unset;
-		bottom: 100%;
-	}
-	.post .voting-controls .karma-value:hover::after,
-	.comment-item .voting-controls .karma-value:hover::after {
-		opacity: 1.0;
-	}
-	.post .voting-controls.waiting .karma-value:hover::after,
-	.comment-item .voting-controls.waiting .karma-value:hover::after {
-		display: none;
-	}
-	.comment-item .voting-controls .karma-value:hover::after {
 		z-index: 5001;
+	}
+	.voting-controls:hover .explanation {
+		opacity: 1.0;
+	}
+	.voting-controls .explanation p {
+		margin: 8px;
 	}
 
 	.author {
@@ -7270,26 +7244,12 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.5;
 }
 
-.comment-item .voting-controls.active-controls::after,
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls.active-controls::after,
-.post .voting-controls .karma-value::after,
-.author::before {
+.voting-controls .explanation,
+.author::before{
 	background-color: #fff;
 	color: #999;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #ddd inset;
-}
-.comment-item .voting-controls.active-controls::after,
-.post .voting-controls.active-controls::after {
-	padding: 6px 4px 4px 4px;
-	bottom: -44px;
-}
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls .karma-value::after {
-	padding: 2px 8px 1px 8px;
-	top: -25px;
-	min-width: 56px;
 }
 
 /*====================*/

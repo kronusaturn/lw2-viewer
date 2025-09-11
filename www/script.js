@@ -890,6 +890,8 @@ function voteCompleteEvent(targetType, targetId, response) {
 			displayTarget.setAttribute("title", titleText);
 		}
 
+		updateVoteExplanation(control);
+
 		control.queryAll("button.vote").forEach(button => {
 			updateVoteButton(button, voteUpDown, voteClass);
 		});

@@ -103,6 +103,7 @@
 	       (button "upvote")
 	       <span class="karma-value" title=tooltip>(safe text)</span>
 	       (button "downvote")
+	       <script>updateVoteExplanation\(\)</script>
 	     </div>))
     (if as-text
 	(hash-cond (make-hash-table)

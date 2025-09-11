@@ -1118,27 +1118,13 @@ a.post-section.alignment-forum:hover::before {
 	opacity: 0.8;
 }
 
-.comment-item .voting-controls.active-controls::after,
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls.active-controls::after,
-.post .voting-controls .karma-value::after,
+.voting-controls .explanation,
 .author::before {
 	background-color: #fff;
 	color: #777;
 	box-shadow: 0 0 0 1px #ccc inset;
 	text-shadow: none;
 	border-radius: 4px;
-}
-.comment-item .voting-controls.active-controls::after,
-.post .voting-controls.active-controls::after {
-	padding: 6px;
-	bottom: -46px;
-}
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls .karma-value::after {
-	padding: 2px 8px;
-	top: -26px;
-	min-width: 64px;
 }
 
 /*====================*/

@@ -1106,26 +1106,12 @@ a.comment-parent-link::before {
 	opacity: 0.8;
 }
 
-.comment-item .voting-controls.active-controls::after,
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls.active-controls::after,
-.post .voting-controls .karma-value::after,
+.voting-controls .explanation,
 .author::before {
 	background-color: #888;
 	color: #ccc;
 	border-radius: 4px;
 	box-shadow: 0 0 0 1px #bbb inset;
-}
-.comment-item .voting-controls.active-controls::after,
-.post .voting-controls.active-controls::after {
-	padding: 6px;
-	bottom: -46px;
-}
-.comment-item .voting-controls .karma-value::after,
-.post .voting-controls .karma-value::after {
-	padding: 2px 8px;
-	top: -28px;
-	min-width: 64px;
 }
 
 /*====================*/

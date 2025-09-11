@@ -1985,62 +1985,36 @@ article {
 
 /*= Karma controls hover tooltips =*/
 
+.voting-controls .explanation {
+	display: none;
+}
+
 @media only screen and (pointer: fine) {
 	.post .voting-controls,
 	.comment-item .voting-controls {
 		position: relative;
 	}
-	.post .karma.active-controls::after,
-	.comment-item .karma.active-controls::after {
-		content: "Double-click for strong vote";
+	.voting-controls .explanation {
 		position: absolute;
 		pointer-events: none;
 		display: block;
-		left: 6px;
+		left: 50%;
 		width: 100%;
+		min-width: 13em;
+		transform: translateX(-50%);
 		line-height: 1.15;
 		white-space: normal;
 		text-align: center;
 		font-size: 0.875rem;
 		opacity: 0;
 		transition: opacity 0.2s ease;
-	}
-	.post .voting-controls.active-controls:hover::after,
-	.comment-item .voting-controls.active-controls:hover::after {
-		opacity: 1.0;
-	}
-
-	.post .voting-controls .karma-value::after,
-	.comment-item .voting-controls .karma-value::after {
-		content: attr(title);
-		position: absolute;
-		pointer-events: none;
-		display: block;
-		left: 50%;
-		transform: translateX(-50%);
-		white-space: pre-wrap;
-		width: max-content;
-		text-align: center;
-		font-size: 0.875rem;
-		color: #bbb;
-		opacity: 0;
-		transition: opacity 0.2s ease;
-	}
-	.post .voting-controls.agreement .karma-value:hover::after,
-	.comment-item .voting-controls.agreement .karma-value:hover::after {
-		top: unset;
-		bottom: 100%;
-	}
-	.post .voting-controls .karma-value:hover::after,
-	.comment-item .voting-controls .karma-value:hover::after {
-		opacity: 1.0;
-	}
-	.post .voting-controls.waiting .karma-value:hover::after,
-	.comment-item .voting-controls.waiting .karma-value:hover::after {
-		display: none;
-	}
-	.comment-item .voting-controls .karma-value:hover::after {
 		z-index: 5001;
+	}
+	.voting-controls:hover .explanation {
+		opacity: 1.0;
+	}
+	.voting-controls .explanation p {
+		margin: 8px;
 	}
 
 	.author {

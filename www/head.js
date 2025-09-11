@@ -748,6 +748,31 @@ function initializeCommentControls() {
 	}
 }
 
+function updateVoteExplanation(control) {
+	control = control || document.currentScript.parentElement;
+
+	control.queryAll(".explanation").forEach(e => e.remove());
+
+	let explanation = "";
+	let karmaValueElem = control.query(".karma-value");
+	if(karmaValueElem.title) {
+		explanation += "<p><strong>" + karmaValueElem.title + "</strong></p>";
+		karmaValueElem.title = "";
+	}
+	
+	if(control.hasClass("karma"))
+		explanation += "<p>Overall karma indicates overall quality.</p>";
+	else if(control.hasClass("agreement"))
+		explanation += "<p>Agreement karma indicates agreement, separate from overall quality.</p>";
+
+	if(control.query("button"))
+		explanation += "<p>Double-click for strong vote.</p>";
+
+	let explanationElem = newElement("DIV", { "class": "explanation" });
+	explanationElem.innerHTML = explanation;
+	control.appendChild(explanationElem);
+}
+
 /****************/
 /* PRETTY DATES */
 /****************/
