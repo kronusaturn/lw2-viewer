@@ -1424,9 +1424,7 @@
 			      (let ((vote-buttons (vote-buttons base-score
 								:as-text t
 								:af-score (and af af-base-score)
-								:vote-count (+ vote-count (if (member (cdr (assoc :karma current-vote)) '(nil "neutral") :test #'equal)
-											      0
-											      1))
+								:vote-count vote-count
 								:extended-score extended-score
 								:extended-vote-style (site-extended-vote-style *current-site*)))
 				    (out (make-hash-table)))
