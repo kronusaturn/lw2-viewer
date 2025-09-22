@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.data-viewers.post
-  (:use #:cl #:lw2.utils #:lw2.sites #:lw2.backend #:lw2.context #:lw2.clean-html #:lw2.schema-type #:lw2.html-reader #:lw2.interface-utils #:lw2.user-context #:lw2.links #:lw2.backlinks)
+  (:use #:cl #:lw2.utils #:lw2.sites #:lw2.backend #:lw2.lmdb #:lw2.context #:lw2.clean-html #:lw2.schema-type #:lw2.html-reader #:lw2.interface-utils #:lw2.user-context #:lw2.links #:lw2.backlinks)
   (:import-from #:lw2.comment-threads #:output-comments)
   (:import-from #:alexandria #:when-let)
   (:export #:post-headline-to-html #:post-body-to-html))
@@ -61,7 +61,7 @@
    (fm-crosspost list :backend-type backend-crossposts-v2
 		 :subfields (:is-crosspost :hosted-here :foreign-post-id))
    (fm-crosspost list :backend-type backend-crossposts-v1)
-   (html-body (or null string) :context :body)))
+   (html-body (or null string memoized-reference) :context :body)))
 
 (defgeneric rectify-post* (backend post) ; TODO this should go in a more generic postprocessing method
   (:method ((backend t) post) post)
@@ -218,7 +218,7 @@
 		      <li>Contact: (safe (clean-text-to-html contact-info))</li>)
 		    </ul>)))
 	</div>))
-      (when (and (or url (nonempty-string html-body))
+      (when (and (or url (if (stringp html-body) (nonempty-string html-body) html-body))
 		 (not (and debate debate-responses)))
         <div class="body-text post-body">
           (if url <p><a class="link-post-link" href=(presentable-link url)>Link post</a></p>)

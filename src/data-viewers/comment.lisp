@@ -40,7 +40,7 @@
 		    :context :shortform
 		    :subfields (:--id :user-id :posted-at :post-id :base-score :af-base-score :page-url
 				:parent-comment-id :af :vote-count :retracted :deleted-public :html-body))
-   (html-body string)))
+   (html-body (or null string memoized-reference))))
 
 (defun comment-link (post-id tag &optional comment-id)
   (when (or post-id tag)

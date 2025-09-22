@@ -118,7 +118,7 @@
                (conversation list)
                (content list)
 	       (contents list)
-               (html-body (or string null)))
+               (html-body (or null string memoized-reference)))
 	      message
     (let ((conversation (rectify-conversation conversation)))
       (multiple-value-bind (pretty-time js-time) (pretty-time created-at)
@@ -1150,7 +1150,7 @@
 	       (get-post-answers post-id :force-revalidate t))))
 	 (when text
 	   (alist-bind ((new-comment-id simple-string :--id)
-			(new-comment-html simple-string :html-body))
+			(new-comment-html (or simple-string memoized-reference) :html-body))
 		       new-comment-result
 		       (mark-comment-replied (alist* :parent-comment-id parent-comment-id :user-id *current-userid* new-comment-result))
 		       (setf (markdown-source :comment new-comment-id new-comment-html) text)

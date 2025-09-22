@@ -107,13 +107,8 @@
 (define-cache-database 'backend-lw2-modernized
     "user-deleted")
 
-(define-backend-function comments-list-to-graphql-json (comments-list)
-  (backend-lw2-legacy
-   (json:encode-json-to-string
-    (plist-hash-table (list :data (plist-hash-table (list :*comments-list comments-list))))))
-  (backend-lw2-modernized
-   (json:encode-json-to-string
-    (plist-hash-table (list :data (plist-hash-table (list :*comments-list (plist-hash-table (list :results comments-list)))))))))
+(define-cache-database 'backend-lmdb-cache
+    "memoized-source-text")
 
 (defun do-graphql-debug (query)
   (when *graphql-debug-output*
@@ -324,17 +319,60 @@
 			   (ensure-character-stream result-source)))))
      (json:decode-json-from-source string-source))))
 
-(define-backend-function postprocess-query-result (result)
+(defun make-graphql-json (type data)
+  (json:encode-json-to-string
+   (plist-hash-table (list :data (plist-hash-table (list :*thing (plist-hash-table (list type data))))))))
+
+(defun process-item-for-cache (item)
+  (let ((html-body-cons (assoc :html-body item)))
+    (if (memoized-reference-p (cdr html-body-cons))
+	(acons :html-body-ref (encode-memoized-reference (cdr html-body-cons))
+	       (remove html-body-cons item))
+	item)))
+
+(define-backend-function postprocess-query-result (result &optional cache-fn)
   (backend-base
+   (when cache-fn
+     (error "Not implemented!"))
    result)
   (backend-lw2-legacy
    (signal-lw2-errors (cdr (assoc :errors result)))
-   (fixup-lw2-return-value (cdadr (assoc :data result)))))
+   (let* ((result (cdadr (assoc :data result)))
+	  (result-type (car (first result))))
+     (flet ((process-item (item)
+	      (let ((html-body-ref (cdr (assoc :html-body-ref item)))
+		    (html-body-cons (assoc :html-body item)))
+		(cond (html-body-ref
+		       (acons :html-body (decode-memoized-reference html-body-ref) item))
+		      ((and html-body-cons (nonempty-string (cdr html-body-cons)))
+		       (let ((ref (make-memoized-reference (cdr html-body-cons))))
+			 (cache-put-if-not-exists
+			  "memoized-source-text" (memoized-reference-hash ref) (cdr html-body-cons)
+			  :key-type :byte-vector)
+			 (acons :html-body ref
+				(remove html-body-cons item))))
+		      (t item)))))
+       (case result-type
+	 (:result
+	  (let ((item (process-item (cdr (first result)))))
+	    (when cache-fn
+	      (funcall cache-fn (make-graphql-json result-type (process-item-for-cache item))))
+	    item))
+	 (:results
+	  (let ((item-list (map 'list #'process-item (cdr (first result)))))
+	    (when cache-fn
+	      (funcall cache-fn (make-graphql-json result-type (map 'list #'process-item-for-cache item-list))))
+	    item-list))
+	 (t
+	  (when cache-fn
+	    (funcall cache-fn (json:encode-json-to-string result)))
+	  (cdr (first result))))))))
 
-(define-backend-function decode-query-result (result-source)
+(define-backend-function decode-query-result (result-source &optional cache-fn)
   (backend-base
    (postprocess-query-result
-    (deserialize-query-result result-source))))
+    (deserialize-query-result result-source)
+    cache-fn)))
 
 (defmethod graphql-uri ((backend backend-alignment-forum))
   (if *use-alignment-forum*
@@ -417,21 +455,30 @@
 						:weakness :value
 						:synchronized t))
 
-(defun cache-update (cache-db key data)
+(defun cache-update (cache-db key data decoder)
   (let ((meta-db (format nil "~A-meta" cache-db))
 	(new-hash (hash-string data))
 	(current-time (get-unix-time)))
     (with-cache-transaction
-      (let* ((metadata (cache-get meta-db key :value-type :lisp))
-	     (same-data (equalp new-hash (cdr (assoc :city-128-hash metadata))))
-	     (last-mod (if same-data
-			   (or (cdr (assoc :last-modified metadata)) current-time)
-			   current-time)))
-	(cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
-	(unless same-data
-	  (remhash (list *current-backend* cache-db key) *parsed-results-cache*)
-	  (cache-put cache-db key data))
-	(values data (unix-to-universal-time last-mod))))))
+	(let* ((metadata (cache-get meta-db key :value-type :lisp))
+	       (same-data (equalp new-hash (cdr (assoc :city-128-hash metadata))))
+	       (last-mod (if same-data
+			     (or (cdr (assoc :last-modified metadata)) current-time)
+			     current-time))
+	       (u-last-mod (unix-to-universal-time last-mod)))
+	  (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
+	  (let ((in-memory-result (gethash (list *current-backend* cache-db key) *parsed-results-cache*)))
+	    (multiple-value-bind (result count)
+		(cond ((and same-data in-memory-result)
+		       (values-list in-memory-result))
+		      (same-data
+		       (funcall decoder (cache-get cache-db key)))
+		      (t
+		       (funcall decoder data (lambda (new-cache-data)
+					       (cache-put cache-db key new-cache-data)))))
+	      (unless (and same-data in-memory-result)
+		(setf (gethash (list *current-backend* cache-db key) *parsed-results-cache*) (list result count)))
+	      (values result count u-last-mod)))))))
 
 (defun cache-mark-stale (cache-db key)
   (let ((meta-db (format nil "~A-meta" cache-db))
@@ -477,7 +524,7 @@
           (funcall fn)))
       args)))
 
-(defun ensure-cache-update-thread (query cache-db cache-key)
+(defun ensure-cache-update-thread (query cache-db cache-key decoder)
   (let ((key (format nil "~A-~A" cache-db cache-key))) 
     (labels ((background-fn ()
 	       (unwind-protect
@@ -485,7 +532,7 @@
 		      (multiple-value-bind (value error)
 			  (log-and-ignore-errors
 			   (sb-sys:with-deadline (:seconds 60)
-			     (return (cache-update cache-db cache-key (run-query query)))))
+			     (return (cache-update cache-db cache-key (run-query query) decoder))))
 			(declare (ignore value))
 			(return error)))
 		 (remhash key *background-cache-update-threads*))))
@@ -507,7 +554,9 @@
 		(if-let ((parsed-result (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*)))
 		    (multiple-value-call #'values (values-list parsed-result) last-modified)
 		  (multiple-value-bind (result count)
-		      (with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))
+		      (handler-case
+			  (with-cache-readonly-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))
+			(error () (with-cache-transaction (funcall decoder (cache-get cache-db cache-key :return-type 'binary-stream)))))
 		    (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
 		    (values result count last-modified)))))
        (block retrieve-result
@@ -522,17 +571,15 @@
 	       (let ((timeout (if cached-result
 				  (if force-revalidate nil 0.5)
 				  nil))
-		     (thread (ensure-cache-update-thread query cache-db cache-key)))
+		     (thread (ensure-cache-update-thread query cache-db cache-key decoder)))
 		 (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		     (get-cached-result)
-		     (multiple-value-bind (new-result last-modified)
+		     (multiple-value-bind (result count last-modified)
 			 (sb-thread:join-thread thread :timeout timeout)
-		       (typecase new-result
-			 (condition (error new-result))
-			 (t (multiple-value-bind (result count)
-				(funcall decoder new-result)
-			      (setf (gethash (list *current-backend* cache-db cache-key) *parsed-results-cache*) (list result count))
-			      (values result count last-modified))))))))))))))
+		       (typecase result
+			 (condition (error result))
+			 (t
+			  (values result count last-modified)))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
@@ -592,11 +639,7 @@
       (cache-freshness-status "index-json" cache-id)
     (declare (ignore is-fresh))
     (labels ((query-and-put ()
-	       (multiple-value-bind (encoded-result last-modified)
-		   (cache-update "index-json" cache-id (lw2-graphql-query query :return-type :string))
-		 (multiple-value-bind (result count)
-		     (decode-query-result encoded-result)
-		   (values result count last-modified))))
+	       (cache-update "index-json" cache-id (lw2-graphql-query query :return-type :string) #'decode-query-result))
 	     (get-cached-result ()
 	       (with-cache-readonly-transaction
 		   (multiple-value-bind (result count)
@@ -733,7 +776,8 @@
   (backend-lw2-tags
    (let* ((tagid (get-slug-tagid slug))
 	  (query-fn (lambda ()
-		      (comments-list-to-graphql-json
+		      (make-graphql-json
+		       :results
 		       (lw2-query-list-limit-workaround
 			:tag-rel
 			(alist :view "postsWithTag" :tag-id tagid)
@@ -854,8 +898,8 @@
 (define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-graphql
    (let ((fn (lambda ()
-	       (comments-list-to-graphql-json
-		(get-post-comments-list post-id "postCommentsTop")))))
+	       (make-graphql-json :results (map 'list #'process-item-for-cache
+						(get-post-comments-list post-id "postCommentsTop"))))))
      (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
   (backend-ea-forum
    ;; Work around bizarre parent comment bug in EA forum
@@ -871,7 +915,8 @@
 (defun get-post-answers (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (let ((fn (lambda ()
 	      (let ((answers (get-post-comments-list post-id "questionAnswers")))
-		(comments-list-to-graphql-json
+		(make-graphql-json
+		 :results
 		 (nconc
 		  answers
 		  (get-post-answer-replies post-id answers)))))))
@@ -886,7 +931,8 @@
    nil)
   (backend-debates
    (let ((fn (lambda ()
-	       (comments-list-to-graphql-json
+	       (make-graphql-json
+		:results
 		(get-post-comments-list post-id "debateResponses")))))
      (lw2-graphql-query-timeout-cached fn "post-debate-responses-json" post-id :revalidate revalidate :force-revalidate force-revalidate))))
 
@@ -1087,12 +1133,12 @@
 							(lw2-graphql-query (posts-query-string) :auth-token auth-token)
 							(lw2-graphql-query (comments-query-string) :auth-token auth-token))))
 			       (ecase return-type
-				 (:string (json:encode-json-to-string result))
+				 (:string (make-graphql-json :results (map 'list #'process-item-for-cache result)))
 				 ((nil) result))))
 		      (:posts (lw2-graphql-query (posts-query-string) :auth-token auth-token :return-type return-type))
 		      (:comments (lw2-graphql-query (comments-query-string) :auth-token auth-token :return-type return-type)))))))
        (if cache-database
-	   (lw2-graphql-query-timeout-cached fn cache-database user-id :decoder 'deserialize-query-result :revalidate revalidate :force-revalidate force-revalidate)
+	   (lw2-graphql-query-timeout-cached fn cache-database user-id :decoder 'decode-query-result :revalidate revalidate :force-revalidate force-revalidate)
 	   (funcall fn))))))
 
 (define-backend-function get-conversation-messages (conversation-id auth-token)
@@ -1199,7 +1245,7 @@
 (define-backend-function markdown-source (target-type id version)
   (backend-lw2-modernized
    (let ((db-name (markdown-source-db-name target-type))
-	 (version (base64:usb8-array-to-base64-string (hash-string version))))
+	 (version (base64:usb8-array-to-base64-string (hash-string (dereference-text version)))))
      (or
       (if-let ((cache-data (cache-get db-name id :value-type :lisp)))
 	      (alist-bind ((cached-version simple-string :version)
@@ -1218,7 +1264,7 @@
 
 (define-backend-function (setf markdown-source) (markdown target-type id version)
   (backend-lw2-modernized
-   (let ((version (base64:usb8-array-to-base64-string (hash-string version))))
+   (let ((version (base64:usb8-array-to-base64-string (hash-string (dereference-text version)))))
      (cache-put (markdown-source-db-name target-type)
 		id
 		(alist :version version :markdown markdown)

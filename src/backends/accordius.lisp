@@ -24,7 +24,9 @@
 	   collect (cons (json:lisp-to-camel-case (string (car arg))) (cdr arg))))))
     obj))
 
-(define-backend-operation postprocess-query-result backend-accordius (result)
+(define-backend-operation postprocess-query-result backend-accordius (result &optional cache-fn)
+  (when cache-fn
+    (error "Not implemented!"))
   (if-let (data (assoc :data result))
 	  (cdadr data)
 	  result))

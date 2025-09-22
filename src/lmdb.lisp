@@ -4,12 +4,16 @@
   (:export
    #:close-unused-environments
    #:define-cache-database #:with-cache-mutex #:with-cache-transaction #:with-cache-readonly-transaction
-   #:cache-put #:cache-get #:cache-exists #:cache-del
+   #:cache-put #:cache-put-if-not-exists #:cache-get #:cache-exists #:cache-del
    #:count-database-entries #:truncate-database
    #:call-with-cursor #:cursor-get
    #:existence
    #:binary-stream
-   #:simple-cacheable #:define-lmdb-memoized #:current-memo-hash #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
+   #:simple-cacheable
+   #:memoized-reference #:make-memoized-reference #:encode-memoized-reference #:decode-memoized-reference
+   #:memoized-reference-p #:memoized-reference-hash
+   #:dereference-text
+   #:define-lmdb-memoized #:current-memo-hash #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
   (:unintern #:lmdb-clear-db #:lmdb-put-string #:*db-mutex* #:*cache-environment-databases-list* #:*db-environments-lock*))
 
 (in-package #:lw2.lmdb) 
@@ -223,6 +227,11 @@
   (with-db (db db-name :read-only t)
     (lmdb:get db (encode-value key key-type) :return-type 'existence)))
 
+(defun cache-put-if-not-exists (db-name key value &key (key-type :string) (value-type :string))
+  (with-cache-transaction
+    (unless (cache-exists db-name key :key-type key-type)
+      (cache-put db-name key value :key-type key-type :value-type value-type))))
+
 (defun cache-del (db-name key &key value (key-type :string) (value-type :string))
   (with-db (db db-name)
     (lmdb:del db
@@ -433,6 +442,25 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
      (declare (dynamic-extent #'when-not-ready #'when-ready))
      (call-with-scorecard ,scoreboard ,key #'when-not-ready #'when-ready)))
 
+(defstruct (memoized-reference (:constructor %make-memoized-reference))
+  (hash (error "Must specify hash.") :type (vector (unsigned-byte 8))))
+
+(defun make-memoized-reference (datum)
+  (%make-memoized-reference :hash (hash-printable-object datum)))
+
+(defun encode-memoized-reference (ref)
+  (cl-base64:usb8-array-to-base64-string (memoized-reference-hash ref)))
+
+(defun decode-memoized-reference (encoded-reference)
+  (%make-memoized-reference :hash (cl-base64:base64-string-to-usb8-array encoded-reference)))
+
+(defun dereference-text (object)
+  (if (memoized-reference-p object)
+      (cache-get "memoized-source-text"
+		 (memoized-reference-hash object)
+		 :key-type :byte-vector)
+      object))
+
 (defun make-lmdb-memoized-wrapper (db-name version scoreboard fn return-type)
   (declare (type (simple-array (unsigned-byte 8) (*)) version))
   (labels ((unchecked-return-type (array size)
@@ -446,20 +474,27 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
 	     (when (version-equal array size version)
 	       (unchecked-return-type array size))))
     (lambda (&rest args)
-      (let* ((hash (hash-printable-object args))
-	     (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
-	     (cached-value (cache-get db-name hash :key-type :byte-vector :return-type #'cached-return-type)))
-	(if cached-value
-	    cached-value
-	    (scorecard-protect scoreboard hash
-	      (let* ((new-value (apply fn hash args))
-		     (octets-value (concatenate '(simple-array (unsigned-byte 8) (*))
-						version
-						(string-to-octets new-value :external-format :utf-8))))
-		(with-cache-transaction
-		  (cache-put db-name hash octets-value :key-type :byte-vector :value-type :byte-vector)
-		  (setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))))
-	      (cache-get db-name hash :key-type :byte-vector :return-type #'unchecked-return-type)))))))
+      (let ((real-args))
+	(flet ((real-args ()
+		 (or real-args
+		     (setf real-args (map 'list #'dereference-text args)))))
+	  (let* ((hash (if (and (memoized-reference-p (first args)) (not (rest args)))
+			   (memoized-reference-hash (first args))
+			   (hash-printable-object (real-args))))
+		 (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
+		 (cached-value (cache-get db-name hash :key-type :byte-vector :return-type #'cached-return-type)))
+	    (if cached-value
+		cached-value
+		(scorecard-protect
+		 scoreboard hash
+		 (let* ((new-value (apply fn hash (real-args)))
+			(octets-value (concatenate '(simple-array (unsigned-byte 8) (*))
+						   version
+						   (string-to-octets new-value :external-format :utf-8))))
+		   (with-cache-transaction
+		       (cache-put db-name hash octets-value :key-type :byte-vector :value-type :byte-vector)
+		     (setf *memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))))
+		 (cache-get db-name hash :key-type :byte-vector :return-type #'unchecked-return-type)))))))))
 
 (defmacro define-lmdb-memoized (name class-name (&key sources) lambda &body body)
   (let ((db-name (concatenate 'string (string-downcase (symbol-name name)) "-memo"))
