@@ -232,6 +232,6 @@
 	(with-html-stream-output (:stream stream)
 	  (output-comments stream "debate-response" debate-responses nil :replies-open nil)))
       (backlinks-to-html (get-backlinks post-id) post-id)
-      (when (nonempty-string html-body)
+      (when (if (stringp html-body) (nonempty-string html-body) html-body)
 	(with-html-stream-output (post-meta-to-html post :body nil :bottom)))
     </main>))
