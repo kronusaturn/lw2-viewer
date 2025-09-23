@@ -50,7 +50,7 @@
 			  (let* ((post-comments (when-let ((x (cache-get cache-database post-id :return-type 'binary-stream))) (decode-query-result x)))
 				 (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
 							  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-			    (cache-update cache-database post-id (comments-list-to-graphql-json new-post-comments) #'decode-query-result)))
+			    (cache-update cache-database post-id (make-graphql-json :results new-post-comments) #'decode-query-result)))
 		      (when-let ((user-id (cdr (assoc :user-id comment))))
 			(cache-mark-stale "user-page-items" user-id))
 		      (mark-comment-replied comment)))
