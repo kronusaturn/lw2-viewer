@@ -340,10 +340,12 @@
    (let* ((result (cdadr (assoc :data result)))
 	  (result-type (car (first result))))
      (flet ((process-item (item)
-	      (let ((html-body-ref (cdr (assoc :html-body-ref item)))
-		    (html-body-cons (assoc :html-body item)))
+	      (let* ((html-body-ref-cons (assoc :html-body-ref item))
+		     (html-body-ref (cdr html-body-ref-cons))
+		     (html-body-cons (assoc :html-body item)))
 		(cond (html-body-ref
-		       (acons :html-body (decode-memoized-reference html-body-ref) item))
+		       (acons :html-body (decode-memoized-reference html-body-ref)
+			      (remove html-body-ref-cons item)))
 		      ((and html-body-cons (nonempty-string (cdr html-body-cons)))
 		       (let ((ref (make-memoized-reference (cdr html-body-cons))))
 			 (cache-put-if-not-exists
