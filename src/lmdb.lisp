@@ -461,6 +461,11 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
 		 :key-type :byte-vector)
       object))
 
+(defun memoized-reference-hashable-form (object)
+  (if (memoized-reference-p object)
+      (memoized-reference-hash object)
+      object))
+
 (defun make-lmdb-memoized-wrapper (db-name version scoreboard fn return-type)
   (declare (type (simple-array (unsigned-byte 8) (*)) version))
   (labels ((unchecked-return-type (array size)
@@ -480,7 +485,7 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
 		     (setf real-args (map 'list #'dereference-text args)))))
 	  (let* ((hash (if (and (memoized-reference-p (first args)) (not (rest args)))
 			   (memoized-reference-hash (first args))
-			   (hash-printable-object (real-args))))
+			   (hash-printable-object (map 'list #'memoized-reference-hashable-form args))))
 		 (*memoized-output-dynamic-blocks* (cache-get "dynamic-content-blocks" hash :key-type :byte-vector :value-type :lisp))
 		 (cached-value (cache-get db-name hash :key-type :byte-vector :return-type #'cached-return-type)))
 	    (if cached-value
