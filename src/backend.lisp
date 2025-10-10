@@ -1273,8 +1273,11 @@
 		:value-type :lisp))))
 
 (defun get-elicit-question-title (question-id)
-  (cdr
-   (lw2-graphql-query (graphql-query-string "ElicitBlockData" (alist :question-id question-id) '(:title)))))
+  (let ((datum
+	  (lw2-graphql-query (graphql-query-string "ElicitBlockData" (alist :question-id question-id) '(:title)))))
+    (etypecase datum
+      (cons (cdr datum))
+      (string datum))))
 
 (defun make-rate-limiter (delay)
   (let ((rl-hash (make-hash-table :test 'equal :synchronized t)))
