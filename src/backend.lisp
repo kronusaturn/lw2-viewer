@@ -1244,10 +1244,13 @@
 (defun markdown-source-db-name (target-type)
   (ecase target-type (:comment "comment-markdown-source") (:post "post-markdown-source")))
 
+(defun markdown-source-html-version (html-body)
+  (base64:usb8-array-to-base64-string (hash-string (dereference-text html-body))))
+
 (define-backend-function markdown-source (target-type id version)
   (backend-lw2-modernized
    (let ((db-name (markdown-source-db-name target-type))
-	 (version (base64:usb8-array-to-base64-string (hash-string (dereference-text version)))))
+	 (version (markdown-source-html-version version)))
      (or
       (if-let ((cache-data (cache-get db-name id :value-type :lisp)))
 	      (alist-bind ((cached-version simple-string :version)
@@ -1261,16 +1264,21 @@
 					:auth-token *current-auth-token*)
 		     ((trivia:alist (:html-body . html-body)
 				    (:contents . (assoc :markdown markdown)))
-		      (cache-put db-name id (alist :version (base64:usb8-array-to-base64-string (hash-string html-body)) :markdown markdown) :value-type :lisp)
-		      markdown))))))
+		      (cache-put db-name id (alist :version (markdown-source-html-version html-body)
+						   :markdown markdown)
+				 :value-type :lisp)
+		      markdown))
+      (dereference-text version)
+      ""))))
 
 (define-backend-function (setf markdown-source) (markdown target-type id version)
   (backend-lw2-modernized
-   (let ((version (base64:usb8-array-to-base64-string (hash-string (dereference-text version)))))
+   (let ((version (markdown-source-html-version version)))
      (cache-put (markdown-source-db-name target-type)
 		id
 		(alist :version version :markdown markdown)
-		:value-type :lisp))))
+		:value-type :lisp))
+   markdown))
 
 (defun get-elicit-question-title (question-id)
   (let ((datum

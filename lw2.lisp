@@ -1361,6 +1361,7 @@
     (:get ()
      (let* ((csrf-token (make-csrf-token))
             (post-body (if post-id (get-post-body post-id :auth-token (hunchentoot:cookie-in "lw2-auth-token"))))
+	    (html-body (cdr (assoc :html-body post-body)))
             (section (or section (loop for (sym . sec) in '((:draft . "drafts") (:meta . "meta") (:frontpage-date . "frontpage"))
                                        if (cdr (assoc sym post-body)) return sec
                                        finally (return "all")))))
@@ -1378,7 +1379,8 @@
 						     collect (alist :name name :desc desc :selected (string= name section)))
 				    :lesswrong-misc (typep *current-backend* 'backend-lw2-misc-features)
 				    :submit-to-frontpage (if post-id (cdr (assoc :submit-to-frontpage post-body)) t)
-                                    :markdown-source (or (and post-id (markdown-source :post post-id (cdr (assoc :html-body post-body)))) "")))))
+                                    :markdown-source (or (and post-id (markdown-source :post post-id html-body))
+							 "")))))
     (:post (text question submit-to-frontpage)
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
