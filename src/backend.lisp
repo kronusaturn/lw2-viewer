@@ -348,9 +348,6 @@
 			      (remove html-body-ref-cons item)))
 		      ((and html-body-cons (nonempty-string (cdr html-body-cons)))
 		       (let ((ref (make-memoized-reference (cdr html-body-cons))))
-			 (cache-put-if-not-exists
-			  "memoized-source-text" (memoized-reference-hash ref) (cdr html-body-cons)
-			  :key-type :byte-vector)
 			 (acons :html-body ref
 				(remove html-body-cons item))))
 		      (t item)))))
@@ -845,18 +842,23 @@
 					(declare (ignore condition))
 					(when hosted-here
 					  (return (remove :fm-crosspost post :key #'car))))))
-		  (let* ((*current-site* (find-site (backend-magnum-crosspost-site backend)))
+		  (let* ((original-backend *current-backend*)
+			 (*current-site* (find-site (backend-magnum-crosspost-site backend)))
 			 (*current-backend* (site-backend *current-site*))
 			 (*retrieve-crosspost* nil)
 			 (foreign-post (get-post-body foreign-post-id :revalidate revalidate :force-revalidate force-revalidate))
 			 (foreign-post-body (cdr (assoc :html-body foreign-post))))
 		    (declare (special *retrieve-crosspost*))
-		    (if foreign-post-body
-			(list-cond*
-			 ((not hosted-here) :html-body foreign-post-body)
-			 (t :foreign-post foreign-post)
-			 post)
-			post))))))))))
+		    (macrolet ((wob (&body body) `(let ((*current-backend* original-backend)) ,@body)))
+		      (if foreign-post-body
+			  (list-cond*
+			   ((not hosted-here) :html-body (if (wob (memoized-reference-exists foreign-post-body))
+							     foreign-post-body
+							     (let ((body-text (dereference-text foreign-post-body)))
+							       (wob (make-memoized-reference body-text)))))
+			   (t :foreign-post foreign-post)
+			   (remove :html-body post :key #'car))
+			  post)))))))))))
 
 (defun get-post-comments-list (post-id view &rest rest &key auth-token parent-answer-id fields context)
   (declare (ignore fields context auth-token))

@@ -12,7 +12,7 @@
    #:simple-cacheable
    #:memoized-reference #:make-memoized-reference #:encode-memoized-reference #:decode-memoized-reference
    #:memoized-reference-p #:memoized-reference-hash
-   #:dereference-text
+   #:dereference-text #:memoized-reference-exists
    #:define-lmdb-memoized #:current-memo-hash #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
   (:unintern #:lmdb-clear-db #:lmdb-put-string #:*db-mutex* #:*cache-environment-databases-list* #:*db-environments-lock*))
 
@@ -446,7 +446,10 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
   (hash (error "Must specify hash.") :type (vector (unsigned-byte 8))))
 
 (defun make-memoized-reference (datum)
-  (%make-memoized-reference :hash (hash-printable-object datum)))
+  (let ((hash (hash-printable-object datum)))
+    (cache-put-if-not-exists "memoized-source-text" hash datum
+			     :key-type :byte-vector)
+    (%make-memoized-reference :hash hash)))
 
 (defun encode-memoized-reference (ref)
   (cl-base64:usb8-array-to-base64-string (memoized-reference-hash ref)))
@@ -460,6 +463,13 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
 		 (memoized-reference-hash object)
 		 :key-type :byte-vector)
       object))
+
+(defun memoized-reference-exists (object)
+  (cache-exists "memoized-source-text"
+		(if (memoized-reference-p object)
+		    (memoized-reference-hash object)
+		    (hash-printable-object object))
+		:key-type :byte-vector))
 
 (defun memoized-reference-hashable-form (object)
   (if (memoized-reference-p object)
