@@ -445,6 +445,10 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
 (defstruct (memoized-reference (:constructor %make-memoized-reference))
   (hash (error "Must specify hash.") :type (vector (unsigned-byte 8))))
 
+(define-condition memoized-reference-error (error)
+  ((reference :reader memoized-reference-error-reference :initarg :reference))
+  (:report "Memoized reference does not exist."))
+
 (defun make-memoized-reference (datum)
   (let ((hash (hash-printable-object datum)))
     (cache-put-if-not-exists "memoized-source-text" hash datum
@@ -459,9 +463,10 @@ to finish. Finally, all threads evaluate WHEN-READY, and its values are returned
 
 (defun dereference-text (object)
   (if (memoized-reference-p object)
-      (cache-get "memoized-source-text"
-		 (memoized-reference-hash object)
-		 :key-type :byte-vector)
+      (or (cache-get "memoized-source-text"
+		     (memoized-reference-hash object)
+		     :key-type :byte-vector)
+	  (error 'memoized-reference-error :reference object))
       object))
 
 (defun memoized-reference-exists (object)
