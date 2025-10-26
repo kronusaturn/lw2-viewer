@@ -857,7 +857,9 @@
 							     (let ((body-text (dereference-text foreign-post-body)))
 							       (wob (make-memoized-reference body-text)))))
 			   (t :foreign-post foreign-post)
-			   (remove :html-body post :key #'car))
+			   (if hosted-here
+			       post
+			       (remove :html-body post :key #'car)))
 			  post)))))))))))
 
 (defun get-post-comments-list (post-id view &rest rest &key auth-token parent-answer-id fields context)
