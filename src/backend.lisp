@@ -1169,28 +1169,34 @@
   (backend-progress-forum
    (format nil "pf-prod-~(~A~)" index)))
 
+(defparameter *search-hits-per-page* 20)
+
 (define-backend-function encode-algolia-search-query (query indexes)
+  (backend-algolia-search-v2
+   (json:encode-json-to-string
+    (sethash (make-hash-table)
+	     :options (alist "emptyStringSearchResults" "empty")
+	     :queries
+	     (loop for index in indexes
+		   collect (alist "indexName" (algolia-search-index-name index)
+				  "params" (alist "query" query
+						  "hitsPerPage" *search-hits-per-page*
+						  "page" 0))))))
   (backend-algolia-search
    (json:encode-json-alist-to-string
     (alist
      "requests"
      (loop for index in indexes
 	   collect (alist "indexName" (algolia-search-index-name index)
-			  "params" (format nil "query=~A&hitsPerPage=200&page=0"
-					   (url-rewrite:url-encode query)))))))
-  (backend-lw2
-   (json:encode-json-to-string
-    (loop for index in indexes
-	  collect (alist "indexName" (algolia-search-index-name index)
-			 "params" (alist "query" query
-					 "hitsPerPage" 200
-					 "page" 0))))))
+			  "params" (format nil "query=~A&hitsPerPage=~A&page=0"
+					   (url-rewrite:url-encode query)
+					   *search-hits-per-page*)))))))
 
 (define-backend-function decode-algolia-search-results (data)
+  (backend-algolia-search-v2
+   data)
   (backend-algolia-search
-   (cdr (assoc :results data)))
-  (backend-lw2
-   data))
+   (cdr (assoc :results data))))
 
 (define-backend-function lw2-search-query (query &key (indexes '(:tags :posts :comments)))
   (backend-algolia-search

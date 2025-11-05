@@ -27,7 +27,7 @@
     #:backend-magnum-crossposts #:backend-magnum-crosspost-site #:backend-crossposts-v1 #:backend-crossposts-v2
     #:backend-lw2-misc-workarounds
     #:backend-lw2-misc-features
-    #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-ea-forum #:backend-accordius
+    #:backend-lw2-legacy #:backend-lw2-modernized #:backend-lw2 #:backend-algolia-search #:backend-algolia-search-v2 #:backend-ea-forum #:backend-accordius
     #:backend-progress-forum
     #:backend-arbital
     #:make-backend #:define-backend-function #:define-backend-operation #:backend
@@ -77,6 +77,9 @@
 
 (defclass backend-algolia-search (backend-base)
   ((algolia-search-uri :accessor algolia-search-uri :initarg :algolia-search-uri :type simple-string))
+  (:metaclass backend-class))
+
+(defclass backend-algolia-search-v2 (backend-algolia-search) ()
   (:metaclass backend-class))
 
 (defclass backend-feed-crossposts (backend-graphql) ()
@@ -142,7 +145,7 @@
 		       backend-lw2-legacy
 		       backend-lw2-misc-workarounds
 		       backend-lw2-misc-features
-		       backend-algolia-search
+		       backend-algolia-search-v2
 		       backend-q-and-a
 		       backend-related-questions
 		       backend-debates
@@ -161,7 +164,7 @@
 			    backend-lw2-modernized
 			    backend-lw2-legacy
 			    backend-lw2-misc-features
-			    backend-algolia-search
+			    backend-algolia-search-v2
 			    backend-q-and-a
 			    backend-related-questions
 			    backend-feed-crossposts
