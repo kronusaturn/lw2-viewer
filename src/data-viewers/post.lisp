@@ -85,7 +85,9 @@
   (:method ((backend backend-accordius) tags)
     (dolist (tag tags) (alist-bind ((text string)) tag <a href=("/tags/~A" text)>(progn text)</a>)))
   (:method ((backend backend-lw2-tags) tags)
-    (dolist (tag tags) (alist-bind ((name string) (slug string)) (cdr (assoc :tag tag)) <a href=("/tag/~A" slug)>(progn name)</a>))))
+    (dolist (tag tags)
+      (when-let ((tag-inner (and tag (cdr (assoc :tag tag)))))
+	(alist-bind ((name string) (slug string)) tag-inner <a href=("/tag/~A" slug)>(progn name)</a>)))))
 
 (defun qualified-linking (url meta-location)
   <nav class="qualified-linking">
