@@ -321,7 +321,11 @@
 
 (defun make-graphql-json (type data)
   (json:encode-json-to-string
-   (plist-hash-table (list :data (plist-hash-table (list :*thing (plist-hash-table (list type data))))))))
+   (let ((data (case type
+		 (:result (process-item-for-cache data))
+		 (:results (map 'list #'process-item-for-cache data))
+		 (t data))))
+     (plist-hash-table (list :data (plist-hash-table (list :*thing (plist-hash-table (list type data)))))))))
 
 (defun process-item-for-cache (item)
   (let ((html-body-cons (assoc :html-body item)))
@@ -355,12 +359,12 @@
 	 (:result
 	  (let ((item (process-item (cdr (first result)))))
 	    (when cache-fn
-	      (funcall cache-fn (make-graphql-json result-type (process-item-for-cache item))))
+	      (funcall cache-fn (make-graphql-json result-type item)))
 	    item))
 	 (:results
 	  (let ((item-list (map 'list #'process-item (cdr (first result)))))
 	    (when cache-fn
-	      (funcall cache-fn (make-graphql-json result-type (map 'list #'process-item-for-cache item-list))))
+	      (funcall cache-fn (make-graphql-json result-type item-list)))
 	    item-list))
 	 (t
 	  (when cache-fn
@@ -904,8 +908,8 @@
 (define-backend-function get-post-comments (post-id &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
   (backend-graphql
    (let ((fn (lambda ()
-	       (make-graphql-json :results (map 'list #'process-item-for-cache
-						(get-post-comments-list post-id "postCommentsTop"))))))
+	       (make-graphql-json :results
+				  (get-post-comments-list post-id "postCommentsTop")))))
      (lw2-graphql-query-timeout-cached fn "post-comments-json" post-id :revalidate revalidate :force-revalidate force-revalidate)))
   (backend-ea-forum
    ;; Work around bizarre parent comment bug in EA forum
@@ -1139,7 +1143,7 @@
 							(lw2-graphql-query (posts-query-string) :auth-token auth-token)
 							(lw2-graphql-query (comments-query-string) :auth-token auth-token))))
 			       (ecase return-type
-				 (:string (make-graphql-json :results (map 'list #'process-item-for-cache result)))
+				 (:string (make-graphql-json :results result))
 				 ((nil) result))))
 		      (:posts (lw2-graphql-query (posts-query-string) :auth-token auth-token :return-type return-type))
 		      (:comments (lw2-graphql-query (comments-query-string) :auth-token auth-token :return-type return-type)))))))
