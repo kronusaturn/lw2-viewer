@@ -902,7 +902,8 @@
 		       (loop
 			  with full-width = (or (class-is node "mjx-full-width")
 						(loop for e across (plump:children node)
-						   when (member "MJXc-display" (class-list e) :test #'string=)
+						      when (and (plump:element-p e)
+								(member "MJXc-display" (class-list e) :test #'string=))
 						   return t))
 			  for current = node then (plump:parent current)
 			  for parent = (plump:parent current)
