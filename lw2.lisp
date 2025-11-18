@@ -1662,6 +1662,7 @@
 (define-component-routes forum-site (view-tags-index-alt (standard-route :uri "/topics") () (view-tags-index)))
 
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/wikitags" :handler (lambda () (redirect "/tags")))
 (define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/topics/all" :handler (lambda () (redirect "/topics")))
 
 (define-route 'alternate-frontend-site 'standard-route :name 'view-tags-voting-redirect :uri "/tagVoting" :handler (lambda () (main-site-redirect "/tagVoting")))
@@ -2124,8 +2125,10 @@
 					 (collection-to-html collection)))))
 
 (define-component-routes lesswrong-viewer-site (view-sequences (standard-route :uri "/sequences") () (view-collection "oneQyj4pw77ynzwAF")))
+(define-route 'lesswrong-viewer-site 'standard-route :name 'view-rationality :uri "/rationality" :handler (lambda () (redirect "/sequences")))
 (define-component-routes lesswrong-viewer-site (view-codex (standard-route :uri "/codex") () (view-collection "2izXHCrmJ684AnZ5X")))
 (define-component-routes lesswrong-viewer-site (view-hpmor (standard-route :uri "/hpmor") () (view-collection "ywQvGBSojSQZTMpLh")))
+(define-component-routes lesswrong-viewer-site (view-hpmor (standard-route :uri "/books") () (view-collection "nmk3nLpQE89dMRzzN")))
 (define-component-routes ea-forum-viewer-site (view-handbook (standard-route :uri "/handbook") () (view-collection "MobebwWs2o86cS9Rd")))
 
 (define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
