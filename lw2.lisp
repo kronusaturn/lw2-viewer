@@ -1632,7 +1632,7 @@
 	 (renderer ()
 	   (post-comment :tag-id tag-id)))))))
 
-(define-component-routes forum-site (view-tag (regex-route :regex "^/(?:tag|topics|w)/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
+(define-component-routes forum-site (view-tag (regex-route :regex "^/(?:tag|topics|w|wiki|wikitags)/([^/?]+)(/[^/?]*)?") (slug tail) (view-tag slug tail)))
 
 (define-route 'ea-forum-viewer-site 'regex-route :name 'view-tags-redirect :regex "^/tag/" :handler (lambda () (redirect (ppcre:regex-replace "^/tag/" (hunchentoot:request-uri*) "/topics/"))))
 
@@ -1661,9 +1661,11 @@
 (define-component-routes forum-site (view-tags-index (standard-route :uri "/tags") () (view-tags-index)))
 (define-component-routes forum-site (view-tags-index-alt (standard-route :uri "/topics") () (view-tags-index)))
 
-(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/tags/all" :handler (lambda () (redirect "/tags")))
-(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/wikitags" :handler (lambda () (redirect "/tags")))
-(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect :uri "/topics/all" :handler (lambda () (redirect "/topics")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect-tags/all :uri "/tags/all" :handler (lambda () (redirect "/tags")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect-wikitags :uri "/wikitags" :handler (lambda () (redirect "/tags")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect-w :uri "/w" :handler (lambda () (redirect "/tags")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect-wiki :uri "/wiki" :handler (lambda () (redirect "/tags")))
+(define-route 'forum-site 'standard-route :name 'view-tags-index-redirect-topics/all :uri "/topics/all" :handler (lambda () (redirect "/topics")))
 
 (define-route 'alternate-frontend-site 'standard-route :name 'view-tags-voting-redirect :uri "/tagVoting" :handler (lambda () (main-site-redirect "/tagVoting")))
 (define-route 'alternate-frontend-site 'standard-route :name 'view-tags-dashboard-redirect :uri "/tags/dashboard" :handler (lambda () (main-site-redirect "/tags/dashboard")))
