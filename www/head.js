@@ -525,18 +525,21 @@ function setTOCCollapseState(collapsed = false) {
 }
 
 function injectTOCCollapseToggleButton() {
-	let TOC = document.currentScript.parentElement;
-	if (!TOC)
-		return;
+	let currentScript = document.currentScript;
+	requestAnimationFrame(() => {
+		let TOC = currentScript.parentElement;
+		if (!TOC)
+			return;
 
-	TOC.insertAdjacentHTML("afterbegin", "<button type='button' class='toc-collapse-toggle-button'></button>");
+		TOC.insertAdjacentHTML("afterbegin", "<button type='button' class='toc-collapse-toggle-button'></button>");
 
-	let defaultTOCCollapseState = (window.innerWidth <= 520) ? "true" : "false";
-	setTOCCollapseState((localStorage.getItem("toc-collapsed") ?? defaultTOCCollapseState) == "true");
+		let defaultTOCCollapseState = (window.innerWidth <= 520) ? "true" : "false";
+		setTOCCollapseState((localStorage.getItem("toc-collapsed") ?? defaultTOCCollapseState) == "true");
 
-	TOC.query(".toc-collapse-toggle-button").addActivateEvent(GW.tocCollapseToggleButtonClicked = (event) => {
-		setTOCCollapseState(TOC.classList.contains("collapsed") == false);
-		localStorage.setItem("toc-collapsed", TOC.classList.contains("collapsed"));
+		TOC.query(".toc-collapse-toggle-button").addActivateEvent(GW.tocCollapseToggleButtonClicked = (event) => {
+			setTOCCollapseState(TOC.classList.contains("collapsed") == false);
+			localStorage.setItem("toc-collapsed", TOC.classList.contains("collapsed"));
+		});
 	});
 }
 
