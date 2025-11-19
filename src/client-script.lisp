@@ -54,7 +54,7 @@
 
 (defun call-with-server-data (client-function server-endpoint-uri)
   (with-html-stream-output (:stream stream)
-    (format stream "<script async src=\"data:text/javascript,callWithServerData('~A','~A');\"></script>" (json:lisp-to-camel-case (string client-function)) server-endpoint-uri)))
+    (format stream "<script>callWithServerData('~A','~A');</script>" (json:lisp-to-camel-case (string client-function)) server-endpoint-uri)))
 
 (defun activate-client-trigger (trigger-name)
   (with-html-stream-output (:stream stream)

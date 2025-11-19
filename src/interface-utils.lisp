@@ -21,7 +21,7 @@
 	    (* (local-time:timestamp-to-unix time) 1000))))
 
 (defun pretty-time-js ()
-  "<script async src='data:text/javascript,prettyDate()'></script>")
+  "<script>prettyDate()</script>")
 
 (defun pretty-time-html (timespec)
   (multiple-value-bind (pretty-time js-time) (pretty-time timespec)

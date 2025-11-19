@@ -786,15 +786,16 @@ let dtf = new Intl.DateTimeFormat([],
 				    : { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' } ));
 
 function prettyDate() {
-	let dateElement = document.currentScript.parentElement;
-	let jsDate = dateElement.dataset.jsDate;
-	if (jsDate) {
-		let pretty = dtf.format(new Date(+ jsDate));
-		window.requestAnimationFrame(() => {
+	let currentScript = document.currentScript;
+	requestAnimationFrame(() => {
+		let dateElement = currentScript.parentElement;
+		let jsDate = dateElement.dataset.jsDate;
+		if (jsDate) {
+			let pretty = dtf.format(new Date(+ jsDate));
 			dateElement.innerHTML = pretty;
 			dateElement.removeClass('hide-until-init');
-		});
-	}
+		}
+	});
 }
 
 
@@ -817,7 +818,7 @@ function callWithServerData(fname, uri) {
 
 /*	Polyfill for requestIdleCallback in Apple and Microsoft browsers. */
 if (!window.requestIdleCallback) {
-	window.requestIdleCallback = (fn) => { setTimeout(fn, 0) };
+	window.requestIdleCallback = (fn) => { requestAnimationFrame(fn) };
 }
 
 GW.triggers = {};
@@ -828,7 +829,7 @@ function invokeTrigger(args) {
 	} else if(args.priority > 0) {
 		requestIdleCallback(args.fn, {timeout: args.priority});
 	} else {
-		setTimeout(args.fn, 0);
+		requestAnimationFrame(args.fn);
 	}
 }
 
