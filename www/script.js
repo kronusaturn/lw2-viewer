@@ -3154,16 +3154,16 @@ function numToAlpha(n) {
 function activateAntiKibitzer() {
 	GWLog("activateAntiKibitzer");
 
+	//	Inject controls (if desktop).
+	if (GW.isMobile == false)
+		injectAntiKibitzerToggle();
+
 	//	Activate anti-kibitzer mode (if needed).
 	if (localStorage.getItem("antikibitzer") == "true")
 		toggleAntiKibitzerMode();
 
 	//	Remove temporary CSS that hides the authors and karma values.
 	removeElement("#antikibitzer-temp");
-
-	//	Inject controls (if desktop).
-	if (GW.isMobile == false)
-		injectAntiKibitzerToggle();
 }
 
 function injectAntiKibitzerToggle() {
