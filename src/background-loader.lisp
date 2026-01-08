@@ -19,44 +19,46 @@
     (lambda ()
       (with-site-context (site :request nil)
 	(log-and-ignore-errors
-	 (let* ((posts-json (sb-sys:with-deadline (:seconds 120) (get-posts-json)))
-		(posts-list (decode-query-result posts-json)))
-	   (when posts-list
-	     (with-cache-transaction
-	       (cache-update "index-json" "new-not-meta" posts-json #'decode-query-result)
-	       (dolist (post posts-list)
-		 (cache-put "postid-to-title" (cdr (assoc :--id post)) (cdr (assoc :title post))))
-	       (dolist (post posts-list)
-		 (cache-put "postid-to-slug" (cdr (assoc :--id post)) (cdr (assoc :slug post)))))
-	     (loop for post in posts-list
-		as post-id = (cdr (assoc :--id post))
-		if (string= post-id last-post-processed) return nil
-		do (log-and-ignore-errors
-		    (lw2.clean-html:clean-html (cdr (assoc :html-body (get-post-body post-id :revalidate nil))) :with-toc t :post-id post-id)))
-	     (setf last-post-processed (cdr (assoc :--id (first posts-list)))))))
+	 (sb-sys:with-deadline (:seconds 120)
+	   (let* ((posts-json (get-posts-json))
+		  (posts-list (decode-query-result posts-json)))
+	     (when posts-list
+	       (with-cache-transaction
+		   (cache-update "index-json" "new-not-meta" posts-json #'decode-query-result)
+		 (dolist (post posts-list)
+		   (cache-put "postid-to-title" (cdr (assoc :--id post)) (cdr (assoc :title post))))
+		 (dolist (post posts-list)
+		   (cache-put "postid-to-slug" (cdr (assoc :--id post)) (cdr (assoc :slug post)))))
+	       (loop for post in posts-list
+		     as post-id = (cdr (assoc :--id post))
+		     if (string= post-id last-post-processed) return nil
+		       do (log-and-ignore-errors
+			   (lw2.clean-html:clean-html (cdr (assoc :html-body (get-post-body post-id :revalidate nil))) :with-toc t :post-id post-id)))
+	       (setf last-post-processed (cdr (assoc :--id (first posts-list))))))))
 	(log-and-ignore-errors
-	 (let ((recent-comments-json (sb-sys:with-deadline (:seconds 120) (get-recent-comments-json))))
-	   (when-let ((recent-comments (ignore-errors (decode-query-result recent-comments-json))))
-	     (cache-update "index-json" "recent-comments" recent-comments-json #'decode-query-result)
-	     (loop for comment in recent-comments
-		as comment-id = (cdr (assoc :--id comment))
-		as cache-database = (if (or (cdr (assoc :answer comment)) (cdr (assoc :parent-answer-id comment)))
-					"post-answers-json"
-					"post-comments-json")
-		if (string= comment-id last-comment-processed) return nil
-		do (log-and-ignore-errors
-		    (with-cache-transaction
-			(when-let ((post-id (cdr (assoc :post-id comment))))
-			  (let* ((post-comments (when-let ((x (cache-get cache-database post-id :return-type 'binary-stream))) (decode-query-result x)))
-				 (new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
-							  #'> :key (lambda (c) (cdr (assoc :base-score c))))))
-			    (cache-update cache-database post-id (make-graphql-json :results new-post-comments) #'decode-query-result)))
-		      (when-let ((user-id (cdr (assoc :user-id comment))))
-			(cache-mark-stale "user-page-items" user-id))
-		      (mark-comment-replied comment)))
-		do (log-and-ignore-errors
-		    (lw2.clean-html:clean-html (cdr (assoc :html-body comment)))))
-	     (setf last-comment-processed (cdr (assoc :--id (first recent-comments)))))))
+	 (sb-sys:with-deadline (:seconds 120)
+	   (let ((recent-comments-json (get-recent-comments-json)))
+	     (when-let ((recent-comments (ignore-errors (decode-query-result recent-comments-json))))
+	       (cache-update "index-json" "recent-comments" recent-comments-json #'decode-query-result)
+	       (loop for comment in recent-comments
+		     as comment-id = (cdr (assoc :--id comment))
+		     as cache-database = (if (or (cdr (assoc :answer comment)) (cdr (assoc :parent-answer-id comment)))
+					     "post-answers-json"
+					     "post-comments-json")
+		     if (string= comment-id last-comment-processed) return nil
+		       do (log-and-ignore-errors
+			   (with-cache-transaction
+			       (when-let ((post-id (cdr (assoc :post-id comment))))
+				 (let* ((post-comments (when-let ((x (cache-get cache-database post-id :return-type 'binary-stream))) (decode-query-result x)))
+					(new-post-comments (sort (cons comment (delete-if (lambda (c) (string= comment-id (cdr (assoc :--id c)))) post-comments))
+								 #'> :key (lambda (c) (cdr (assoc :base-score c))))))
+				   (cache-update cache-database post-id (make-graphql-json :results new-post-comments) #'decode-query-result)))
+			     (when-let ((user-id (cdr (assoc :user-id comment))))
+			       (cache-mark-stale "user-page-items" user-id))
+			     (mark-comment-replied comment)))
+		     do (log-and-ignore-errors
+			 (lw2.clean-html:clean-html (cdr (assoc :html-body comment)))))
+	       (setf last-comment-processed (cdr (assoc :--id (first recent-comments))))))))
 	(send-all-notifications)))))
 
 (defun background-loader ()
