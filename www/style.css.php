@@ -3611,6 +3611,7 @@ ol {
 
 .footnote-item {
 	display: flex;
+	min-height: 1lh;
 }
 
 .footnote-item > :not(.nothing) {
