@@ -1107,7 +1107,7 @@
 		     (plump:traverse node #'move-children-out-of-node :test (lambda (n) (tag-is n "sup" "strong"))))
 		    ((tag-is node "style")
 		     (let ((text (plump:text node)))
-		       (when (search ".mjx-math" text)
+		       (when (search "mjx-math" text)
 			 (setf (gethash text style-hash) t)))
 		     (plump:remove-child node))
 		    ((tag-is node "script")
