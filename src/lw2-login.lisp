@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
+  (:use #:cl #:lw2-viewer.config #:lw2.context #:lw2.sites #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:import-from #:lw2.context #:*current-backend*)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password #:do-logout
@@ -296,10 +296,19 @@ fields - The return values we want to get from the server after it completes our
 						     :deleted-reason reason))))
 
 (defun do-lw2-vote (auth-token target-collection target-id vote)
-  (let* ((mutation (format nil "setVote~:(~A~)" target-collection))
+  (let* ((mutation (format nil "performVote~:(~A~)" target-collection))
 	 (karma-vote (or (nonempty-string vote)
 			 (cdr (assoc :karma vote))))
 	 (extended-vote (remove :karma vote :key #'car))
+	 (agreement (or (cdr (assoc :agreement extended-vote)) "neutral"))
+	 (extended-vote (cond ((eq (site-extended-vote-style *current-site*) :ea)
+			       (cond ((or (string= agreement "smallUpvote") (string= agreement "bigUpvote"))
+				      (alist :agree t :disagree :false))
+				     ((or (string= agreement "smallDownvote") (string= agreement "bigDownvote"))
+				      (alist :agree :false :disagree t))
+				     (t
+				      (alist :agree :false :disagree :false))))
+			      (t extended-vote)))
 	 (ret (do-lw2-post-query auth-token
 		(alist "query" (graphql-mutation-string mutation
 							(remove-if #'null
@@ -307,14 +316,18 @@ fields - The return values we want to get from the server after it completes our
 									  :vote-type karma-vote
 									  :extended-vote extended-vote)
 								   :key #'cdr)
-							'(:--id :base-score :af :af-base-score :vote-count :extended-score
-							  :current-user-vote :current-user-extended-vote))
+							'((:document :--id :base-score :af :af-base-score :vote-count :extended-score
+							  :current-user-vote :current-user-extended-vote)))
 		       "variables" nil
 		       "operationName" mutation)))
+	 (ret (cdr (assoc :document ret)))
 	 (confirmed-vote (block nil
 			   (alist-bind (current-user-vote current-user-extended-vote) ret
 				       (return (list-cond* (current-user-vote :karma current-user-vote)
-							   current-user-extended-vote))))))
+							   (if (eq (site-extended-vote-style *current-site*) :ea)
+							       ;; Hack to make EA forum agreement agree with LW
+							       (alist :agreement agreement)
+							       current-user-extended-vote)))))))
     (values confirmed-vote ret)))
     
 

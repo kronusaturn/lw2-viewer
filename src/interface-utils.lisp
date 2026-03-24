@@ -108,8 +108,9 @@
     (if as-text
 	(hash-cond (make-hash-table)
 		   (base-score :karma (list (text) (votes-to-tooltip vote-count)))
-		   (extended-score :agreement (list (extended-text)
-						    (extended-tooltip))))
+		   ((or extended-score (eq extended-vote-style :ea))
+		    :agreement (list (extended-text)
+				     (extended-tooltip))))
 	(progn
 	  (when base-score
 	    (voting "karma" (votes-to-tooltip vote-count) (text)))
