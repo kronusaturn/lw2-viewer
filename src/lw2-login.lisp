@@ -296,7 +296,7 @@ fields - The return values we want to get from the server after it completes our
 						     :deleted-reason reason))))
 
 (defun do-lw2-vote (auth-token target-collection target-id vote)
-  (let* ((mutation (format nil "setVote~:(~A~)" target-collection))
+  (let* ((mutation (format nil "performVote~:(~A~)" target-collection))
 	 (karma-vote (or (nonempty-string vote)
 			 (cdr (assoc :karma vote))))
 	 (extended-vote (remove :karma vote :key #'car))
@@ -316,10 +316,11 @@ fields - The return values we want to get from the server after it completes our
 									  :vote-type karma-vote
 									  :extended-vote extended-vote)
 								   :key #'cdr)
-							'(:--id :base-score :af :af-base-score :vote-count :extended-score
-							  :current-user-vote :current-user-extended-vote))
+							'((:document :--id :base-score :af :af-base-score :vote-count :extended-score
+							  :current-user-vote :current-user-extended-vote)))
 		       "variables" nil
 		       "operationName" mutation)))
+	 (ret (cdr (assoc :document ret)))
 	 (confirmed-vote (block nil
 			   (alist-bind (current-user-vote current-user-extended-vote) ret
 				       (return (list-cond* (current-user-vote :karma current-user-vote)
