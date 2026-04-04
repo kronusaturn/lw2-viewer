@@ -309,17 +309,18 @@ fields - The return values we want to get from the server after it completes our
 				     (t
 				      (alist :agree :false :disagree :false))))
 			      (t extended-vote)))
-	 (ret (do-lw2-post-query auth-token
-		(alist "query" (graphql-mutation-string mutation
-							(remove-if #'null
-								   (alist :document-id target-id
-									  :vote-type karma-vote
-									  :extended-vote extended-vote)
-								   :key #'cdr)
-							'((:document :--id :base-score :af :af-base-score :vote-count :extended-score
-							  :current-user-vote :current-user-extended-vote)))
-		       "variables" nil
-		       "operationName" mutation)))
+	 (ret (with-retrying (retry :retries 5 :before-retry (sleep 1))
+		(do-lw2-post-query auth-token
+		  (alist "query" (graphql-mutation-string mutation
+							  (remove-if #'null
+								     (alist :document-id target-id
+									    :vote-type karma-vote
+									    :extended-vote extended-vote)
+								     :key #'cdr)
+							  '((:document :--id :base-score :af :af-base-score :vote-count :extended-score
+								       :current-user-vote :current-user-extended-vote)))
+			 "variables" nil
+			 "operationName" mutation))))
 	 (ret (cdr (assoc :document ret)))
 	 (confirmed-vote (block nil
 			   (alist-bind (current-user-vote current-user-extended-vote) ret

@@ -12,6 +12,7 @@
            #:*messages-index-fields*
            #:*notifications-base-terms*
 	   #:*enable-rate-limit*
+	   #:with-retrying
            #:start-background-loader #:stop-background-loader #:background-loader-running-p
 	   #:call-with-http-response
 	   #:forwarded-header #:backend-request-headers
@@ -115,16 +116,17 @@
     (format *graphql-debug-output* "~&GraphQL query: ~A~%" query)))
 
 (defmacro with-retrying ((maybe-retry-fn-name &key retries before-maybe-retry before-retry) &body body)
-  (with-gensyms (remaining-retries retry)
-    `(let ((,remaining-retries ,retries))
-       (tagbody ,retry
-	  (labels ((,maybe-retry-fn-name ()
-		     ,before-maybe-retry
-		     (when (> ,remaining-retries 0)
-		       (decf ,remaining-retries)
-		       ,before-retry
-		       (go ,retry))))
-	    ,@body)))))
+  (with-gensyms (remaining-retries retry block-name)
+    `(block ,block-name
+       (let ((,remaining-retries ,retries))
+	 (tagbody ,retry
+	    (labels ((,maybe-retry-fn-name ()
+		       ,before-maybe-retry
+		       (when (> ,remaining-retries 0)
+			 (decf ,remaining-retries)
+			 ,before-retry
+			 (go ,retry))))
+	      (return-from ,block-name ,@body)))))))
 
 (defun force-close (stream)
   (ignore-errors (close stream :abort t)))
