@@ -987,10 +987,13 @@
 			     (setf target (plump:parent target)))
 			   (create-dynamic-call target 'lw2.elicit-predictions::render-elicit-block question-id))))
 		     (if (string-is-whitespace (plump:text node))
-			 (if (or (plump:get-elements-by-tag-name node "img")
-				 (plump:get-elements-by-tag-name node "iframe"))
-			     (add-class node "imgonly")
-			     (plump:remove-child node))
+			 (cond ((or (plump:get-elements-by-tag-name node "img")
+				    (plump:get-elements-by-tag-name node "iframe"))
+				(add-class node "imgonly"))
+			       ((plump:get-elements-by-tag-name node "mjx-container")
+				(add-class node "mathjax-block-container"))
+			       (:otherwise
+				(plump:remove-child node)))
 			 (if-let (parent (plump:parent node))
 				 (progn
 				   (when (and nil (tag-is node "p") ;; FIXME: disabled until we can fix math and code false positives
@@ -1107,7 +1110,8 @@
 		     (plump:traverse node #'move-children-out-of-node :test (lambda (n) (tag-is n "sup" "strong"))))
 		    ((tag-is node "style")
 		     (let ((text (plump:text node)))
-		       (when (search "mjx-math" text)
+		       (when (or (search "jax=\"CHTML\"" text)
+				 (search "mjx-math" text))
 			 (setf (gethash text style-hash) t)))
 		     (plump:remove-child node))
 		    ((tag-is node "script")
