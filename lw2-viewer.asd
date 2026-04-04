@@ -26,7 +26,7 @@
 			     (:file "resources" :depends-on ("config-package" "utils" "sites" "context" "colors"))
 			     (:file "response" :depends-on ("utils" "conditions" "sites" "routes" "html-reader"))
 			     (:file "fonts-modules")
-			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules" "backend" "resources"))
+			     (:file "fonts" :depends-on ("html-reader" "utils" "sites" "fonts-modules" "backend" "resources" "conditions"))
                              (:file "config-package" :depends-on ("sites" "backend-modules" "fonts-modules"))
                              (:module "config-copy"
 				      :pathname "../"
