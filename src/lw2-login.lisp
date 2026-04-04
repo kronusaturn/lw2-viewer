@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.login
-  (:use #:cl #:lw2-viewer.config #:lw2.context #:lw2.sites #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
+  (:use #:cl #:lw2-viewer.config #:lw2.context #:lw2.sites #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:lw2.conditions #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:import-from #:lw2.context #:*current-backend*)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password #:do-logout
@@ -310,17 +310,19 @@ fields - The return values we want to get from the server after it completes our
 				      (alist :agree :false :disagree :false))))
 			      (t extended-vote)))
 	 (ret (with-retrying (retry :retries 5 :before-retry (sleep 1))
-		(do-lw2-post-query auth-token
-		  (alist "query" (graphql-mutation-string mutation
-							  (remove-if #'null
-								     (alist :document-id target-id
-									    :vote-type karma-vote
-									    :extended-vote extended-vote)
-								     :key #'cdr)
-							  '((:document :--id :base-score :af :af-base-score :vote-count :extended-score
-								       :current-user-vote :current-user-extended-vote)))
-			 "variables" nil
-			 "operationName" mutation))))
+		(handler-case
+		    (do-lw2-post-query auth-token
+		      (alist "query" (graphql-mutation-string mutation
+							      (remove-if #'null
+									 (alist :document-id target-id
+										:vote-type karma-vote
+										:extended-vote extended-vote)
+									 :key #'cdr)
+							      '((:document :--id :base-score :af :af-base-score :vote-count :extended-score
+									   :current-user-vote :current-user-extended-vote)))
+			     "variables" nil
+			     "operationName" mutation))
+		  (lw2-unknown-error () (retry)))))
 	 (ret (cdr (assoc :document ret)))
 	 (confirmed-vote (block nil
 			   (alist-bind (current-user-vote current-user-extended-vote) ret
