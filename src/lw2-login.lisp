@@ -301,7 +301,10 @@ fields - The return values we want to get from the server after it completes our
 			 (cdr (assoc :karma vote))))
 	 (extended-vote (remove :karma vote :key #'car))
 	 (agreement (or (cdr (assoc :agreement extended-vote)) "neutral"))
-	 (extended-vote (cond ((eq (site-extended-vote-style *current-site*) :ea)
+	 ;; Hack to make EA forum agreement agree with LW
+	 (ea-workaround (and (eq (site-extended-vote-style *current-site*) :ea)
+				    (string-equal target-collection "Comment")))
+	 (extended-vote (cond (ea-workaround
 			       (cond ((or (string= agreement "smallUpvote") (string= agreement "bigUpvote"))
 				      (alist :agree t :disagree :false))
 				     ((or (string= agreement "smallDownvote") (string= agreement "bigDownvote"))
@@ -327,9 +330,7 @@ fields - The return values we want to get from the server after it completes our
 	 (confirmed-vote (block nil
 			   (alist-bind (current-user-vote current-user-extended-vote) ret
 				       (return (list-cond* (current-user-vote :karma current-user-vote)
-							   (if (and (eq (site-extended-vote-style *current-site*) :ea)
-								    (string-equal target-collection "Comment"))
-							       ;; Hack to make EA forum agreement agree with LW
+							   (if ea-workaround
 							       (alist :agreement agreement)
 							       current-user-extended-vote)))))))
     (values confirmed-vote ret)))
