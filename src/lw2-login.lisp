@@ -327,7 +327,8 @@ fields - The return values we want to get from the server after it completes our
 	 (confirmed-vote (block nil
 			   (alist-bind (current-user-vote current-user-extended-vote) ret
 				       (return (list-cond* (current-user-vote :karma current-user-vote)
-							   (if (eq (site-extended-vote-style *current-site*) :ea)
+							   (if (and (eq (site-extended-vote-style *current-site*) :ea)
+								    (string-equal target-collection "Comment"))
 							       ;; Hack to make EA forum agreement agree with LW
 							       (alist :agreement agreement)
 							       current-user-extended-vote)))))))
