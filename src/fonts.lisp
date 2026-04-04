@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2.fonts
-  (:use #:cl #:iterate #:sb-thread #:lw2.fonts-modules #:lw2.html-reader #:lw2.utils #:lw2.resources)
+  (:use #:cl #:iterate #:sb-thread #:lw2.fonts-modules #:lw2.conditions #:lw2.html-reader #:lw2.utils #:lw2.resources)
   (:export #:fonts-source #:google-fonts-source #:obormot-fonts-source
 	   #:generate-fonts-html-headers)
   (:recycle #:lw2-viewer))
@@ -31,19 +31,20 @@
 (sb-ext:defglobal *fonts-redirect-thread* nil)
 
 (defun update-obormot-fonts ()
-  (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :if-unchanged :keep-original :element-type 'character)
-    (iter
-     (for uri in *obormot-fonts-stylesheet-uris*)
-     (for response = (dex:get uri
-			      :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
-			      :force-string t
-			      :keep-alive nil))
-     (with-input-from-string (in-stream response)
-       (iter (for line in-stream in-stream using #'read-line)
-	     (for replaced = (ppcre:regex-replace "url\\(['\"](?=https?://fonts.obormot.net/)" line "\\&https://fonts.greaterwrong.com/"))
-	     (write-string replaced out-stream)
-	     (terpri out-stream)))))
-  (setf *fonts-redirect-last-update* (get-unix-time)))
+  (log-and-ignore-errors
+   (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :if-unchanged :keep-original :element-type 'character)
+     (iter
+      (for uri in *obormot-fonts-stylesheet-uris*)
+      (for response = (dex:get uri
+			       :headers (alist "referer" (lw2.sites::site-uri (first lw2.sites::*sites*)) "accept" "text/css,*/*;q=0.1")
+			       :force-string t
+			       :keep-alive nil))
+      (with-input-from-string (in-stream response)
+	(iter (for line in-stream in-stream using #'read-line)
+	      (for replaced = (ppcre:regex-replace "url\\(['\"](?=https?://fonts.obormot.net/)" line "\\&https://fonts.greaterwrong.com/"))
+	      (write-string replaced out-stream)
+	      (terpri out-stream)))))
+   (setf *fonts-redirect-last-update* (get-unix-time))))
 
 (defun update-obormot-fonts-async ()
   (unless *fonts-redirect-thread*
