@@ -1161,6 +1161,14 @@
      (lw2-query-string* :message :list (alist :view "messagesConversation" :conversation-id conversation-id) :fields *messages-index-fields*))
     :auth-token auth-token)))
 
+(define-backend-function get-iframe-widget-html (id)
+  (backend-lw2-legacy
+   (let ((result
+	   (lw2-graphql-query (lw2-query-string :iframe-widget-srcdoc :single
+						(alist :selector (alist :document-id id))
+								      :fields '(:html)))))
+     (cdr (assoc :html result)))))
+
 (defun search-result-markdown-to-html (item)
   (alist* :html-body
 	  (handler-case (nth-value 1 (cl-markdown:markdown (cdr (assoc :body item)) :stream nil))
