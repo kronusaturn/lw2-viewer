@@ -29,20 +29,20 @@
 		   (create :type "widget-size"
 			   :id id
 			   :height height)))))))
-      (chain window
-	     (add-event-listener
-	      "message"
-	      (lambda (event)
-		(let* ((type (chain event data type)))
-		  (when (string= type "widget-id")
-		    (unless id
-		      (setf id (chain event data id))
-		      (chain (new (-resize-observer send-size))
-			     (observe (chain document document-element)))
-		      (send-size)))))))
-      (unless id
-	(widget-message (create :type "widget-request-id")))))
-   "</script>")))
+	(chain window
+	       (add-event-listener
+		"message"
+		(lambda (event)
+		  (let* ((type (chain event data type)))
+		    (when (string= type "widget-id")
+		      (unless id
+			(setf id (chain event data id))
+			(chain (new (-resize-observer send-size))
+			       (observe (chain document document-element)))
+			(send-size)))))))
+	(unless id
+	  (widget-message (create :type "widget-request-id"))))))
+   "</script>"))
 
 (defparameter *outside-script*
   (ps
@@ -73,6 +73,6 @@
 		:id id))))))
 
 (defun render-iframe-widget (id)
-  (let ((html (concatenate 'string (get-iframe-widget-html id) (inside-script id))))
+  (let ((html (concatenate 'string (get-iframe-widget-html id) *inside-script*)))
     <iframe class="widget" data-widget-id=id sandbox="allow-scripts" srcdoc=html></iframe>
-    <script>(with-html-stream-output (outside-script id))</script>))
+    <script>(with-html-stream-output (write-string *outside-script* *html-output*))</script>))
