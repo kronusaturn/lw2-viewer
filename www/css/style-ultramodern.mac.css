@@ -3580,6 +3580,15 @@ input {
 	font-weight: inherit;
 }
 
+/*= Embedded widgets =*/
+
+iframe.widget {
+	width: 100%;
+	height: 400px;
+	color: black;
+	background-color: white;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/

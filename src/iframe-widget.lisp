@@ -6,6 +6,8 @@
 
 (named-readtables:in-readtable html-reader)
 
+;; ref: packages/lesswrong/components/lexical/embeds/IframeWidgetEmbed/IframeWidgetNode.tsx
+
 (defun render-iframe-widget (id)
   (let ((html (get-iframe-widget-html id)))
-    <iframe sandbox="allow-scripts" srcdoc=html></iframe>))
+    <iframe class="widget" sandbox="allow-scripts" srcdoc=html></iframe>))
