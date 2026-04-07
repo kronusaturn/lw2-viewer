@@ -3592,6 +3592,33 @@ iframe.widget {
 	background-color: white;
 }
 
+/*= LLM content blocks =*/
+
+.llm-content-block {
+	background-color: #eee;
+	padding: 0 1em;
+	border: 4px solid #ccc;
+	margin: 1.5em 0;
+}
+.llm-content-block::before,
+.llm-content-block::after {
+	content: attr(data-model-name);
+	background-color: #ccc;
+	width: calc(2em + 100%);
+	margin: 0 -1em;
+	display: block;
+//	font-family: 'Concourse Smallcaps', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
+	font-weight: 600;
+	text-align: center;
+	color: #fff;
+}
+.llm-content-block::before {
+	padding: 0.25em 0 calc(4px + 0.25em) 0;
+}
+.llm-content-block::after {
+	padding: calc(4px + 0.25em) 0 0.25em 0;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/

@@ -1768,6 +1768,14 @@ select {
 EOT;
 ?>
 
+/*= LLM content blocks =*/
+
+
+.llm-content-block::before,
+.llm-content-block::after {
+	font-family: <?php echo $UI_font_smallcaps; ?>;
+}
+
 /*============*/
 /* ABOUT PAGE */
 /*============*/
