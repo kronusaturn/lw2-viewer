@@ -3619,6 +3619,33 @@ iframe.widget {
 	padding: calc(4px + 0.25em) 0 0.25em 0;
 }
 
+/*= Details / summary =*/
+
+details {
+	border: 2px solid #eee;
+	margin: 1.25em 0;
+}
+details > .detailsBlockContent {
+	padding: 0.5em;
+}
+
+details > summary {
+	background-color: #eee;
+	padding: 0.5em 0 0.5em 0.75em;
+	cursor: pointer;
+}
+details > summary > :first-child,
+details > .detailsBlockContent > :first-child {
+	margin-top: 0;
+}
+details > summary > :last-child,
+details > .detailsBlockContent > :last-child  {
+	margin-bottom: 0;
+}
+details > summary > p {
+	display: inline-block;
+}
+
 /*************/
 /* FOOTNOTES */
 /*************/
