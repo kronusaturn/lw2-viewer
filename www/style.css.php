@@ -3644,6 +3644,8 @@ details > .detailsBlockContent > :last-child  {
 }
 details > summary > p {
 	display: inline-block;
+	max-width: calc(100% - 2em);
+	text-align: left;
 }
 
 /*************/
