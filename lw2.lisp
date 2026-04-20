@@ -710,6 +710,11 @@
 (defun set-cookie (key value &key (max-age (- (expt 2 31) 1)) (path "/"))
   (hunchentoot:set-cookie key :value value :path path :max-age max-age :secure (site-secure *current-site*)))
 
+(defun ensure-session-token ()
+  (set-cookie "session-token"
+	      (or (nonempty-string (hunchentoot:cookie-in "session-token"))
+		  (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))))
+
 (defun set-default-headers (return-code)
   (setf (hunchentoot:content-type*) "text/html; charset=utf-8"
 	(hunchentoot:return-code*) return-code
@@ -745,12 +750,14 @@
 (defmethod call-with-backend-context ((backend backend-token-login) (request (eql t)) fn)
   (let ((*current-auth-status* (safe-decode-json (hunchentoot:cookie-in "lw2-status"))))
     (multiple-value-bind (*current-auth-token* *current-userid* *current-username*)
-	(let* ((auth-token (hunchentoot:cookie-in "lw2-auth-token"))
+	(let* ((auth-token (nonempty-string (hunchentoot:cookie-in "lw2-auth-token")))
 	       (expires (cdr (assoc :expires *current-auth-status*))))
-	  (when (and (nonempty-string auth-token)
+	  (when (and auth-token
 		     (not *read-only-mode*)
 		     (or (null expires)
 			 (and (integerp expires) (<= (get-unix-time) (- expires (* 60 60 24))))))
+	    (set-cookie "lw2-auth-token" auth-token)
+	    (ensure-session-token)
 	    (with-cache-readonly-transaction
 		(let* ((user-id (cache-get "auth-token-to-userid" auth-token))
 		       (user-last-modified (when user-id
@@ -1953,7 +1960,7 @@
 	      (emit-login-page :error-message error-message)))))
       (cond
 	((not (or cookie-check (hunchentoot:cookie-in "session-token")))
-	 (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+	 (ensure-session-token)
 	 (redirect (format nil "/login?~@[return=~A&~]cookie-check=y" (if return (url-rewrite:url-encode return))))) 
 	(cookie-check
 	 (if (hunchentoot:cookie-in "session-token")
