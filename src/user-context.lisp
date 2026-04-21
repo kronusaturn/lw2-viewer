@@ -28,4 +28,4 @@
 (defun user-bot-p ()
   (if *force-human*
       nil
-      (not *current-userid*)))
+      (not (and (boundp '*current-userid) *current-userid*))))
