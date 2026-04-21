@@ -2046,7 +2046,7 @@
 
 (defmethod view-login ((backend backend-oauth2.0-login))
   (with-http-args (return)
-    (set-cookie "session-token" (base64:usb8-array-to-base64-string (ironclad:make-random-salt)))
+    (ensure-session-token)
     (redirect
      (oauth2.0-login-request-uri backend "authorize"
 				 (alist "response_type" "code"
