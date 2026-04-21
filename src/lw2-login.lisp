@@ -2,6 +2,7 @@
   (:use #:cl #:lw2-viewer.config #:lw2.context #:lw2.sites #:lw2.utils #:lw2.graphql #:lw2.backend #:lw2.backend-modules #:lw2.conditions #:alexandria #:cl-json #:flexi-streams #:websocket-driver-client)
   (:import-from #:ironclad #:byte-array-to-hex-string #:digest-sequence)
   (:import-from #:lw2.context #:*current-backend*)
+  (:import-from #:lw2.user-context #:*force-human*)
   (:export #:do-lw2-resume #:do-login #:do-lw2-create-user #:do-lw2-forgot-password #:do-lw2-reset-password #:do-logout
 	   #:do-login-with-oidc-access-token
 	   #:do-lw2-post-query #:do-lw2-post-query*
@@ -80,7 +81,8 @@
 (defun do-graphql-post-query (auth-token data)
   (call-with-http-response
    #'json:decode-json
-   (graphql-uri *current-backend*)
+   (let ((*force-human* t))
+     (graphql-uri *current-backend*))
    :method :post
    :want-stream t
    :headers (backend-request-headers auth-token t)
@@ -112,7 +114,8 @@
 
 (defun do-login-with-oidc-access-token (access-token)
   (multiple-value-bind (body status response-headers)
-      (dex:get (quri:make-uri :defaults (quri:uri (graphql-uri *current-backend*))
+      (dex:get (quri:make-uri :defaults (quri:uri (let ((*force-human* t))
+						    (graphql-uri *current-backend*)))
 			      :path "/auth/useAccessToken"
 			      :query (alist "access_token" access-token))
 	       :max-redirects 0

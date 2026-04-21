@@ -12,6 +12,7 @@
     #:backend-passport-js-login
     #:backend-oauth2.0-login
     #:graphql-uri #:websocket-uri #:algolia-search-uri #:rest-api-uri
+    #:graphql-bot-uri
     #:oauth2.0-login-uri #:oauth2.0-client-id #:oauth2.0-client-secret
     #:backend-feed-crossposts
     #:backend-q-and-a #:backend-related-questions
@@ -173,7 +174,9 @@
 			    backend-shortform
 			    backend-lw2-tags-comments
 			    backend-lw2-wiki-tags
-			    backend-crossposts-v2) ()
+			    backend-crossposts-v2)
+  ((graphql-bot-uri :accessor graphql-bot-uri :initarg :graphql-bot-uri :initform nil
+		    :type (or null simple-string)))
   (:metaclass backend-class))
 
 (defclass backend-progress-forum (backend-passport-js-login

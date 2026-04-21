@@ -3,7 +3,7 @@
 	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
   (:import-from #:alexandria-2 #:subseq*)
   (:import-from #:collectors #:with-collector)
-  (:import-from #:lw2.user-context #:*current-auth-token*)
+  (:import-from #:lw2.user-context #:*current-auth-token* #:user-bot-p)
   (:reexport #:lw2.backend-modules)
   (:export #:*use-alignment-forum*
 	   #:*graphql-uri-hook*
@@ -382,6 +382,11 @@
 (defmethod graphql-uri ((backend backend-alignment-forum))
   (if *use-alignment-forum*
       "https://www.alignmentforum.org/graphql"
+      (call-next-method)))
+
+(defmethod graphql-uri ((backend backend-ea-forum))
+  (or (and (user-bot-p)
+	   (graphql-bot-uri backend))
       (call-next-method)))
 
 (define-backend-function backend-request-headers (auth-token forwarded)
