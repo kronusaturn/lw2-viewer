@@ -3472,7 +3472,7 @@ figure {
 	[style*="--aspect-ratio"]::before {
 		content: "";
 		display: block;
-		padding-bottom: calc(100% / (var(--aspect-ratio)));
+		padding-bottom: calc(100% / (var(--aspect-ratio)) + 2px);
 	}  
 	[style*="--aspect-ratio"] > * {
 		position: absolute;
