@@ -803,7 +803,7 @@
       (multiple-value-bind (*revalidate-default* *force-revalidate-default*)
 	  (cond ((or (let ((revalidate-header (hunchentoot:header-in* :x-revalidate)))
 		       (and revalidate-header (string-equal revalidate-header "no")))
-		     (ppcre:scan "GPTBot|ClaudeBot|GoogleOther|AmazonBot|facebookexternalhit|meta-externalagent|FriendlyCrawler"
+		     (ppcre:scan "GPTBot|ClaudeBot|GoogleOther|AmazonBot|facebookexternalhit|meta-externalagent|FriendlyCrawler|LinkupBot"
 				 (hunchentoot:header-in* :user-agent)))
 		 ;; Low priority bots
 		 (values nil nil))
