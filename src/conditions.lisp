@@ -26,7 +26,8 @@
 (deftype fatal-error () `(or serious-condition usocket:ns-condition usocket:socket-condition))
 
 (defgeneric condition-http-return-code (c)
-  (:method ((c condition)) 500))
+  (:method ((c condition)) 500)
+  (:method ((c sb-sys:deadline-timeout)) 429))
 
 (defmethod error-to-html :around ((condition condition))
   <div class="gw-error">
