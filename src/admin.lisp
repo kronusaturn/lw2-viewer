@@ -135,3 +135,16 @@
     (format stream "[~%")
     (map-posts-and-comments fn :skip-comments t)
     (format stream "]~%")))
+
+(defun update-slug-to-userid-mapping ()
+  (with-cache-transaction
+      (call-with-cursor
+       "userid-to-slug"
+       (lambda (db cursor)
+	 (declare (ignore db))
+	 (let ((op :first))
+	   (loop
+	    (multiple-value-bind (val key) (cursor-get cursor op)
+	      (setf op :next)
+	      (unless val (return nil))
+	      (cache-put-if-not-exists "slug-to-userid" val key))))))))
