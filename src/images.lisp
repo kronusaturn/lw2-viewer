@@ -9,7 +9,8 @@
 (sb-ext:defglobal *image-convert-semaphore* (sb-thread:make-semaphore :count 2))
 
 (defmacro run-program (program-args &rest lisp-args)
-  `(uiop:run-program (append *wrapper-program* (list ,@program-args)) ,@lisp-args))
+  `(sb-sys:with-deadline (:seconds 60)
+     (uiop:run-program (append *wrapper-program* (list ,@program-args)) ,@lisp-args)))
 
 (defun mime-type (image-filename)
   (run-program ("file" "--brief" "--mime-type" image-filename) :output (lambda (stream) (read-line stream))))
