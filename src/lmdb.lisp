@@ -212,11 +212,13 @@
 
 (defun cache-put (db-name key value &key (key-type :string) (value-type :string))
   (with-db (db db-name)
-    (if (lmdb:put db
-		  (encode-value key key-type)
-		  (encode-value value value-type))
-	value
-	nil)))
+    (let ((encoded-key (encode-value key key-type)))
+      (if value
+	  (if (lmdb:put db encoded-key
+			(encode-value value value-type))
+	      value
+	      nil)
+	  (lmdb:del db encoded-key nil)))))
 
 (defun cache-get (db-name key &key (key-type :string) (value-type :string) return-type)
   (multiple-value-bind (lmdb-type decoder) (accessor-decoder return-type value-type)
