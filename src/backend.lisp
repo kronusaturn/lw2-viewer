@@ -1029,29 +1029,33 @@
 
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
   (backend-graphql
-   (let* ((user-id (ccase user-identifier-type
-		     (:user-id user-identifier)
-		     (:user-slug (get-slug-userid user-identifier))))
-	  (query-string (lw2-query-string :user :single (alist :document-id user-id) :fields (list-cond* (auth-token :last-notifications-check) (user-fields))))
-	  (result (if auth-token
-		      (lw2-graphql-query query-string :auth-token auth-token)
-		      (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
-     (alist-bind ((user-id (or simple-string null) :--id)
-		  (display-name (or simple-string null))
-		  (full-name (or simple-string null))
-		  (slug (or simple-string null))
-		  (deleted boolean))
-		 result
-		 (when user-id
-	 (with-cache-transaction
-	   (when display-name
-	     (cache-username user-id display-name)
-	     (cache-user-full-name user-id (or full-name "")))
-	   (when slug
-	     (cache-user-slug user-id slug)
-	     (cache-slug-userid slug user-id))
-	   (user-deleted user-id deleted))))
-     result)))
+   (let ((user-id (ccase user-identifier-type
+		    (:user-id user-identifier)
+		    (:user-slug (get-slug-userid user-identifier)))))
+     (handler-bind (((or lw2-not-found-error lw2-not-allowed-error)
+		      (lambda (c)
+			(declare (ignore c))
+			(user-deleted user-id t))))
+       (let* ((query-string (lw2-query-string :user :single (alist :document-id user-id) :fields (list-cond* (auth-token :last-notifications-check) (user-fields))))
+	      (result (if auth-token
+			  (lw2-graphql-query query-string :auth-token auth-token)
+			  (lw2-graphql-query-timeout-cached query-string "user-json" user-id :revalidate revalidate :force-revalidate force-revalidate))))
+	 (alist-bind ((user-id (or simple-string null) :--id)
+		      (display-name (or simple-string null))
+		      (full-name (or simple-string null))
+		      (slug (or simple-string null))
+		      (deleted boolean))
+		     result
+		     (when user-id
+		       (with-cache-transaction
+			   (when display-name
+			     (cache-username user-id display-name)
+			     (cache-user-full-name user-id (or full-name "")))
+			 (when slug
+			   (cache-user-slug user-id slug)
+			   (cache-slug-userid slug user-id))
+			 (user-deleted user-id deleted))))
+	 result)))))
 
 (define-backend-function get-notifications (&key user-id (offset 0) (limit 40) auth-token)
   (backend-lw2-legacy
