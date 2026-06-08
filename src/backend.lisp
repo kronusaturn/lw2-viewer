@@ -1024,9 +1024,7 @@
   (backend-lw2-modernized
    (when user-id
      (if set
-	 (if status
-	     (cache-put "user-deleted" user-id "1")
-	     (cache-del "user-deleted" user-id))
+	 (cache-put "user-deleted" user-id (if status "1"))
 	 (cache-get "user-deleted" user-id :return-type 'existence)))))
 
 (define-backend-function get-user (user-identifier-type user-identifier &key (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*) auth-token)
