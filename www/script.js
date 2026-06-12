@@ -3118,7 +3118,7 @@ function setEditPostPageSubmitButtonText() {
 	GWLog("setEditPostPageSubmitButtonText");
 	if (!query("#content").hasClass("edit-post-page")) return;
 
-	queryAll("input[type='radio'][name='section'], .question-checkbox").forEach(radio => {
+	queryAll("input[type='radio'][name='section']").forEach(radio => {
 		radio.addEventListener("change", GW.postSectionSelectorValueChanged = (event) => {
 			GWLog("GW.postSectionSelectorValueChanged");
 			updateEditPostPageSubmitButtonText();
@@ -3133,9 +3133,9 @@ function updateEditPostPageSubmitButtonText() {
 	if (query("input#drafts").checked == true) 
 		submitButton.value = "Save Draft";
 	else if (query(".posting-controls").hasClass("edit-existing-post"))
-		submitButton.value = query(".question-checkbox").checked ? "Save Question" : "Save Post";
+		submitButton.value = "Save Post";
 	else
-		submitButton.value = query(".question-checkbox").checked ? "Submit Question" : "Submit Post";
+		submitButton.value = "Submit Post";
 }
 
 /*****************/
@@ -4736,7 +4736,6 @@ function mainInitializer() {
 	// with icons, to save space.
 	if (GW.isMobile && query(".edit-post-page")) {
 		query("label[for='link-post']").innerHTML = "&#xf0c1";
-		query("label[for='question']").innerHTML = "&#xf128";
 	}
 
 	// Add error message (as placeholder) if user tries to click Search with
