@@ -16,6 +16,8 @@
     #:oauth2.0-login-uri #:oauth2.0-client-id #:oauth2.0-client-secret
     #:backend-feed-crossposts
     #:backend-q-and-a #:backend-related-questions
+    #:backend-question-posts-allowed
+    #:question-posts-allowed
     #:backend-debates
     #:backend-alignment-forum
     #:backend-events
@@ -87,6 +89,9 @@
   (:metaclass backend-class))
 
 (defclass backend-q-and-a (backend-graphql) ()
+  (:metaclass backend-class))
+
+(defclass backend-question-posts-allowed (backend-graphql) ()
   (:metaclass backend-class))
 
 (defclass backend-related-questions (backend-graphql) ()
@@ -167,6 +172,7 @@
 			    backend-lw2-misc-features
 			    backend-algolia-search-v2
 			    backend-q-and-a
+			    backend-question-posts-allowed
 			    backend-related-questions
 			    backend-feed-crossposts
 			    backend-backlinks
@@ -198,6 +204,10 @@
 
 (defclass backend-arbital (backend-lmdb-cache) ()
   (:metaclass backend-class))
+
+(defgeneric question-posts-allowed (backend)
+  (:method ((backend backend-base)) nil)
+  (:method ((backend backend-question-posts-allowed)) t))
 
 (defun make-backend (type-string &rest args)
   (apply #'make-instance (symbolicate "BACKEND-" (string-upcase type-string)) args))
