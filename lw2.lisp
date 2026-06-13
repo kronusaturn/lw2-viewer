@@ -1377,6 +1377,7 @@
                                     :csrf-token csrf-token
                                     :title (cdr (assoc :title post-body))
                                     :url (cdr (assoc :url post-body))
+				    :question (cdr (assoc :question post-body))
 				    :tags-supported (typep *current-backend* 'backend-accordius)
 				    :tags (when (and post-id (typep *current-backend* 'backend-accordius)) (do-wl-rest-query (format nil "posts/~a/update_tagset/" post-id) '()))
                                     :post-id post-id
@@ -1387,7 +1388,7 @@
 				    :submit-to-frontpage (if post-id (cdr (assoc :submit-to-frontpage post-body)) t)
                                     :markdown-source (or (and post-id (markdown-source :post post-id html-body))
 							 "")))))
-    (:post (text submit-to-frontpage)
+    (:post (text question submit-to-frontpage)
      (let ((lw2-auth-token *current-auth-token*)
            (url (if (string= url "") nil url)))
        (assert lw2-auth-token)
@@ -1399,7 +1400,8 @@
 		(t :meta (or (string= section "meta") :false))
 		((not post-id) :is-event nil)
 		(t :draft (or (string= section "drafts") :false))
-		((typep *current-backend* 'backend-lw2-misc-features) :submit-to-frontpage (and submit-to-frontpage t))))
+		((typep *current-backend* 'backend-lw2-misc-features) :submit-to-frontpage (and submit-to-frontpage t))
+		((not post-id) :question (if question t :false))))
 	      (post-unset
 	       (list-cond
 		((not link-post) :url t)))

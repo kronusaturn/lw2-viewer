@@ -11,6 +11,9 @@
 		<label for="tags">Tags:</label>
 		<input type="text" name="tags" id="tags-input" value="{{ tags }}">
 		{% endif %}
+		<input type="checkbox" class="question-checkbox" name="question" id="question"{% if question %} checked{% endif %}>
+		<label for="question" class="iconify">Question post</label>
+		
 		{% if lesswrong-misc %}
 		<input type="checkbox" name="submit-to-frontpage" id="submit-to-frontpage"{% if submit-to-frontpage %} checked{% endif %}>
 		<label for="submit-to-frontpage">Moderators may promote to frontpage</label>
