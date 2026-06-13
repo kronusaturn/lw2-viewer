@@ -1384,6 +1384,7 @@
                                     :section-list (loop for (name desc) in '(("all" "All") ("meta" "Meta") ("frontpage" "Frontpage") ("drafts" "Drafts"))
 						     when (or (string= name section) (member name '("drafts" "all") :test #'string=))
 						     collect (alist :name name :desc desc :selected (string= name section)))
+				    :question-posts-allowed (question-posts-allowed *current-backend*)
 				    :lesswrong-misc (typep *current-backend* 'backend-lw2-misc-features)
 				    :submit-to-frontpage (if post-id (cdr (assoc :submit-to-frontpage post-body)) t)
                                     :markdown-source (or (and post-id (markdown-source :post post-id html-body))
@@ -1401,7 +1402,9 @@
 		((not post-id) :is-event nil)
 		(t :draft (or (string= section "drafts") :false))
 		((typep *current-backend* 'backend-lw2-misc-features) :submit-to-frontpage (and submit-to-frontpage t))
-		((not post-id) :question (if question t :false))))
+		((and (question-posts-allowed *current-backend*)
+		      (not post-id))
+		 :question (if question t :false))))
 	      (post-unset
 	       (list-cond
 		((not link-post) :url t)))
