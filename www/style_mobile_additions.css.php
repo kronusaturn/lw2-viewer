@@ -1226,11 +1226,6 @@ a.comment-parent-link::after {
 		font-weight: 900;
 		justify-self: start;
 	}
-	#edit-post-form .post-meta-fields .question-checkbox,
-	#edit-post-form .post-meta-fields .question-checkbox + label {
-		grid-column: 6;
-		margin-left: unset;
-	}
 	#edit-post-form .post-meta-fields input[type='radio'] + label {
 		align-self: start;
 	}

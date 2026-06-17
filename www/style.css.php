@@ -3221,13 +3221,6 @@ a.comment-parent-link:hover::after {
 	grid-row: 1;
 	grid-column: 6;
 }
-#edit-post-form .question-checkbox,
-#edit-post-form .question-checkbox + label {
-	grid-row: 3;
-	grid-column: 5;
-	justify-self: start;
-	margin-left: 1.5em;
-}
 
 #edit-post-form .post-meta-fields label[for="submit-to-frontpage"] {
 	grid-row: 4;
