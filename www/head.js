@@ -770,6 +770,8 @@ function updateVoteExplanation(control) {
 
 	if(control.query("button"))
 		explanation += "<p>Double-click for strong vote.</p>";
+	else if(loggedInUserId)
+		explanation += "<p>Please view in context to vote.</p>";
 
 	let explanationElem = newElement("DIV", { "class": "explanation" });
 	explanationElem.innerHTML = explanation;
