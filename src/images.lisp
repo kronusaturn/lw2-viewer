@@ -82,7 +82,7 @@
     (setf histogram-list (sort histogram-list #'>))
     (let ((tenth (first (nthcdr 10 histogram-list))))
       (and histogram-list
-	   (> (/ (float background-pixels) (float total-pixels)) 0.3333333)
+	   (> (/ (float background-pixels) (float total-pixels)) 0.1)
 	   (> (/ total-brightness total-pixels) 0.5d0)
 	   (> background-brightness (* 3 192))
 	   (or (not tenth)
@@ -110,7 +110,7 @@
 (define-cache-database 'lw2.backend-modules:backend-lmdb-cache "dynamic-content-images" "cached-images")
 
 (sb-ext:defglobal *image-threads* (make-hash-table :test 'equal :synchronized t))
-(defparameter *current-version* 6)
+(defparameter *current-version* 7)
 
 (defun filename-to-uri (filename)
   (concatenate 'base-string "/proxy-assets/" filename))
