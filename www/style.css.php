@@ -3675,11 +3675,13 @@ ol {
 
 .footnote-item > :not(.nothing) {
 	margin: 0 0.2em;
+	flex: 1 1 auto;
 }
 
 .footnote-item > :first-child {
 	margin-left: -0.2em;
 	margin-right: 0;
+	flex: 0 1 auto;
 }
 
 .footnote-back-link a:not(.nothing) {
