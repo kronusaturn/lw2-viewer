@@ -104,7 +104,7 @@
        (compare-streams (stream-error-stream condition) *html-output*)))
 
 (defun interesting-condition-p (condition)
-  (not (or (typep condition 'lw2-client-error)
+  (not (or (typep condition '(or lw2-client-error #+sbcl sb-ext:timeout))
 	   (html-output-stream-error-p condition))))
 
 (defun log-condition (condition)
