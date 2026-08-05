@@ -309,14 +309,15 @@
 			       args
 			       :test #'string=)))))
 
+(defun direct-class-is (node &rest args)
+  (declare (dynamic-extent args))
+  (intersection (class-list node) args
+		:test #'string=))
+
 (defun class-is (node &rest args)
-  (declare (type plump:node node)
-	   (dynamic-extent args))
+  (declare (dynamic-extent args))
   (any-ancestor node (lambda (n)
-		       (intersection
-			(class-list n)
-			args
-			:test #'string=))))
+		       (apply #'direct-class-is n args))))
 
 (defun text-class-is-not (node &rest args)
   (declare (type plump:node node)
