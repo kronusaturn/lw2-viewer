@@ -675,17 +675,6 @@
 						 (last-uri `("last" ,last-uri "Last" :nofollow t)))))
 	    (format out-stream "<script>document.querySelectorAll('#bottom-bar').forEach(bb => { bb.classList.add('decorative'); });</script>"))))))
 
-(defun decode-json-as-hash-table (json-source)
-  (let (current-hash-table current-key)
-    (declare (special current-hash-table current-key))
-    (json:bind-custom-vars
-     (:beginning-of-object (lambda () (setf current-hash-table (make-hash-table :test 'equal)))
-      :object-key (lambda (x) (setf current-key x))
-      :object-value (lambda (x) (setf (gethash current-key current-hash-table) x))
-      :end-of-object (lambda () current-hash-table)
-      :aggregate-scope '(current-hash-table current-key))
-     (json:decode-json-from-source json-source))))
-
 (defun get-ignore-hash (&optional (user-id (logged-in-userid)))
   (if-let (ignore-json (and user-id (cache-get "user-ignore-list" user-id)))
 	  (decode-json-as-hash-table ignore-json)

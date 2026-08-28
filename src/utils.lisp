@@ -16,6 +16,7 @@
 	   #:hash-cond #:sethash
 	   #:safe-decode-json
 	   #:string-to-existing-keyword #:call-with-safe-json #:js-true
+	   #:decode-json-as-hash-table
 	   #:delete-easy-handler #:abnormal-unwind-protect
 	   #:ignorable-multiple-value-bind
 	   #:compare-streams #:ensure-character-stream
@@ -369,6 +370,17 @@ specified, the KEYWORD symbol with the same name as VARIABLE-NAME is used."
   (let ((json:*json-identifier-name-to-lisp* #'identity)
 	(json:*identifier-name-to-key* #'string-to-existing-keyword))
     (funcall fn)))
+
+(defun decode-json-as-hash-table (json-source)
+  (let (current-hash-table current-key)
+    (declare (special current-hash-table current-key))
+    (json:bind-custom-vars
+     (:beginning-of-object (lambda () (setf current-hash-table (make-hash-table :test 'equal)))
+      :object-key (lambda (x) (setf current-key x))
+      :object-value (lambda (x) (setf (gethash current-key current-hash-table) x))
+      :end-of-object (lambda () current-hash-table)
+      :aggregate-scope '(current-hash-table current-key))
+     (json:decode-json-from-source json-source))))
 
 (defun delete-easy-handler (name)
   (setf hunchentoot::*easy-handler-alist*
