@@ -991,7 +991,7 @@
 				      (alist :document-id sequence-id)
 				      :fields `(:--id :title :created-at :user-id
 						      (:contents :html)
-						      (:chapters :title :subtitle :number (:contents :html) (:posts ,@(request-fields :post :list nil)))
+						      (:chapters :title :subtitle :number (:contents :html) :----typename (:posts ,@(request-fields :post :list nil)))
 						      :grid-image-id :----typename))
 		    :return-type :both)
 		 (let ((posts (sequence-post-ids sequence)))
