@@ -739,6 +739,17 @@ GW.commentActionButtonClicked = (event) => {
 	event.target.blur();
 };
 
+function prepareComment() {
+	var e = document.currentScript.parentElement.querySelector("a.permalink");
+	var realLink = e.getAttribute("href");
+	var fakeLink = realLink.replace("/posts/", "/stsop/");
+	var fn = function () { e.setAttribute("href", realLink) };
+
+	e.setAttribute("href", fakeLink);
+	e.addEventListener("mouseenter", fn, {once: true});
+	e.addEventListener("focus", fn, {once: true});
+}
+
 function initializeCommentControls() {
 	e = newElement("DIV", { "class": "comment-controls posting-controls" });
 	document.currentScript.insertAdjacentElement("afterend", e);

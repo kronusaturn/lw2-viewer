@@ -139,6 +139,7 @@
 			  (clean-html* html-body))))
 	      </div>
 	      (when post-id (backlinks-to-html (get-backlinks post-id comment-id) (format nil "~A-~A" post-id comment-id)))
+	      <script>prepareComment\(\)</script>
 	      (when *enable-voting*
 	        <script>initializeCommentControls\(\)</script>)
 	    </div>))))
