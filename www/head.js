@@ -740,9 +740,9 @@ GW.commentActionButtonClicked = (event) => {
 };
 
 function prepareComment() {
-	if (navigator.userAgent.indexOf("compatible; ") > 0 ||
-	    navigator.userAgent.indexOf(" +http") > 0)
+	if (!GW.mainstreamBrowser)
 		return;
+
 	var e = document.currentScript.parentElement.querySelector("a.permalink");
 	var realLink = e.getAttribute("href");
 	var fakeLink = realLink.replace("/posts/", "/stsop/");

@@ -555,7 +555,10 @@
 		 ("loggedInUserSlug" (or (logged-in-user-slug) ""))))
 	      (set-script-variables
 	       ("applicationServerKey" (get-vapid-public-key))
-	       ("GW" (alist "useFancyFeatures" (not (typep *current-site* 'arbital-site))
+	       ("GW" (alist "mainstreamBrowser" (let ((ua (hunchentoot:header-in* :user-agent)))
+						  (and (ppcre:scan " (Chrome|Safari|Firefox)/\\d" ua)
+						       (not (ppcre:scan "\\+https?:/|\bcompatible;" ua))))
+			    "useFancyFeatures" (not (typep *current-site* 'arbital-site))
 			    "secureCookies" (to-boolean (site-secure *current-site*))
 			    "csrfToken" csrf-token
 			    "assets" (alist "popup.svg" (generate-versioned-link "/assets/popup.svg"))
