@@ -2620,6 +2620,10 @@ a.comment-parent-link:hover::after {
 	visibility: visible;
 }
 
+.comment-meta .hockey {
+	display: none;
+}
+
 /*************************/
 /* COMMENTS COMPACT VIEW */
 /*************************/

@@ -79,7 +79,9 @@
 					   (generate-item-link :post post-id)
 					   (cond ((or answer parent-answer-id) "answer") (t "comment"))
 					   comment-id)
-		   title="Permalink"></a>)
+		   title="Permalink"></a>
+		(when (mainstream-browser)
+		  <a class="hockey" href=("/stsop/~A/comment/~A" post-id comment-id)></a>))
 	      (with-html-stream-output
 		(when page-url
 		  <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)

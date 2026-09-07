@@ -2,7 +2,8 @@
   (:use #:cl #:lw2.links #:lw2.html-reader)
   (:import-from #:lw2.utils #:hash-cond #:alist-bind)
   (:export #:pretty-time #:pretty-time-js #:pretty-time-html
-	   #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons))
+	   #:pretty-number #:generate-post-auth-link #:clean-lw-link #:votes-to-tooltip #:vote-buttons
+	   #:mainstream-browser))
 
 (in-package #:lw2.interface-utils)
 
@@ -118,3 +119,8 @@
 	    (voting "agreement"
 		    (extended-tooltip)
 		    (extended-text)))))))
+
+(defun mainstream-browser ()
+  (let ((ua (hunchentoot:header-in* :user-agent)))
+    (and (ppcre:scan " (Chrome|Safari|Firefox)/\\d" ua)
+	 (not (ppcre:scan "\\+https?:/|\bcompatible;" ua)))))
