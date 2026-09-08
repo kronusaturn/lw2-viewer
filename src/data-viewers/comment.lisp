@@ -81,7 +81,7 @@
 					   comment-id)
 		   title="Permalink"></a>
 		(when (mainstream-browser)
-		  <a class="hockey" href=("/stsop/~A/comment/~A" post-id comment-id)></a>))
+		  <a class="hockey" href=("/stsop/~A/~A/comment/~A" post-id (get-post-slug post-id) comment-id)></a>))
 	      (with-html-stream-output
 		(when page-url
 		  <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
