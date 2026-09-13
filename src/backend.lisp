@@ -571,10 +571,12 @@
 		    (values result count last-modified)))))
        (block retrieve-result
 	 (handler-bind
-	     ((fatal-error (lambda (c)
-			     (declare (ignore c))
-			     (if cached-result
-				 (return-from retrieve-result (get-cached-result))))))
+	     (((and fatal-error
+		    (not lw2-client-error))
+	       (lambda (c)
+		 (declare (ignore c))
+		 (if cached-result
+		   (return-from retrieve-result (get-cached-result))))))
 	   (if (and cached-result (or (not revalidate)
 				      (and (not force-revalidate) (eq is-fresh :skip))))
 	       (get-cached-result)
