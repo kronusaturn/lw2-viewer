@@ -72,7 +72,7 @@
 (define-condition lw2-login-required-error (lw2-client-error) ((http-return-code :allocation :class :initform 403))
   (:report "This document is only visible to logged-in users."))
 
-(define-condition lw2-rate-limit-exceeded (lw2-client-error) ((http-return-code :allocation :class :initform 429))
+(define-condition lw2-rate-limit-exceeded (lw2-error) ((http-return-code :allocation :class :initform 429))
   (:report "Rate limit exceeded. Try again later."))
 
 (define-condition lw2-server-error (lw2-error)
