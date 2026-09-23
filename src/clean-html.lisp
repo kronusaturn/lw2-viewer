@@ -79,7 +79,7 @@
 (declaim (ftype function url-scanner))
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (setf (fdefinition 'url-scanner) (ppcre:create-scanner
-				    "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly))(?:\\:[0-9]+){0,1}(?:(?:/|\\?(?!(?:$|\\s)))(?:(?:(\\()|\\)(?![.,;:?!]?(?:$|\\s))|[-\\w\\d.,;:?'\\\\+@!&%$#=~–_/])*(?(1)[-\\w\\d\\\\+@&%$#=~_/)]|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
+				    "(?:https?://[-a-zA-Z0-9]+\\.[-a-zA-Z0-9.]+|[-a-zA-Z0-9.]+\\.(?:com|edu|gov|mil|net|org|int|biz|info|name|museum|us|ca|uk|io|ly)(?=/))(?:\\:[0-9]+){0,1}(?:(?:/|\\?(?!(?:$|\\s)))(?:(?:(\\()|\\)(?![.,;:?!]?(?:$|\\s))|[-\\w\\d.,;:?'\\\\+@!&%$#=~–_/])*(?(1)[-\\w\\d\\\\+@&%$#=~_/)]|[-\\w\\d\\\\+@&%$#=~_/]))?)?"
 				    :single-line-mode t)))
 
 (defun hyphenate-string (string)
@@ -777,7 +777,11 @@
 		      ((or
 			(and (ppcre:scan "^\s*https?://" (plump:text node))
 			     (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
-			(notany (lambda (attr) (nonempty-string (plump:attribute node attr))) '("href" "name" "id")))
+			(notany (lambda (attr) (nonempty-string (plump:attribute node attr))) '("href" "name" "id"))
+			;; http link to a bare domain name was probably inappropriately auto-linked on LW side.
+			(and (not (mismatch "http://" (plump:attribute node "href") :end2 7))
+			     (not (find #\/ (plump:attribute node "href") :start 7))
+			     (string= (plump:attribute node "href") (plump:text node) :start1 7)))
 		       (flatten-element node))
 		      (t (tagbody start
 			    (let* ((next-sibling (plump:next-sibling node))
