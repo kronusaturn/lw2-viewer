@@ -14,7 +14,8 @@
 	#:lw2.data-viewers.post
 	#:lw2.data-viewers.comment
 	#:lw2.client-script
-	#:lw2.resources)
+	#:lw2.resources
+	#:lw2.honeypot)
   (:import-from #:alexandria #:with-gensyms #:once-only #:ensure-list #:when-let #:when-let* #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
@@ -2197,6 +2198,28 @@
     (setf (hunchentoot:header-out "Content-Type") "text/javascript")
     (let ((stream (make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
       (write-package-client-scripts package stream))))
+
+(define-page view-nonsense (:regex "^/jorts/") ()
+  (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
+  (with-response-stream (*standard-output*)
+    <html>
+      <head>
+        <title>(emit-random-sentence)</title>
+        <meta name="robots" content="noindex, nofollow, none">
+      </head>
+      <body>
+        (loop do
+	      (loop for initial = t then nil
+		    do (unless initial (write-char #\Space))
+		    (if (zerop (random 3))
+			(progn <a href=(random-url)>(emit-random-sentence)</a>)
+			(emit-random-sentence))
+		    (write-char #\.)
+		    while (plusp (random 20)))
+	      (write-string "<p>")
+	      while (plusp (random 200)))
+      </body>
+    </html>))
 
 (hunchentoot:define-easy-handler
     (view-proxy-asset

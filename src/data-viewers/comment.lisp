@@ -1,5 +1,6 @@
 (uiop:define-package #:lw2.data-viewers.comment
-  (:use #:cl #:lw2.html-reader #:lw2.utils #:lw2.schema-type #:lw2.context #:lw2.user-context #:lw2.backend #:lw2.links #:lw2.interface-utils #:lw2.sites #:lw2.clean-html #:lw2.lmdb #:lw2.backlinks)
+    (:use #:cl #:lw2.html-reader #:lw2.utils #:lw2.schema-type #:lw2.context #:lw2.user-context #:lw2.backend #:lw2.links #:lw2.interface-utils #:lw2.sites #:lw2.clean-html #:lw2.lmdb #:lw2.backlinks)
+  (:import-from #:lw2.honeypot #:random-url)
   (:export #:*comment-individual-link* #:comment-to-html))
 
 (in-package #:lw2.data-viewers.comment)
@@ -81,7 +82,7 @@
 					   comment-id)
 		   title="Permalink"></a>
 		(when (mainstream-browser)
-		  <a class="hockey" href=("/stsop/~A/~A/comment/~A" post-id (get-post-slug post-id) comment-id)></a>))
+		  <a class="hockey" href=(random-url)></a>))
 	      (with-html-stream-output
 		(when page-url
 		  <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
