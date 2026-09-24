@@ -58,8 +58,9 @@
 (defun read-unlock-slowpath (rwlock)
   (with-rwlock-accessors (rwlock)
     (with-mutex (write-waitqueue-mutex)
-      (decf (the (signed-byte 61) draining-readers))
-      (when (= draining-readers 0)
+      (when (plusp draining-readers)
+	(decf (the (signed-byte 61) draining-readers)))
+      (when (zerop draining-readers)
 	(condition-notify write-waitqueue)))
     (values nil)))
 
