@@ -122,5 +122,5 @@
 
 (defun mainstream-browser ()
   (let ((ua (hunchentoot:header-in* :user-agent)))
-    (and (ppcre:scan " (Chrome|Safari|Firefox)/\\d" ua)
+    (and (ppcre:scan " (Chrome|Safari|Firefox|CriOS)/\\d" ua)
 	 (not (ppcre:scan "\\+https?:/|\\bcompatible;" ua)))))
