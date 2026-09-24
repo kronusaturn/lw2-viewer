@@ -56,9 +56,7 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 self.addEventListener('install', (event) => {
-	event.waitUntil(
-		caches.open("v1").then(openedCache => { cache = openedCache; }).then(self.skipWaiting())
-	);
+	self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
