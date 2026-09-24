@@ -9,7 +9,8 @@
 		#:without-interrupts #:allow-with-interrupts #:with-interrupts)
   (:import-from #:alexandria
 		#:with-gensyms
-		#:once-only)
+		#:once-only
+		#:unwind-protect-case)
   (:export #:rwlock #:make-rwlock #:read-lock #:read-unlock #:write-lock #:write-unlock #:with-read-lock #:with-write-lock #:with-rwlock-protect))
 
 (in-package #:lw2.rwlock)
@@ -39,9 +40,12 @@
 
 (defun read-lock-slowpath (rwlock)
   (with-rwlock-accessors (rwlock)
-    (with-mutex (read-waitqueue-mutex)
-      (loop until (evenp (atomic-incf readers 0))
-	 do (or (condition-wait read-waitqueue read-waitqueue-mutex) (error "Waitqueue error"))))
+    (unwind-protect-case
+     ()
+     (with-mutex (read-waitqueue-mutex)
+       (loop until (evenp (atomic-incf readers 0))
+	     do (or (condition-wait read-waitqueue read-waitqueue-mutex) (error "Waitqueue error"))))
+     (:abort (read-unlock rwlock)))
     (values nil)))
 
 (defun read-lock (rwlock)
@@ -69,12 +73,15 @@
 (defun write-lock (rwlock)
   (with-rwlock-accessors (rwlock)
     (grab-mutex write-mutex)
-    (with-mutex (write-waitqueue-mutex)
-      (let ((orig-readers (atomic-incf readers 1)))
-	(unless (= orig-readers 0)
-	  (incf (the (signed-byte 61) draining-readers) (the (signed-byte 61) (ash orig-readers -1)))
-	  (loop until (= draining-readers 0)
-		do (or (condition-wait write-waitqueue write-waitqueue-mutex) (error "Waitqueue error"))))))
+    (unwind-protect-case
+     ()
+     (with-mutex (write-waitqueue-mutex)
+       (let ((orig-readers (atomic-incf readers 1)))
+	 (unless (= orig-readers 0)
+	   (incf (the (signed-byte 61) draining-readers) (the (signed-byte 61) (ash orig-readers -1)))
+	   (loop until (= draining-readers 0)
+		 do (or (condition-wait write-waitqueue write-waitqueue-mutex) (error "Waitqueue error"))))))
+     (:abort (write-unlock rwlock)))
     (values nil)))
 
 (defun write-unlock (rwlock)
@@ -82,6 +89,7 @@
     (with-mutex (read-waitqueue-mutex)
       (atomic-decf readers 1)
       (condition-broadcast read-waitqueue))
+    (setf draining-readers 0)
     (release-mutex write-mutex)
     (values nil)))
 
