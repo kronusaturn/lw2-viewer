@@ -1,7 +1,8 @@
 let cache = null;
 
 self.addEventListener('fetch', function(event) {
-	if(event.request.url.match(/^\/([a-z]*\.(js|css)|css\/|assets\/)/)) {
+	if(event.request.url.match(/^\/([a-z]*\.(js|css)|css\/|assets\/)/) &&
+	   !event.request.url.match(/^\/reveal.css$/)) {
 		let responder = cache => {
 			return cache.match(event.request).then(match => {
 				if(match) {

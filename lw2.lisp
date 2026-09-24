@@ -1204,7 +1204,9 @@
 		    <script>postId=(with-html-stream-output (:stream stream) (json:encode-json post-id stream))</script>
 		    <script>alignmentForumPost=(if (cdr (assoc :af post)) "true" "false")</script>
 		    (when (logged-in-userid)
-			      (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id))))
+		      (call-with-server-data 'process-vote-data (format nil "/karma-vote/post?post-id=~A" post-id)))
+		    (when comment-id
+		      <link rel="stylesheet" href="/reveal.css">))
 		  (retrieve-individual-comment (comment-thread-type)
 		    (let* ((comments (case comment-thread-type
 				       (:comment (get-post-comments post-id))
