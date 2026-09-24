@@ -82,7 +82,7 @@
 					   comment-id)
 		   title="Permalink"></a>
 		(when (mainstream-browser)
-		  <a class="hockey" href=(random-url)></a>))
+		  <a href=(random-url) class="hockey" rel="nofollow"></a>))
 	      (with-html-stream-output
 		(when page-url
 		  <a class="lw2-link" href=(clean-lw-link page-url) title=(main-site-abbreviation *current-site*)></a>)
