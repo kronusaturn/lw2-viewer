@@ -50,6 +50,11 @@
 (defparameter *default-prefs* (alist :items-per-page 20 :default-sort "new"))
 (defvar *current-prefs* nil)
 
+(defun requests-in-progress ()
+  (if (boundp '*test-acceptor*) ; TODO fix this hack
+      (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))
+      0))
+
 (defun get-post-sequences (post-id)
   (when-let (sequence-ids (get-post-sequence-ids post-id))
     (with-collector (col)
@@ -779,9 +784,7 @@
 							   (or (hunchentoot:header-in* :x-max-requests)
 							       (return nil)))))
 					 *max-requests-in-progress*))
-	   (requests-in-progress (if (boundp '*test-acceptor*) ; TODO fix this hack
-				     (hunchentoot:acceptor-requests-in-progress (symbol-value '*test-acceptor*))
-				     0)))
+	   (requests-in-progress (requests-in-progress)))
       (declare (type (or null (and fixnum (integer 0))) max-requests-in-progress)
 	       (type (and fixnum (integer 0)) requests-in-progress))
       (when (and max-requests-in-progress
