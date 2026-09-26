@@ -1178,6 +1178,12 @@
      (when (hunchentoot:get-parameter "commentId")
        (redirect (format nil "~A/comment/~A" (generate-item-link :post post-id) comment-id))
        (return))
+     (when (and comment-id
+		(mainstream-browser)
+		(not (string= comment-id (hunchentoot:cookie-in "flood-auth"))))
+       (set-cookie "flood-auth" comment-id :max-age 60)
+       (redirect (hunchentoot:request-uri*))
+       (return))
      (let* ((lw2-auth-token *current-auth-token*)
 	    (preview (string-equal format "preview"))
 	    (show-comments (and (not preview) show-comments))
