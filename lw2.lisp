@@ -2203,26 +2203,27 @@
       (write-package-client-scripts package stream))))
 
 (define-page view-nonsense (:regex "^/jorts/") ()
-  (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
-  (with-response-stream (*standard-output*)
-    <html>
-      <head>
-        <title>(emit-random-sentence)</title>
-        <meta name="robots" content="noindex, nofollow, none">
-      </head>
-      <body>
-        (loop do
-	      (loop for initial = t then nil
-		    do (unless initial (write-char #\Space))
-		    (if (zerop (random 3))
-			(progn <a href=(random-url)>(emit-random-sentence)</a>)
-			(emit-random-sentence))
-		    (write-char #\.)
-		    while (plusp (random 20)))
-	      (write-string "<p>")
-	      while (plusp (random 200)))
-      </body>
-    </html>))
+  (let ((nonsense-paragraphs (* 4 (ceiling *max-requests-in-progress* (max 1 (requests-in-progress))))))
+    (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
+    (with-response-stream (*standard-output*)
+      <html>
+        <head>
+          <title>(emit-random-sentence)</title>
+          <meta name="robots" content="noindex, nofollow, none">
+        </head>
+        <body>
+          (loop for paragraph-counter from 1 to nonsense-paragraphs
+		do
+		(loop for initial = t then nil
+		      do (unless initial (write-char #\Space))
+		      (if (zerop (random 3))
+			  (progn <a href=(random-url)>(emit-random-sentence)</a>)
+			  (emit-random-sentence))
+		      (write-char #\.)
+		      while (plusp (random 20)))
+		(write-string "<p>"))
+        </body>
+      </html>)))
 
 (hunchentoot:define-easy-handler
     (view-proxy-asset
