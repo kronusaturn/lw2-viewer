@@ -771,34 +771,38 @@
 		      (handle-codecogs node src)))
 		   ((not (plump:parent node)) nil)
 		   ((tag-is node "a")
-		    (cond
-		      ((not (plump:attribute node "href"))
-		       (move-children-out-of-node node :keep t))
-		      ((or
-			(and (ppcre:scan "^\s*https?://" (plump:text node))
-			     (not (find #\HORIZONTAL_ELLIPSIS (plump:text node))))
-			(notany (lambda (attr) (nonempty-string (plump:attribute node attr))) '("href" "name" "id"))
-			;; http link to a bare domain name was probably inappropriately auto-linked on LW side.
-			(and (not (mismatch "http://" (plump:attribute node "href") :end2 7))
-			     (not (find #\/ (plump:attribute node "href") :start 7))
-			     (string= (plump:attribute node "href") (plump:text node) :start1 7)))
-		       (flatten-element node))
-		      (t (tagbody start
-			    (let* ((next-sibling (plump:next-sibling node))
-				   (next-text-node (if (plump:text-node-p next-sibling) next-sibling))
-				   (next-next-sibling (if next-text-node (plump:next-sibling next-text-node) next-sibling))
-				   (next-a (if (and next-next-sibling (tag-is next-next-sibling "a")) next-next-sibling)))
-			      (when (and next-a
-					 (or (not next-text-node) (string-is-whitespace (plump:text next-text-node)))
-					 (string= (plump:attribute node "href") (plump:attribute next-a "href")))
-				(when next-text-node
-				  (plump:remove-child next-text-node)
-				  (plump:append-child node next-text-node))
-				(loop for c across (plump:children next-a)
-				   do (progn (plump:remove-child c)
-					     (plump:append-child node c)))
-				(plump:remove-child next-a)
-				(go start)))))))
+		    (let ((href (plump:attribute node "href"))
+			  (text (plump:text node)))
+		      (cond
+			((not href)
+			 (move-children-out-of-node node :keep t))
+			((or
+			  (and (ppcre:scan "^\s*https?://" text)
+			       (not (find #\HORIZONTAL_ELLIPSIS text)))
+			  (notany (lambda (attr)
+				    (nonempty-string (plump:attribute node attr)))
+				  '("href" "name" "id"))
+			  ;; http link to a bare domain name was probably inappropriately auto-linked on LW side.
+			  (and (ppcre:scan "^http://[^/]*$" href)
+			       (>= (length href) 7)
+			       (string= href text :start1 7)))
+			 (flatten-element node))
+			(t (tagbody start
+			      (let* ((next-sibling (plump:next-sibling node))
+				     (next-text-node (if (plump:text-node-p next-sibling) next-sibling))
+				     (next-next-sibling (if next-text-node (plump:next-sibling next-text-node) next-sibling))
+				     (next-a (if (and next-next-sibling (tag-is next-next-sibling "a")) next-next-sibling)))
+				(when (and next-a
+					   (or (not next-text-node) (string-is-whitespace (plump:text next-text-node)))
+					   (string= (plump:attribute node "href") (plump:attribute next-a "href")))
+				  (when next-text-node
+				    (plump:remove-child next-text-node)
+				    (plump:append-child node next-text-node))
+				  (loop for c across (plump:children next-a)
+					do (progn (plump:remove-child c)
+						  (plump:append-child node c)))
+				  (plump:remove-child next-a)
+				  (go start))))))))
 		   ((tag-is node "ul" "ol")
 		    (setf wayward-li-container node)
 		    (let ((new-children (plump:make-child-array)))
