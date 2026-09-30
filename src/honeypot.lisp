@@ -31,14 +31,14 @@
     result))
 
 (defun random-word (&optional capitalize)
-  (let* ((word (aref *word-array* (random (length *word-array*)))))
+  (let* ((word (aref *word-array* (mod (random (expt 2 24)) (length *word-array*)))))
     (if capitalize (capitalize word) word)))
 
 (defun emit-random-sentence ()
     (loop for initial = t then nil
 	  do (unless initial (write-char #\Space))
 	  (write-string (random-word initial))
-	  while (plusp (random 5))))
+	  while (plusp (random 4))))
 
 (defun random-url ()
   (with-output-to-string (*standard-output*)

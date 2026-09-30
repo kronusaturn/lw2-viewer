@@ -2216,11 +2216,11 @@
 		do
 		(loop for initial = t then nil
 		      do (unless initial (write-char #\Space))
-		      (if (zerop (random 3))
+		      (if (zerop (random 2))
 			  (progn <a href=(random-url)>(emit-random-sentence)</a>)
 			  (emit-random-sentence))
 		      (write-char #\.)
-		      while (plusp (random 20)))
+		      while (plusp (random 32)))
 		(write-string "<p>"))
         </body>
       </html>)))
