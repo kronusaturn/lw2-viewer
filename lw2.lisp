@@ -1184,8 +1184,10 @@
 	    (*enable-voting* (not (null (logged-in-userid)))))
        (when (and comment-id
 		  (not preview)
+		  (not (logged-in-userid))
 		  (mainstream-browser)
-		  (not (string= comment-id (hunchentoot:cookie-in "flood-auth"))))
+		  (not (string= comment-id (hunchentoot:cookie-in "flood-auth")))
+		  (> (requests-in-progress) 2))
 	 (set-cookie "flood-auth" comment-id :max-age 60)
 	 (redirect (hunchentoot:request-uri*))
 	 (return))
