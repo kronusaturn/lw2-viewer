@@ -943,7 +943,13 @@
 			     (setf (plump:attribute node "href") href)
 			     (when *link-hook*
 			       (log-and-ignore-errors
-				(funcall *link-hook* href))))))))
+				(funcall *link-hook* href)))
+			     (create-dynamic-call node 'lw2.dynamic-link:dynamic-link
+						  href
+						  (alexandria:hash-table-alist (plump:attributes node))
+						  (with-output-to-string (stream)
+						    (loop for e across (plump:children node)
+							  do (plump:serialize e stream)))))))))
 		    ((tag-is node "img")
 		     (let ((width (ignore-errors (parse-integer (plump:attribute node "width"))))
 			   (height (ignore-errors (parse-integer (plump:attribute node "height")))))

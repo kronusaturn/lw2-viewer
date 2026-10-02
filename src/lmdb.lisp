@@ -13,7 +13,8 @@
    #:memoized-reference #:make-memoized-reference #:encode-memoized-reference #:decode-memoized-reference
    #:memoized-reference-p #:memoized-reference-hash
    #:dereference-text #:memoized-reference-exists
-   #:define-lmdb-memoized #:current-memo-hash #:*memoized-output-stream* #:*memoized-output-without-hyphens*)
+   #:define-lmdb-memoized #:current-memo-hash #:*memoized-output-stream* #:*memoized-output-without-hyphens*
+   #:dynamic-block-original-html)
   (:unintern #:lmdb-clear-db #:lmdb-put-string #:*db-mutex* #:*cache-environment-databases-list* #:*db-environments-lock*))
 
 (in-package #:lw2.lmdb) 
@@ -322,6 +323,11 @@
 (defvar *memoized-output-without-hyphens*) ;todo there's probably a better way to do this...
 (defparameter *memoized-output-dynamic-blocks* nil)
 
+(defparameter *dynamic-block-original-html-fn* nil)
+
+(defun dynamic-block-original-html ()
+  (funcall *dynamic-block-original-html-fn*))
+
 (defun write-memoized-data (array size)
   ;; This is unsafe anyway thanks to mem-aref, and it's pretty speed-critical
   (declare (optimize (safety 0) (debug 0))
@@ -373,10 +379,14 @@
 	    (destructuring-bind (start end fn &rest args) dynamic-block
 	      (process-span index start)
 	      (setf index start)
-	      (log-and-ignore-errors
-	       (handler-case
-		   (progn (apply fn args) (values))
-		 (:no-error () (setf index end)))))
+	      (let ((*dynamic-block-original-html-fn*
+		     (lambda ()
+		       (process-span index end)
+		       (setf index end))))
+		(log-and-ignore-errors
+		 (handler-case
+		     (progn (apply fn args) (values))
+		   (:no-error () (setf index end))))))
 	    (finally
 	     (process-span index size)))))
   t)
