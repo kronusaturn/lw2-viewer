@@ -59,17 +59,18 @@
   (when-let (sequence-ids (get-post-sequence-ids post-id))
     (with-collector (col)
       (dolist (sequence-id sequence-ids)
-	(let* ((sequence (get-sequence sequence-id))
-	       (posts (sequence-post-ids sequence)))
-	  (multiple-value-bind (prev next)
-	      (loop for prev = nil then (car current)
-		 for current on posts
-		 when (string= (car current) post-id)
-		 return (values prev (second current)))
-	    (when (or prev next)
-	      (col (list sequence
-			 (and prev (get-sequence-post sequence prev))
-			 (and next (get-sequence-post sequence next))))))))
+	(log-and-ignore-errors
+	 (let* ((sequence (get-sequence sequence-id))
+		(posts (sequence-post-ids sequence)))
+	   (multiple-value-bind (prev next)
+	       (loop for prev = nil then (car current)
+		     for current on posts
+		     when (string= (car current) post-id)
+		     return (values prev (second current)))
+	     (when (or prev next)
+	       (col (list sequence
+			  (and prev (get-sequence-post sequence prev))
+			  (and next (get-sequence-post sequence next)))))))))
       (col))))
 
 (defun rectify-post-relations (post-relations)
