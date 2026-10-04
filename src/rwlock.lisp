@@ -112,24 +112,25 @@
 
 (defmacro with-read-lock ((rwlock &key upgrade-fn) &body body)
   (if upgrade-fn
-      (with-gensyms (upgraded retry)
-	`(tagbody
-	  ,retry
-	    (let ((,upgraded nil))
-	      (flet ((,upgrade-fn ()
-		       (without-interrupts
-			   (allow-with-interrupts
-			    (unless (write-lock ,rwlock t)
-			      (go ,retry))
-			    (setf ,upgraded t)))))
-		(without-interrupts
-		    (allow-with-interrupts
-		     (read-lock ,rwlock)
-		     (unwind-protect
-			  (with-interrupts ,@body)
-		       (if (not ,upgraded)
-			   (read-unlock ,rwlock)
-			   (write-unlock ,rwlock)))))))))
+      (with-gensyms (upgraded retry block)
+	`(block ,block
+	   (tagbody ,retry
+	      (let ((,upgraded nil))
+		(flet ((,upgrade-fn ()
+			 (without-interrupts
+			     (allow-with-interrupts
+			      (unless (write-lock ,rwlock t)
+				(go ,retry))
+			      (setf ,upgraded t)))))
+		  (without-interrupts
+		      (allow-with-interrupts
+		       (read-lock ,rwlock)
+		       (unwind-protect
+			    (return-from ,block
+			      (with-interrupts ,@body))
+			 (if (not ,upgraded)
+			     (read-unlock ,rwlock)
+			     (write-unlock ,rwlock))))))))))
 	`(with-rwlock (,rwlock :read) ,@body)))
 
 (defmacro with-write-lock ((rwlock) &body body)
