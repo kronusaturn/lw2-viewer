@@ -119,10 +119,10 @@
 (define-backend-function get-current-environment ())
 
 (define-backend-operation get-current-environment backend-lmdb-cache ()
-  (with-rwlock-protect *db-environments-rwlock*
-    (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
-	 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
-    (progn
+  (with-read-lock (*db-environments-rwlock* :upgrade-fn upgrade-lock)
+    (unless (and (backend-lmdb-environment backend) (eq *sites* *environments-sites*)
+		 (eq (backend-databases backend) (environment-container-databases-list (backend-lmdb-environment backend))))
+      (upgrade-lock)
       (setf *environments-sites* *sites*)
       (let ((lmdb-cache-sites (remove-if (lambda (x) (not (typep (site-backend x) 'backend-lmdb-cache)))
 					 *environments-sites*)))

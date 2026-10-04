@@ -11,7 +11,8 @@
 		#:with-gensyms
 		#:once-only
 		#:unwind-protect-case)
-  (:export #:rwlock #:make-rwlock #:read-lock #:read-unlock #:write-lock #:write-unlock #:with-read-lock #:with-write-lock #:with-rwlock-protect))
+  (:export #:rwlock #:make-rwlock #:read-lock #:read-unlock #:write-lock #:write-unlock #:with-read-lock #:with-write-lock)
+  (:unintern #:with-rwlock-protect))
 
 (in-package #:lw2.rwlock)
 
@@ -71,9 +72,13 @@
 	(read-unlock-slowpath rwlock)))
     (values nil)))
 
-(defun write-lock (rwlock)
+(defun write-lock (rwlock &optional upgrade)
   (with-rwlock-accessors (rwlock)
-    (grab-mutex write-mutex)
+    (let ((got-mutex (grab-mutex write-mutex :waitp (not upgrade))))
+      (when upgrade
+	(read-unlock rwlock))
+      (unless got-mutex
+	(return-from write-lock nil)))
     (unwind-protect-case
      ()
      (with-mutex (write-waitqueue-mutex)
@@ -83,7 +88,7 @@
 	   (loop until (= draining-readers 0)
 		 do (or (condition-wait write-waitqueue write-waitqueue-mutex) (error "Waitqueue error"))))))
      (:abort (write-unlock rwlock)))
-    (values nil)))
+    t))
 
 (defun write-unlock (rwlock)
   (with-rwlock-accessors (rwlock)
@@ -107,43 +112,25 @@
 
 (defmacro with-read-lock ((rwlock &key upgrade-fn) &body body)
   (if upgrade-fn
-      (with-gensyms (upgraded)
-	`(let ((,upgraded nil))
-	   (flet ((,upgrade-fn ()
-		    (without-interrupts
-			(allow-with-interrupts
-			 (read-unlock ,rwlock)
-			 (write-lock ,rwlock)
-			 (setf ,upgraded t)))))
-	     (without-interrupts
-		 (allow-with-interrupts
-		  (read-lock ,rwlock)
-		  (unwind-protect
-		       (with-interrupts ,@body)
-		    (if (not ,upgraded)
-			(read-unlock ,rwlock)
-			(write-unlock ,rwlock))))))))
-      `(with-rwlock (,rwlock :read) ,@body)))
+      (with-gensyms (upgraded retry)
+	`(tagbody
+	  ,retry
+	    (let ((,upgraded nil))
+	      (flet ((,upgrade-fn ()
+		       (without-interrupts
+			   (allow-with-interrupts
+			    (unless (write-lock ,rwlock t)
+			      (go ,retry))
+			    (setf ,upgraded t)))))
+		(without-interrupts
+		    (allow-with-interrupts
+		     (read-lock ,rwlock)
+		     (unwind-protect
+			  (with-interrupts ,@body)
+		       (if (not ,upgraded)
+			   (read-unlock ,rwlock)
+			   (write-unlock ,rwlock)))))))))
+	`(with-rwlock (,rwlock :read) ,@body)))
 
 (defmacro with-write-lock ((rwlock) &body body)
   `(with-rwlock (,rwlock :write) ,@body))
-
-(defmacro with-rwlock-protect (rwlock predicate-form write-form &body read-forms)
-  "
-Protect READ-FORMS from being evaluated when PREDICATE-FORM returns false.
-RWLOCK will be locked in read mode. If PREDICATE-FORM returns false, RWLOCK will
-be upgraded to write mode and WRITE-FORM will be evaluated. WRITE-FORM should
-ensure that PREDICATE-FORM will return true. PREDICATE-FORM may be evaluated
-more than once. Returns the values returned by READ-FORMS."
-  (once-only (rwlock)
-    (with-gensyms (predicate-fn write-fn read-fn)
-      `(flet ((,predicate-fn () ,predicate-form)
-	      (,write-fn () ,write-form)
-	      (,read-fn () ,@read-forms))
-	 (declare (dynamic-extent #',predicate-fn #',write-fn #',read-fn))
-	 (with-read-lock (,rwlock :upgrade-fn upgrade-lock)
-	   (unless (,predicate-fn)
-	     (upgrade-lock)
-	     (unless (,predicate-fn)
-	       (,write-fn)))
-	   (,read-fn))))))
