@@ -2816,6 +2816,9 @@ a.comment-parent-link:hover::after {
 	pointer-events: none;
 }
 
+// Workaround for firefox ~156 box shadow performance regression
+@supports (-moz-appearance: none) { .new-comment::before { box-shadow: none !important; } }
+
 /***********************************/
 /* COMMENT THREAD MINIMIZE BUTTONS */
 /***********************************/
