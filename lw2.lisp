@@ -1571,7 +1571,7 @@
             </span>)
         </div>)
       (when html
-	<div class="tag-description body-text">(with-html-stream-output (:stream stream) (let ((*memoized-output-stream* stream)) (clean-html* html)))</div>))))
+	<div class="tag-description body-text">(with-html-stream-output (:stream stream) (let ((*memoized-output-stream* stream)) (clean-html* html :with-toc t)))</div>))))
 
 (defun tag-list-to-html (tags)
   <ul class="tag-list">
