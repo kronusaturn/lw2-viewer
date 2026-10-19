@@ -177,6 +177,9 @@
 
 (defun dynamic-image (uri container-tag-name container-attributes img-attributes)
   (declare (simple-string uri container-tag-name))
+  (when (ppcre:scan "^data:" uri)
+    (return-from dynamic-image
+      (dynamic-block-original-html)))
   (let ((image-data
 	 (log-and-ignore-errors
 	  (sb-sys:with-deadline (:seconds 5)
