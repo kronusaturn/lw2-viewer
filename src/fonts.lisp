@@ -32,6 +32,7 @@
 
 (defun update-obormot-fonts ()
   (log-and-ignore-errors
+   (setf *fonts-redirect-last-update* (get-unix-time))
    (with-atomic-file-replacement (out-stream (asdf:system-relative-pathname :lw2-viewer "www/fonts.css") :if-unchanged :keep-original :element-type 'character)
      (iter
       (for uri in *obormot-fonts-stylesheet-uris*)
@@ -43,8 +44,7 @@
 	(iter (for line in-stream in-stream using #'read-line)
 	      (for replaced = (ppcre:regex-replace "url\\(['\"](?=https?://fonts.obormot.net/)" line "\\&https://fonts.greaterwrong.com/"))
 	      (write-string replaced out-stream)
-	      (terpri out-stream)))))
-   (setf *fonts-redirect-last-update* (get-unix-time))))
+	      (terpri out-stream)))))))
 
 (defun update-obormot-fonts-async ()
   (unless *fonts-redirect-thread*
