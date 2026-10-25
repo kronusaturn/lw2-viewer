@@ -1760,14 +1760,16 @@ pre {
 
 input[type='text'],
 input[type='search'],
-input[type='password'] {
+input[type='password'],
+input[type='email'] {
 	border: 1px solid #999;
 	color: #000;
 	background-color: transparent;
 }
 input[type='text']:focus,
 input[type='search']:focus,
-input[type='password']:focus {
+input[type='password']:focus,
+input[type='email']:focus {
 	border: 1px solid #ccc;
 }
 

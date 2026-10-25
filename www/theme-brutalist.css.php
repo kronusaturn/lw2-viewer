@@ -1487,6 +1487,7 @@ code {
 input[type='text'],
 input[type='search'],
 input[type='password'],
+input[type='email'],
 textarea {
 	background-color: transparent;
 	border: 1px solid #000;
@@ -1495,6 +1496,7 @@ textarea {
 input[type='text']:focus,
 input[type='search']:focus,
 input[type='password']:focus,
+input[type='email']:focus,
 textarea:focus {
 	border: 1px dashed #000;
 }
