@@ -4283,9 +4283,9 @@ li {
 #content.preview.user-page .page-main-heading {
 	margin-left: 8px;
 }
-#content.preview.not(not) .body-text {
-	margin-left: 8px;
-	margin-right: 8px;
+#content.preview.user-page .body-text {
+	margin-left: 12px;
+	margin-right: 12px;
 }
 #content.preview.user-page .user-stats {
 	margin-right: 32px;
