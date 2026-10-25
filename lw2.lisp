@@ -861,17 +861,17 @@
 	do (cond
 	     ((string= type "select")
 	      (destructuring-bind (option-list &optional default) params
-		(format out-stream "<select name=\"~A\">" id)
+		(format out-stream "<select id=\"~A\" name=\"~A\">" id id)
 		(loop for (value label) in option-list
 		      do (format out-stream "<option value=\"~A\"~:[~; selected~]>~A</option>" value (string= default value) label))
 		(format out-stream "</select>")))
 	     (t
 	       (destructuring-bind (&optional (autocomplete "off") default) params
-		 (format out-stream "<input type=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id autocomplete (and default (encode-entities default))))))
+		 (format out-stream "<input type=\"~A\" id=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id id autocomplete (and default (encode-entities default))))))
 	do (format out-stream ""))
   (if textarea
     (destructuring-bind (ta-name ta-contents) textarea
-      (format out-stream "<div class=\"textarea-container\"><textarea name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>" ta-name (encode-entities ta-contents))))
+      (format out-stream "<div class=\"textarea-container\"><textarea id=\"~A\" name=\"~A\">~A</textarea><span class='markdown-reference-link'>You can use <a href='http://commonmark.org/help/' target='_blank'>Markdown</a> here.</span></div>" ta-name ta-name (encode-entities ta-contents))))
   (format out-stream "<input type=\"hidden\" name=\"csrf-token\" value=\"~A\"><input type=\"submit\" value=\"~A\">~@[~A~]</form>"
 	  csrf-token button-label end-html))
 
