@@ -2816,7 +2816,7 @@ a.comment-parent-link:hover::after {
 	pointer-events: none;
 }
 
-// Workaround for firefox ~156 box shadow performance regression
+/* Workaround for firefox ~156 box shadow performance regression */
 @supports (-moz-appearance: none) { .new-comment::before { box-shadow: none !important; } }
 
 /***********************************/
@@ -3459,7 +3459,7 @@ figure {
 	border: 0;
 }
 
-// Aspect ratio trick from https://css-tricks.com/aspect-ratio-boxes/
+/* Aspect ratio trick from https://css-tricks.com/aspect-ratio-boxes/ */
 
 [style*="--aspect-ratio"] > * {
 	width: 100%;
@@ -3607,7 +3607,7 @@ iframe.widget {
 	width: calc(2em + 100%);
 	margin: 0 -1em;
 	display: block;
-//	font-family: 'Concourse Smallcaps', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif;
+	/* font-family: 'Concourse Smallcaps', 'a_Avante', 'Assistant', Arial, 'GW-Symbols', sans-serif; */
 	font-weight: 600;
 	text-align: center;
 	color: #fff;
@@ -4331,7 +4331,7 @@ li {
 	border-radius: 28px;
 	align-items: center;
 	justify-content: center;
-	//padding-bottom: 2px;
+	/* padding-bottom: 2px; */
 	padding-left: 1.5px;
 	font-family: "Font Awesome", "Font Awesome 5 Free";
 	cursor: pointer;
