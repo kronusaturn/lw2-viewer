@@ -866,8 +866,8 @@
 		      do (format out-stream "<option value=\"~A\"~:[~; selected~]>~A</option>" value (string= default value) label))
 		(format out-stream "</select>")))
 	     (t
-	       (destructuring-bind (&optional (autocomplete "off") default) params
-		 (format out-stream "<input type=\"~A\" id=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]>" type id id autocomplete (and default (encode-entities default))))))
+	       (destructuring-bind (autocomplete &key default 1p-ignore) params
+		 (format out-stream "<input type=\"~A\" id=\"~A\" name=\"~A\" autocomplete=\"~A\"~@[ value=\"~A\"~]~:[~; data-1p-ignore~]>" type id id autocomplete (and default (encode-entities default)) 1p-ignore))))
 	do (format out-stream ""))
   (if textarea
     (destructuring-bind (ta-name ta-contents) textarea
@@ -1942,7 +1942,7 @@
 					"<a href=\"/reset-password\">Forgot password</a>"))
 	       (output-form out-stream "post" (format nil "/login~@[?return=~A~]" (if return (url-rewrite:url-encode return))) "signup-form" "Create account" csrf-token
 			    '(("signup-username" "Username" "text" "username")
-			      ("signup-email" "Email" "text" "email")
+			      ("signup-email" "Email" "email" "email" :1p-ignore t)
 			      ("signup-password" "Password" "password" "new-password")
 			      ("signup-password2" "Confirm password" "password" "new-password"))
 			    "Create account")
