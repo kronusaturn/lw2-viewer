@@ -1945,7 +1945,8 @@
 			      ("signup-email" "Email" "email" "email" :1p-ignore t)
 			      ("signup-password" "Password" "password" "new-password")
 			      ("signup-password2" "Confirm password" "password" "new-password"))
-			    "Create account")
+			    "Create account"
+			    :end-html "<script>(()=>{var form=document.currentScript.parentElement; form.addEventListener('submit', ()=>form.queryAll('input').foreach(e=>e.removeAttribute('data-1p-ignore')))})()</script>")
 	       (if-let (main-site-title (main-site-title *current-site*))
 		       (format out-stream "<div class=\"login-tip\"><span>Tip:</span> You can log in with the same username and password that you use on ~A~:*. Creating an account here also creates one on ~A.</div>"
 			       main-site-title))
