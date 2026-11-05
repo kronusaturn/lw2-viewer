@@ -477,7 +477,6 @@
 			     (or (cdr (assoc :last-modified metadata)) current-time)
 			     current-time))
 	       (u-last-mod (unix-to-universal-time last-mod)))
-	  (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
 	  (let ((in-memory-result (gethash (list *current-backend* cache-db key) *parsed-results-cache*))
 		new-cache-data)
 	    (multiple-value-bind (result count)
@@ -491,6 +490,7 @@
 		(write-async-buffer async-buffer (list result count u-last-mod)))
 	      (unless (and same-data in-memory-result)
 		(setf (gethash (list *current-backend* cache-db key) *parsed-results-cache*) (list result count)))
+	      (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
 	      (when new-cache-data
 		(cache-put cache-db key new-cache-data))
 	      (values result count u-last-mod)))))))
