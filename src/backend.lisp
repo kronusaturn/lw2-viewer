@@ -552,16 +552,16 @@
 			(declare (ignore value))
 			(return error)))
 		 (remhash key *background-cache-update-buffers*))))
-      (sb-ext:with-locked-hash-table (*background-cache-update-buffers*)
-	(when (>= (hash-table-count *background-cache-update-buffers*)
-		  *background-cache-update-threads-max*)
-	  (error 'lw2-rate-limit-exceeded))
-	(or (gethash key *background-cache-update-buffers*)
-	    (progn
-	      (setf new-buffer (make-async-buffer)
-		    (gethash key *background-cache-update-buffers*) new-buffer)
-	      (make-thread-with-current-backend #'background-fn :name "background cache update")
-	      new-buffer))))))
+      (prog1
+	  (sb-ext:with-locked-hash-table (*background-cache-update-buffers*)
+	    (when (>= (hash-table-count *background-cache-update-buffers*)
+		      *background-cache-update-threads-max*)
+	      (error 'lw2-rate-limit-exceeded))
+	    (or (gethash key *background-cache-update-buffers*)
+		(setf new-buffer (make-async-buffer)
+		      (gethash key *background-cache-update-buffers*) new-buffer)))
+	(when new-buffer
+	  (make-thread-with-current-backend #'background-fn :name "background cache update"))))))
 
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (decoder 'decode-query-result)
 								 (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
