@@ -10,12 +10,20 @@
   (mutex (sb-thread:make-mutex))
   (waitqueue (sb-thread:make-waitqueue)))
 
-(defun read-async-buffer (b)
+(defmacro with-maybe-deadline ((&key seconds) &body body)
+  `(flet ((fn () ,@body))
+     (let ((seconds ,seconds))
+       (if seconds
+	   (sb-sys:with-deadline (:seconds seconds) (fn))
+	   (fn)))))
+
+(defun read-async-buffer (b &key timeout)
   (unless (async-buffer-ready b)
-    (sb-thread:with-mutex ((async-buffer-mutex b))
-      (loop until (async-buffer-ready b)
-	    do (or (sb-thread:condition-wait (async-buffer-waitqueue b) (async-buffer-mutex b))
-		   (error "Waitqueue error.")))))
+    (with-maybe-deadline (:seconds timeout)
+      (sb-thread:with-mutex ((async-buffer-mutex b))
+	(loop until (async-buffer-ready b)
+	      do (or (sb-thread:condition-wait (async-buffer-waitqueue b) (async-buffer-mutex b))
+		     (error "Waitqueue error."))))))
   (sb-thread:barrier (:read))
   (async-buffer-data b))
 
