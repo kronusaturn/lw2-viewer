@@ -1,6 +1,7 @@
 (uiop:define-package #:lw2.backend
   (:use #:cl #:sb-thread #:flexi-streams #:alexandria #:iterate #:lw2-viewer.config #:lw2.sites #:lw2.context #:lw2.graphql #:lw2.lmdb
-	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push)
+	#:lw2.utils #:lw2.hash-utils #:lw2.backend-modules #:lw2.schema-type #:lw2.conditions #:lw2.web-push
+	#:lw2.async-buffer)
   (:import-from #:alexandria-2 #:subseq*)
   (:import-from #:collectors #:with-collector)
   (:import-from #:lw2.user-context #:*current-auth-token* #:user-bot-p)
@@ -455,7 +456,7 @@
 (defun lw2-graphql-query-multi (query-list &key auth-token)
   (values-list (lw2-graphql-query-map #'identity query-list :auth-token auth-token)))
 
-(defvar *background-cache-update-threads* (make-hash-table :test 'equal
+(defvar *background-cache-update-buffers* (make-hash-table :test 'equal
 							   :weakness :value
 							   :synchronized t))
 
@@ -465,7 +466,7 @@
 						:weakness :value
 						:synchronized t))
 
-(defun cache-update (cache-db key data decoder)
+(defun cache-update (cache-db key data decoder &optional async-buffer)
   (let ((meta-db (format nil "~A-meta" cache-db))
 	(new-hash (hash-string data))
 	(current-time (get-unix-time)))
@@ -477,17 +478,21 @@
 			     current-time))
 	       (u-last-mod (unix-to-universal-time last-mod)))
 	  (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
-	  (let ((in-memory-result (gethash (list *current-backend* cache-db key) *parsed-results-cache*)))
+	  (let ((in-memory-result (gethash (list *current-backend* cache-db key) *parsed-results-cache*))
+		new-cache-data)
 	    (multiple-value-bind (result count)
 		(cond ((and same-data in-memory-result)
 		       (values-list in-memory-result))
 		      (same-data
 		       (funcall decoder (cache-get cache-db key)))
 		      (t
-		       (funcall decoder data (lambda (new-cache-data)
-					       (cache-put cache-db key new-cache-data)))))
+		       (funcall decoder data (lambda (x) (setf new-cache-data x)))))
+	      (when async-buffer
+		(write-async-buffer async-buffer (list result count u-last-mod)))
 	      (unless (and same-data in-memory-result)
 		(setf (gethash (list *current-backend* cache-db key) *parsed-results-cache*) (list result count)))
+	      (when new-cache-data
+		(cache-put cache-db key new-cache-data))
 	      (values result count u-last-mod)))))))
 
 (defun cache-mark-stale (cache-db key)
@@ -535,25 +540,28 @@
       args)))
 
 (defun ensure-cache-update-thread (query cache-db cache-key decoder)
-  (let ((key (format nil "~A-~A" cache-db cache-key))) 
+  (let ((key (format nil "~A-~A" cache-db cache-key))
+	new-buffer)
     (labels ((background-fn ()
 	       (unwind-protect
 		    (block nil
 		      (multiple-value-bind (value error)
 			  (log-and-ignore-errors
 			   (sb-sys:with-deadline (:seconds 60)
-			     (return (cache-update cache-db cache-key (run-query query) decoder))))
+			     (return (cache-update cache-db cache-key (run-query query) decoder new-buffer))))
 			(declare (ignore value))
 			(return error)))
-		 (remhash key *background-cache-update-threads*))))
-      (sb-ext:with-locked-hash-table (*background-cache-update-threads*)
-	(when (>= (hash-table-count *background-cache-update-threads*)
+		 (remhash key *background-cache-update-buffers*))))
+      (sb-ext:with-locked-hash-table (*background-cache-update-buffers*)
+	(when (>= (hash-table-count *background-cache-update-buffers*)
 		  *background-cache-update-threads-max*)
 	  (error 'lw2-rate-limit-exceeded))
-	(let ((thread (gethash key *background-cache-update-threads*)))
-	  (if thread thread
-	      (setf (gethash key *background-cache-update-threads*)
-		    (make-thread-with-current-backend #'background-fn :name "background cache update"))))))))
+	(or (gethash key *background-cache-update-buffers*)
+	    (progn
+	      (setf new-buffer (make-async-buffer)
+		    (gethash key *background-cache-update-buffers*) new-buffer)
+	      (make-thread-with-current-backend #'background-fn :name "background cache update")
+	      new-buffer))))))
 
 (define-backend-function lw2-graphql-query-timeout-cached (query cache-db cache-key &key (decoder 'decode-query-result)
 								 (revalidate *revalidate-default*) (force-revalidate *force-revalidate-default*))
@@ -583,15 +591,13 @@
 	       (let ((timeout (if cached-result
 				  (if force-revalidate nil 0.5)
 				  nil))
-		     (thread (ensure-cache-update-thread query cache-db cache-key decoder)))
+		     (async-buffer (ensure-cache-update-thread query cache-db cache-key decoder)))
 		 (if (and cached-result (if force-revalidate (not revalidate) (or is-fresh (not revalidate))))
 		     (get-cached-result)
-		     (multiple-value-bind (result count last-modified)
-			 (sb-thread:join-thread thread :timeout timeout)
+		     (let ((result (read-async-buffer async-buffer :timeout timeout)))
 		       (typecase result
 			 (condition (error result))
-			 (t
-			  (values result count last-modified)))))))))))))
+			 (t (values-list result)))))))))))))
 
 (define-backend-function lw2-query-string* (query-type return-type args &key context fields with-total))
 
