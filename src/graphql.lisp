@@ -88,6 +88,7 @@
 		 (symbol (json:lisp-to-camel-case (string obj))))))
 
 (declaim-grammar graphql-simple-field-list)
+(declaim-grammar graphql-argument-alist)
 
 (defgrammar graphql-simple-field (field)
   (typecase field
