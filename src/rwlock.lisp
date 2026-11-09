@@ -40,6 +40,7 @@
 (declaim (inline read-lock read-unlock))
 
 (defun read-lock-slowpath (rwlock)
+  (declare (notinline read-unlock))
   (with-rwlock-accessors (rwlock)
     (unwind-protect-case
      ()
