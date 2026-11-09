@@ -1,5 +1,5 @@
 (uiop:define-package #:lw2-viewer
-  (:use #:cl #:sb-thread #:flexi-streams #:djula #:iterate
+  (:use #:cl #:sb-thread #:flexi-streams #:iterate
 	#:lw2-viewer.config #:lw2.utils #:lw2.lmdb #:lw2.backend #:lw2.links #:lw2.clean-html #:lw2.login #:lw2.context #:lw2.sites #:lw2.components #:lw2.html-reader #:lw2.fonts
 	#:lw2.csrf
 	#:lw2.graphql
@@ -19,6 +19,7 @@
   (:import-from #:alexandria #:with-gensyms #:once-only #:ensure-list #:when-let #:when-let* #:if-let #:alist-hash-table)
   (:import-from #:collectors #:with-collector)
   (:import-from #:ppcre #:regex-replace-all)
+  (:import-from #:djula #:add-template-directory #:compile-template* #:render-template*)
   (:unintern
     #:define-regex-handler #:*fonts-stylesheet-uri* #:generate-fonts-link
     #:user-nav-bar #:*primary-nav* #:*secondary-nav* #:*nav-bars*
