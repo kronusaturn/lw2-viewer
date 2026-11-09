@@ -1,5 +1,7 @@
 (uiop:define-package #:lw2.async-buffer
-    (:use #:cl)
+  (:use #:cl)
+  (:import-from #:lw2.thread-utils
+		#:with-mutex-no-deadline)
   (:export #:make-async-buffer #:read-async-buffer #:write-async-buffer))
 
 (cl:in-package #:lw2.async-buffer)
@@ -31,5 +33,5 @@
   (setf (async-buffer-data b) data)
   (sb-thread:barrier (:write))
   (setf (async-buffer-ready b) t)
-  (sb-thread:with-mutex ((async-buffer-mutex b))
+  (with-mutex-no-deadline ((async-buffer-mutex b))
     (sb-thread:condition-broadcast (async-buffer-waitqueue b))))

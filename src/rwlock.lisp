@@ -6,11 +6,13 @@
   (:import-from #:sb-ext
 		#:atomic-incf #:atomic-decf)
   (:import-from #:sb-sys
-		#:without-interrupts #:allow-with-interrupts #:with-interrupts)
+		#:without-interrupts #:allow-with-interrupts #:with-interrupts #:with-deadline)
   (:import-from #:alexandria
 		#:with-gensyms
 		#:once-only
 		#:unwind-protect-case)
+  (:import-from #:lw2.thread-utils
+		#:with-mutex-no-deadline)
   (:export #:rwlock #:make-rwlock #:read-lock #:read-unlock #:write-lock #:write-unlock #:with-read-lock #:with-write-lock)
   (:unintern #:with-rwlock-protect))
 
@@ -59,7 +61,7 @@
 
 (defun read-unlock-slowpath (rwlock)
   (with-rwlock-accessors (rwlock)
-    (with-mutex (write-waitqueue-mutex)
+    (with-mutex-no-deadline (write-waitqueue-mutex)
       (when (plusp draining-readers)
 	(decf (the (signed-byte 61) draining-readers)))
       (when (zerop draining-readers)
@@ -93,7 +95,7 @@
 
 (defun write-unlock (rwlock)
   (with-rwlock-accessors (rwlock)
-    (with-mutex (read-waitqueue-mutex)
+    (with-mutex-no-deadline (read-waitqueue-mutex)
       (atomic-decf readers 1)
       (condition-broadcast read-waitqueue))
     (setf draining-readers 0)

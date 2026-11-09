@@ -5,9 +5,10 @@
   :components ((:module "src"
 		:components ((:file "utils" :depends-on ("macro-utils"))
 			     (:file "macro-utils")
+			     (:file "thread-utils")
 			     (:file "raw-memory-streams")
-			     (:file "rwlock")
-			     (:file "async-buffer")
+			     (:file "rwlock" :depends-on ("thread-utils"))
+			     (:file "async-buffer" :depends-on ("thread-utils"))
 			     (:file "graphql" :depends-on ("macro-utils"))
                              (:file "hash-utils")
                              (:file "context")
