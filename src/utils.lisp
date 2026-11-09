@@ -29,6 +29,25 @@
 
 (in-package #:lw2.utils)
 
+(declaim (inline to-boolean))
+(defun to-boolean (value)
+  (and value t))
+
+(declaim (inline nonzero-number-p))
+(defun nonzero-number-p (value)
+  (and (typep value 'number)
+       (/= 0 value)))
+
+(defun truthy-string-p (string)
+  (and (typep string 'string)
+       (to-boolean (member string '("t" "true" "y" "yes" "1") :test #'string-equal))))
+
+(defun firstn (list n)
+  (iter (for i from 1 to n)
+	(for x on list)
+	(collect (car x) into out)
+	(finally (return (values out (rest x))))))
+
 (defun nalist (&rest params) (plist-alist params))
 
 (defun nalist* (&rest params)
@@ -238,25 +257,6 @@
 		    `((multiple-value-setq (match-start match-end reg-starts reg-ends)
 			(ppcre:scan ,regex target-string))
 		      (with-regex-accessors ,@body))))))))
-
-(declaim (inline to-boolean))
-(defun to-boolean (value)
-  (and value t))
-
-(declaim (inline nonzero-number-p))
-(defun nonzero-number-p (value)
-  (and (typep value 'number)
-       (/= 0 value)))
-
-(defun truthy-string-p (string)
-  (and (typep string 'string)
-       (to-boolean (member string '("t" "true" "y" "yes" "1") :test #'string-equal))))
-
-(defun firstn (list n)
-  (iter (for i from 1 to n)
-	(for x on list)
-	(collect (car x) into out)
-	(finally (return (values out (rest x))))))
 
 (defun map-plist (fn plist)
   (loop for (key val . rest) = plist then rest
