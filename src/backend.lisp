@@ -469,31 +469,42 @@
 (defun cache-update (cache-db key data decoder &optional async-buffer)
   (let ((meta-db (format nil "~A-meta" cache-db))
 	(new-hash (hash-string data))
-	(current-time (get-unix-time)))
-    (with-cache-transaction
-	(let* ((metadata (cache-get meta-db key :value-type :lisp))
-	       (same-data (equalp new-hash (cdr (assoc :city-128-hash metadata))))
-	       (last-mod (if same-data
-			     (or (cdr (assoc :last-modified metadata)) current-time)
-			     current-time))
-	       (u-last-mod (unix-to-universal-time last-mod)))
-	  (let ((in-memory-result (gethash (list *current-backend* cache-db key) *parsed-results-cache*))
-		new-cache-data)
-	    (multiple-value-bind (result count)
-		(cond ((and same-data in-memory-result)
-		       (values-list in-memory-result))
-		      (same-data
-		       (funcall decoder (cache-get cache-db key)))
-		      (t
-		       (funcall decoder data (lambda (x) (setf new-cache-data x)))))
-	      (when async-buffer
-		(write-async-buffer async-buffer (list result count u-last-mod)))
-	      (unless (and same-data in-memory-result)
-		(setf (gethash (list *current-backend* cache-db key) *parsed-results-cache*) (list result count)))
-	      (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
-	      (when new-cache-data
-		(cache-put cache-db key new-cache-data))
-	      (values result count u-last-mod)))))))
+	(current-time (get-unix-time))
+	after-transaction)
+    (declare (type (or function null) after-transaction))
+    (multiple-value-prog1
+	(with-cache-transaction
+	    (let* ((metadata (cache-get meta-db key :value-type :lisp))
+		   (same-data (equalp new-hash (cdr (assoc :city-128-hash metadata))))
+		   (last-mod (if same-data
+				 (or (cdr (assoc :last-modified metadata)) current-time)
+				 current-time))
+		   (u-last-mod (unix-to-universal-time last-mod)))
+	      (let ((in-memory-result (gethash (list *current-backend* cache-db key) *parsed-results-cache*))
+		    new-cache-data)
+		(multiple-value-bind (result count)
+		    (cond ((and same-data in-memory-result)
+			   (values-list in-memory-result))
+			  (same-data
+			   (funcall decoder (cache-get cache-db key)))
+			  (t
+			   (funcall decoder data (lambda (x) (setf new-cache-data x)))))
+		  (when async-buffer
+		    (flet ((do-write ()
+			     (write-async-buffer async-buffer (list result count u-last-mod))))
+		      ;; If there's new data, we have to wait until the transaction commits
+		      ;; to make sure memoized-references are visible.
+		      (if same-data
+			  (do-write)
+			  (setf after-transaction #'do-write))))
+		  (unless (and same-data in-memory-result)
+		    (setf (gethash (list *current-backend* cache-db key) *parsed-results-cache*) (list result count)))
+		  (cache-put meta-db key (alist :last-checked current-time :last-modified last-mod :city-128-hash new-hash) :value-type :lisp)
+		  (when new-cache-data
+		    (cache-put cache-db key new-cache-data))
+		  (values result count u-last-mod)))))
+      (when after-transaction
+	(funcall after-transaction)))))
 
 (defun cache-mark-stale (cache-db key)
   (let ((meta-db (format nil "~A-meta" cache-db))
