@@ -20,7 +20,6 @@
     (let ((*html-output* (flex:make-flexi-stream (hunchentoot:send-headers) :external-format :utf-8)))
       (handler-case
 	  (funcall fn *html-output*)
-	(serious-condition () (close *html-output*))
 	(:no-error (&rest x) (declare (ignore x)) (finish-output *html-output*))))))
 
 (defmacro with-response-stream ((out-stream) &body body) `(dynamic-flet ((fn (,out-stream) ,@body)) (call-with-response-stream #'fn)))
