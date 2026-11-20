@@ -550,7 +550,7 @@
 			   (sb-sys:with-deadline (:seconds 60)
 			     (return (cache-update cache-db cache-key (run-query query) decoder new-buffer))))
 			(declare (ignore value))
-			(return error)))
+			(write-async-buffer new-buffer error)))
 		 (remhash key *background-cache-update-buffers*))))
       (prog1
 	  (sb-ext:with-locked-hash-table (*background-cache-update-buffers*)
