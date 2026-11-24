@@ -130,7 +130,8 @@
 	     (return-from log-and-ignore-errors (values nil c)))))
        ,@body)))
 
-(defun abort-response ()
+(defun abort-response (&optional condition)
+  (declare (ignore condition))
   (throw 'abort-response nil))
 
 (defun abort-response-if-unrecoverable (condition)
