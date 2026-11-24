@@ -833,17 +833,18 @@
 		(handler-bind
 		    ((fatal-error (lambda (condition)
 				    (handler-bind ((fatal-error #'abort-response))
-				      (abort-response-if-unrecoverable condition)
-				      (let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
-					(emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
-						   (write-string error-html out-stream)
-						   (when (eq (hunchentoot:request-method*) :post)
-						     <form method="post" class="error-retry-form">
-						     (loop for (key . value) in (hunchentoot:post-parameters*)
-							   do <input type="hidden" name=key value=value>)
-						     <input type="submit" value="Retry">
-						     </form>))
-					(return-from call-with-error-page t))))))
+				      (sb-sys:with-deadline (:seconds 0.3 :override t)
+					(abort-response-if-unrecoverable condition)
+					(let ((error-html (with-output-to-string (*html-output*) (error-to-html condition))))
+					  (emit-page (out-stream :title "Error" :return-code (condition-http-return-code condition) :content-class "error-page")
+						     (write-string error-html out-stream)
+						     (when (eq (hunchentoot:request-method*) :post)
+						       <form method="post" class="error-retry-form">
+						       (loop for (key . value) in (hunchentoot:post-parameters*)
+							     do <input type="hidden" name=key value=value>)
+						       <input type="submit" value="Retry">
+						       </form>))
+					  (return-from call-with-error-page t)))))))
 		  (log-conditions
 		   (if (eq (hunchentoot:request-method*) :post)
 		       (funcall fn)
